@@ -171,7 +171,6 @@ const results = await browserSearch.perform({
 
 See [examples](./examples/).
 
-
 ## Credits
 
 Thanks to:

@@ -22,7 +22,9 @@ English version: [GUI Model Deployment Guide](https://juniper-switch-f10.notion.
 中文版: [GUI模型部署教程](https://bytedance.sg.larkoffice.com/docx/TCcudYwyIox5vyxiSDLlgIsTgWf#U94rdCxzBoJMLex38NPlHL21gNb)
 
 ## Local Deployment [vLLM]
+
 We recommend using vLLM for fast deployment and inference. You need to use `vllm>=0.6.1`.
+
 ```bash
 pip install -U transformers
 VLLM_VERSION=0.6.6
@@ -30,7 +32,9 @@ CUDA_VERSION=cu124
 pip install vllm==${VLLM_VERSION} --extra-index-url https://download.pytorch.org/whl/${CUDA_VERSION}
 
 ```
+
 ### Download the Model
+
 We provide three model sizes on Hugging Face: **2B**, **7B**, and **72B**. To achieve the best performance, we recommend using the **7B-DPO** or **72B-DPO** model (based on your hardware configuration):
 
 - [2B-SFT](https://huggingface.co/bytedance-research/UI-TARS-2B-SFT)
@@ -39,8 +43,8 @@ We provide three model sizes on Hugging Face: **2B**, **7B**, and **72B**. To ac
 - [72B-SFT](https://huggingface.co/bytedance-research/UI-TARS-72B-SFT)
 - [72B-DPO](https://huggingface.co/bytedance-research/UI-TARS-72B-DPO)
 
-
 ### Start an OpenAI API Service
+
 Run the command below to start an OpenAI-compatible API service:
 
 ```bash

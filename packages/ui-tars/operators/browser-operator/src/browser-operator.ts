@@ -18,12 +18,28 @@ import type {
   ExecuteParams,
   ExecuteOutput,
 } from '@ui-tars/sdk/core';
-import { BrowserOperatorOptions, SearchEngine } from './types';
+import {
+  BrowserOperatorOptions,
+  SearchEngine,
+  BrowserExecuteOutput,
+  StatusEnum,
+} from './types';
 import { UIHelper } from './ui-helper';
 import { BrowserFinder } from '@agent-infra/browser';
 
 import { KEY_MAPPINGS } from './key-map';
 import { shortcuts } from './shortcuts';
+import {
+  ActionVerifier,
+  ActionVerificationResult,
+  TaskStateTracker,
+  IntermediateStateVerificationResult,
+  IntermediateStateContract,
+  FinalGoalVerifier,
+  FinalGoalVerificationResult,
+  FinalGoalContract,
+  FinalGoalStatus,
+} from './verification';
 
 /**
  * BrowserOperator class that extends the base Operator
@@ -38,13 +54,19 @@ export class BrowserOperator extends Operator {
 
   private uiHelper: UIHelper;
 
-  private highlightClickableElements = true;
+  private highlightClickableElements = false;
 
-  private showActionInfo = true;
+  private showActionInfo = false;
 
-  private showWaterFlowEffect = true;
+  private showWaterFlowEffect = false;
 
   private deviceScaleFactor?: number;
+
+  private actionVerifier = new ActionVerifier();
+
+  private taskStateTracker = new TaskStateTracker();
+
+  private finalGoalVerifier = new FinalGoalVerifier();
 
   /**
    * Creates a new BrowserOperator instance
@@ -61,16 +83,17 @@ export class BrowserOperator extends Operator {
     // Initialize UIHelper with a function that gets the active page
     this.uiHelper = new UIHelper(() => this.getActivePage(), this.logger);
 
-    if (options.highlightClickableElements === false) {
-      this.highlightClickableElements = false;
+    this.highlightClickableElements =
+      options.highlightClickableElements ?? false;
+    this.showActionInfo = options.showActionInfo ?? false;
+    this.showWaterFlowEffect = options.showWaterFlow ?? false;
+
+    if (this.options.intermediateMilestones?.length) {
+      this.taskStateTracker.setMilestones(this.options.intermediateMilestones);
     }
 
-    if (options.showActionInfo === false) {
-      this.showActionInfo = false;
-    }
-
-    if (options.showWaterFlow === false) {
-      this.showWaterFlowEffect = false;
+    if (this.options.finalGoalContract) {
+      this.finalGoalVerifier.setGoalContract(this.options.finalGoalContract);
     }
   }
 
@@ -186,7 +209,7 @@ export class BrowserOperator extends Operator {
    * @param params Parameters containing action details
    * @returns Promise resolving to execution output
    */
-  public async execute(params: ExecuteParams): Promise<ExecuteOutput> {
+  public async execute(params: ExecuteParams): Promise<BrowserExecuteOutput> {
     this.logger.info('Starting execute with params:', params);
 
     const { parsedPrediction, screenWidth, screenHeight } = params;
@@ -202,17 +225,66 @@ export class BrowserOperator extends Operator {
     const { action_type, action_inputs } = parsedPrediction;
     const startBoxStr = action_inputs?.start_box || '';
 
-    const deviceScaleFactor = await this.getDeviceScaleFactor();
+    const deviceScaleFactor = (await this.getDeviceScaleFactor()) || 1;
+
+    let effScreenWidth = screenWidth;
+    let effScreenHeight = screenHeight;
+    if ((!effScreenWidth || !effScreenHeight) && startBoxStr) {
+      try {
+        const activePage = await this.getActivePage();
+        const viewport = activePage.viewport();
+        if (viewport) {
+          effScreenWidth = effScreenWidth || viewport.width * deviceScaleFactor;
+          effScreenHeight =
+            effScreenHeight || viewport.height * deviceScaleFactor;
+        }
+      } catch (e) {
+        this.logger.warn(
+          'Failed to retrieve viewport for default screen dimensions:',
+          e,
+        );
+      }
+    }
+
     const coords = parseBoxToScreenCoords({
       boxStr: startBoxStr,
-      screenWidth,
-      screenHeight,
+      screenWidth: effScreenWidth,
+      screenHeight: effScreenHeight,
     });
-    const startX = coords.x ? coords.x / deviceScaleFactor : null;
-    const startY = coords.y ? coords.y / deviceScaleFactor : null;
+
+    const [actionStartX, actionStartY] = action_inputs?.start_coords || [];
+
+    const startX =
+      coords.x !== null && !isNaN(coords.x)
+        ? coords.x / deviceScaleFactor
+        : actionStartX !== undefined && !isNaN(actionStartX)
+          ? actionStartX / deviceScaleFactor
+          : null;
+    const startY =
+      coords.y !== null && !isNaN(coords.y)
+        ? coords.y / deviceScaleFactor
+        : actionStartY !== undefined && !isNaN(actionStartY)
+          ? actionStartY / deviceScaleFactor
+          : null;
 
     this.logger.info(`Parsed coordinates: (${startX}, ${startY})`);
     this.logger.info(`Executing action: ${action_type}`);
+
+    const preCoords =
+      startX !== null && startY !== null ? { x: startX, y: startY } : undefined;
+    let preSnapshot: any = null;
+
+    try {
+      const activePage = await this.getActivePage();
+      preSnapshot = await this.actionVerifier.capturePreSnapshot(
+        activePage,
+        action_type,
+        action_inputs || {},
+        preCoords,
+      );
+    } catch (e) {
+      this.logger.debug('Pre-action snapshot skipped:', e);
+    }
 
     try {
       await this.getActivePage();
@@ -240,19 +312,49 @@ export class BrowserOperator extends Operator {
         case 'click':
         case 'left_click':
         case 'left_single':
-          if (startX && startY) await this.handleClick(startX, startY);
-          else throw new Error(`Missing startX(${startX}) or startY${startX}.`);
+          if (
+            startX !== null &&
+            startY !== null &&
+            !isNaN(startX) &&
+            !isNaN(startY)
+          ) {
+            await this.handleClick(startX, startY);
+          } else {
+            throw new Error(
+              `Missing or invalid start coordinates: (${startX}, ${startY})`,
+            );
+          }
           break;
 
         case 'double_click':
         case 'left_double':
-          if (startX && startY) await this.handleDoubleClick(startX, startY);
-          else throw new Error(`Missing startX(${startX}) or startY${startX}.`);
+          if (
+            startX !== null &&
+            startY !== null &&
+            !isNaN(startX) &&
+            !isNaN(startY)
+          ) {
+            await this.handleDoubleClick(startX, startY);
+          } else {
+            throw new Error(
+              `Missing or invalid start coordinates: (${startX}, ${startY})`,
+            );
+          }
           break;
 
         case 'right_click':
-          if (startX && startY) await this.handleRightClick(startX, startY);
-          else throw new Error(`Missing startX(${startX}) or startY${startX}.`);
+          if (
+            startX !== null &&
+            startY !== null &&
+            !isNaN(startX) &&
+            !isNaN(startY)
+          ) {
+            await this.handleRightClick(startX, startY);
+          } else {
+            throw new Error(
+              `Missing or invalid start coordinates: (${startX}, ${startY})`,
+            );
+          }
           break;
 
         case 'type':
@@ -281,10 +383,7 @@ export class BrowserOperator extends Operator {
           break;
 
         case 'finished':
-          if (this.options.onFinalAnswer && parsedPrediction.thought) {
-            await this.options.onFinalAnswer(parsedPrediction.thought);
-          }
-          this.uiHelper.cleanup();
+          // Completion is gated by FinalGoalVerifier below
           break;
 
         case 'call_user':
@@ -303,17 +402,143 @@ export class BrowserOperator extends Operator {
       this.logger.info(`Action ${action_type} completed successfully`);
     } catch (error) {
       this.logger.error(`Failed to execute ${action_type}:`, error);
-      await this.cleanup();
+      await this.uiHelper.cleanup();
       throw error;
     }
 
+    let verification: ActionVerificationResult | undefined = undefined;
+    let postSnapshot: any = null;
+    let postPage: Page | null = null;
+    try {
+      postPage = await this.getActivePage();
+      if (preSnapshot && postPage) {
+        postSnapshot = await this.actionVerifier.capturePostSnapshot(
+          postPage,
+          preSnapshot,
+          action_type,
+          action_inputs || {},
+          preCoords,
+        );
+        verification = this.actionVerifier.evaluateOutcome(
+          preSnapshot,
+          postSnapshot,
+          action_type,
+          action_inputs || {},
+          preCoords,
+        );
+        this.logger.info(
+          `[BrowserOperator] Verification: ${verification.category} (confidence ${(verification.confidence * 100).toFixed(0)}%) - ${verification.feedback}`,
+        );
+      }
+    } catch (verErr) {
+      this.logger.warn(
+        'Action verification evaluation skipped/failed:',
+        verErr,
+      );
+    }
+
+    let intermediateState: IntermediateStateVerificationResult | undefined =
+      undefined;
+    try {
+      const activeMilestone = this.taskStateTracker.getActiveMilestone();
+      if (activeMilestone) {
+        if (!postPage) {
+          postPage = await this.getActivePage();
+        }
+        if (postPage) {
+          intermediateState = await this.taskStateTracker.evaluate(
+            postPage,
+            preSnapshot,
+            postSnapshot,
+            verification,
+            action_type,
+            action_inputs,
+          );
+        }
+        if (intermediateState) {
+          this.logger.info(
+            `[BrowserOperator] Intermediate State: ${intermediateState.status} (confidence ${(intermediateState.confidence * 100).toFixed(0)}%) - ${intermediateState.feedback}`,
+          );
+        }
+      }
+    } catch (trackErr) {
+      this.logger.warn('Intermediate state tracking skipped/failed:', trackErr);
+    }
+
+    let finalGoalVerification: FinalGoalVerificationResult | undefined =
+      undefined;
+    if (action_type === 'finished') {
+      try {
+        if (!postPage) {
+          postPage = await this.getActivePage();
+        }
+        finalGoalVerification = await this.finalGoalVerifier.evaluate({
+          page: postPage,
+          prediction: parsedPrediction,
+          actionVerification: verification,
+          lastIntermediateState: intermediateState,
+        });
+        this.logger.info(
+          `[BrowserOperator] Final Goal: ${finalGoalVerification.status} (confidence ${(finalGoalVerification.confidence * 100).toFixed(0)}%) - ${finalGoalVerification.feedback}`,
+        );
+
+        if (finalGoalVerification.status === FinalGoalStatus.VERIFIED) {
+          if (this.options.onFinalAnswer && parsedPrediction.thought) {
+            await this.options.onFinalAnswer(parsedPrediction.thought);
+          }
+          await this.uiHelper.cleanup();
+        }
+      } catch (goalErr) {
+        console.error('Final goal verification error:', goalErr);
+        this.logger.warn('Final goal verification skipped/failed:', goalErr);
+      }
+    }
+
     return {
-      // Hand it over to the upper layer to avoid redundancy
-      // @ts-expect-error fix type later
+      status:
+        action_type === 'finished' &&
+        finalGoalVerification?.status === FinalGoalStatus.VERIFIED
+          ? StatusEnum.END
+          : StatusEnum.RUNNING,
       startX,
       startY,
       action_inputs,
+      verification,
+      intermediateState,
+      finalGoalVerification,
     };
+  }
+
+  public getActionVerifier(): ActionVerifier {
+    return this.actionVerifier;
+  }
+
+  public getTaskStateTracker(): TaskStateTracker {
+    return this.taskStateTracker;
+  }
+
+  public getFinalGoalVerifier(): FinalGoalVerifier {
+    return this.finalGoalVerifier;
+  }
+
+  public setFinalGoalContract(contract: FinalGoalContract | null): void {
+    this.finalGoalVerifier.setGoalContract(contract);
+  }
+
+  public setIntermediateMilestone(
+    milestone: IntermediateStateContract | null,
+  ): void {
+    if (milestone) {
+      this.taskStateTracker.setMilestones([milestone]);
+    } else {
+      this.taskStateTracker.reset();
+    }
+  }
+
+  public setIntermediateMilestones(
+    milestones: IntermediateStateContract[],
+  ): void {
+    this.taskStateTracker.setMilestones(milestones);
   }
 
   private async handleClick(x: number, y: number) {
@@ -321,8 +546,10 @@ export class BrowserOperator extends Operator {
     const page = await this.getActivePage();
 
     try {
-      await this.uiHelper?.showClickIndicator(x, y);
-      await this.delay(300);
+      if (this.showActionInfo) {
+        await this.uiHelper?.showClickIndicator(x, y);
+        await this.delay(300);
+      }
 
       await page.mouse.move(x, y);
       await this.delay(100);
@@ -341,16 +568,16 @@ export class BrowserOperator extends Operator {
     const page = await this.getActivePage();
 
     try {
-      // Show indicator first
-      await this.uiHelper?.showClickIndicator(x, y);
-      await this.delay(300); // 增加延时，原来是 100
+      if (this.showActionInfo) {
+        await this.uiHelper?.showClickIndicator(x, y);
+        await this.delay(300);
+      }
 
-      // Perform double click
       await page.mouse.move(x, y);
-      await this.delay(100); // 增加延时，原来是 50
+      await this.delay(100);
       await page.mouse.click(x, y, { clickCount: 2 });
 
-      await this.delay(800); // 增加延时，原来是 500
+      await this.delay(800);
       this.logger.info('Double click completed');
     } catch (error) {
       this.logger.error('Double click operation failed:', error);
@@ -364,16 +591,16 @@ export class BrowserOperator extends Operator {
     this.logger.info(`Right clicking at (${x}, ${y})`);
 
     try {
-      // Show indicator first
-      await this.uiHelper?.showClickIndicator(x, y);
-      await this.delay(300); // 增加延时，原来是 100
+      if (this.showActionInfo) {
+        await this.uiHelper?.showClickIndicator(x, y);
+        await this.delay(300);
+      }
 
-      // Perform right click
       await page.mouse.move(x, y);
-      await this.delay(100); // 增加延时，原来是 50
+      await this.delay(100);
       await page.mouse.click(x, y, { button: 'right' });
 
-      await this.delay(800); // 增加延时，原来是 500
+      await this.delay(800);
       this.logger.info('Right click completed');
     } catch (error) {
       this.logger.error('Right click operation failed:', error);
@@ -384,19 +611,34 @@ export class BrowserOperator extends Operator {
   private async handleType(inputs: Record<string, any>) {
     const page = await this.getActivePage();
 
-    const content = inputs.content?.trim();
-    if (!content) {
-      this.logger.warn('No content to type');
-      return;
+    const rawContent = inputs.content;
+    if (
+      rawContent === undefined ||
+      rawContent === null ||
+      typeof rawContent !== 'string' ||
+      rawContent.length === 0
+    ) {
+      this.logger.error(
+        'No content to type: missing or invalid content in action_inputs',
+      );
+      throw new Error(
+        'No content to type: missing or invalid content in action_inputs',
+      );
     }
 
-    this.logger.info('Typing content:', content);
-    const stripContent = content.replace(/\\n$/, '').replace(/\n$/, '');
+    const hasEnter = rawContent.endsWith('\n') || rawContent.endsWith('\\n');
+    const stripContent = rawContent.replace(/\\n$/, '').replace(/\n$/, '');
+
+    this.logger.info('Typing content:', stripContent, 'hasEnter:', hasEnter);
 
     // Type each character with a faster random delay
-    await page.keyboard.type(stripContent, { delay: 20 + Math.random() * 30 });
+    if (stripContent.length > 0) {
+      await page.keyboard.type(stripContent, {
+        delay: 20 + Math.random() * 30,
+      });
+    }
 
-    if (content.endsWith('\n') || content.endsWith('\\n')) {
+    if (hasEnter) {
       // Reduced pause before Enter
       await this.delay(50);
 
@@ -535,6 +777,24 @@ export class BrowserOperator extends Operator {
 
     this.logger.info(`Scrolling ${direction} by ${scrollAmount}px`);
 
+    // Position mouse at specified coordinates or fallback to viewport center
+    const viewport = page.viewport();
+    const coordX = inputs?.coordinate?.[0] ?? inputs?.start_coords?.[0];
+    const coordY = inputs?.coordinate?.[1] ?? inputs?.start_coords?.[1];
+    const mouseX =
+      coordX !== undefined && !isNaN(coordX)
+        ? coordX
+        : viewport
+          ? viewport.width / 2
+          : 500;
+    const mouseY =
+      coordY !== undefined && !isNaN(coordY)
+        ? coordY
+        : viewport
+          ? viewport.height / 2
+          : 300;
+    await page.mouse.move(mouseX, mouseY);
+
     switch (direction?.toLowerCase()) {
       case 'up':
         await page.mouse.wheel({ deltaY: -scrollAmount });
@@ -546,6 +806,7 @@ export class BrowserOperator extends Operator {
         this.logger.warn(`Unsupported scroll direction: ${direction}`);
         return;
     }
+    await this.delay(200);
     this.logger.info('Scroll completed');
   }
 
@@ -556,8 +817,8 @@ export class BrowserOperator extends Operator {
   private async handleNavigate(inputs: Record<string, any>): Promise<void> {
     const page = await this.getActivePage();
     let { url } = inputs;
-    // If the url does not start with http:// or If the url does not start with http:// or URL_ADDRESS automatically add https://
-    if (!/^https?:\/\//i.test(url)) {
+    // If the url does not start with http://, https://, data:, or about:, automatically add https://
+    if (!/^(https?|about|data|file):/i.test(url)) {
       url = 'https://' + url;
     }
 
@@ -597,12 +858,33 @@ export class BrowserOperator extends Operator {
     });
 
     // Adjust for device scale factor
-    const startX = startCoords.x ? startCoords.x / deviceScaleFactor : null;
-    const startY = startCoords.y ? startCoords.y / deviceScaleFactor : null;
-    const endX = endCoords.x ? endCoords.x / deviceScaleFactor : null;
-    const endY = endCoords.y ? endCoords.y / deviceScaleFactor : null;
+    const startX =
+      startCoords.x !== null && !isNaN(startCoords.x)
+        ? startCoords.x / deviceScaleFactor
+        : null;
+    const startY =
+      startCoords.y !== null && !isNaN(startCoords.y)
+        ? startCoords.y / deviceScaleFactor
+        : null;
+    const endX =
+      endCoords.x !== null && !isNaN(endCoords.x)
+        ? endCoords.x / deviceScaleFactor
+        : null;
+    const endY =
+      endCoords.y !== null && !isNaN(endCoords.y)
+        ? endCoords.y / deviceScaleFactor
+        : null;
 
-    if (!startX || !startY || !endX || !endY) {
+    if (
+      startX === null ||
+      startY === null ||
+      endX === null ||
+      endY === null ||
+      isNaN(startX) ||
+      isNaN(startY) ||
+      isNaN(endX) ||
+      isNaN(endY)
+    ) {
       throw new Error('Invalid coordinates for drag operation');
     }
 
@@ -670,38 +952,68 @@ export class BrowserOperator extends Operator {
     this.logger.info('Navigation completed or timed out');
   }
 
-  private async getDeviceScaleFactor() {
-    if (this.deviceScaleFactor) {
-      return this.deviceScaleFactor;
+  private async getDeviceScaleFactor(): Promise<number> {
+    try {
+      const page = await this.getActivePage();
+      const scaleFactor = page.viewport()?.deviceScaleFactor;
+      if (scaleFactor) {
+        this.deviceScaleFactor = scaleFactor;
+        return scaleFactor;
+      }
+
+      if (this.deviceScaleFactor) {
+        return this.deviceScaleFactor;
+      }
+
+      const devicePixelRatio = await page.evaluate(
+        () => window.devicePixelRatio,
+      );
+      if (devicePixelRatio) {
+        this.deviceScaleFactor = devicePixelRatio;
+        return devicePixelRatio;
+      }
+    } catch {
+      // Fallback
     }
 
-    this.logger.info('Getting deviceScaleFactor info...');
-    const page = await this.getActivePage();
+    return this.deviceScaleFactor || 1;
+  }
 
-    const scaleFactor = page.viewport()?.deviceScaleFactor;
-    if (scaleFactor) {
-      this.deviceScaleFactor = scaleFactor;
-      return scaleFactor;
-    }
-
-    const devicePixelRatio = await page.evaluate(() => window.devicePixelRatio);
-    if (devicePixelRatio) {
-      this.deviceScaleFactor = devicePixelRatio;
-      return devicePixelRatio;
-    }
-
-    throw Error('Get deviceScaleFactor failed.');
+  public getBrowser(): BrowserInterface {
+    return this.browser;
   }
 
   public async cleanup(): Promise<void> {
     this.logger.info('Starting cleanup...');
-    await this.uiHelper.cleanup();
+    try {
+      if (this.currentPage && !this.currentPage.isClosed()) {
+        await this.uiHelper.cleanup();
+      }
+    } catch {
+      // Ignored if page already closing/closed
+    }
     if (this.currentPage) {
-      await this.currentPage.close();
+      try {
+        if (!this.currentPage.isClosed()) {
+          await this.currentPage.close();
+        }
+      } catch {
+        // Ignored
+      }
       this.currentPage = null;
       this.logger.info('Page closed successfully');
     }
     this.logger.info('Cleanup completed');
+  }
+
+  /**
+   * Closes the active page and destroys the underlying browser session/context.
+   */
+  public async destroy(): Promise<void> {
+    await this.cleanup();
+    if (this.browser && typeof this.browser.close === 'function') {
+      await this.browser.close();
+    }
   }
 }
 
@@ -714,6 +1026,63 @@ export class DefaultBrowserOperator extends BrowserOperator {
 
   private constructor(options: BrowserOperatorOptions) {
     super(options);
+  }
+
+  /**
+   * Creates an independent, context-isolated BrowserOperator session sharing the local browser daemon.
+   * Neither session shares cookies, local storage, or active page references.
+   *
+   * @param options Configuration options for the isolated session
+   * @returns Promise resolving to a dedicated BrowserOperator instance
+   */
+  public static async createIsolatedSession(
+    options: {
+      viewport?: { width: number; height: number; deviceScaleFactor?: number };
+      highlight?: boolean;
+      showActionInfo?: boolean;
+      showWaterFlow?: boolean;
+    } = {},
+  ): Promise<BrowserOperator> {
+    if (!this.logger) {
+      this.logger = new ConsoleLogger('[DefaultBrowserOperator]');
+    }
+
+    if (this.browser) {
+      const isAlive = await this.browser.isBrowserAlive();
+      if (!isAlive) {
+        this.browser = null;
+        this.instance = null;
+      }
+    }
+
+    if (!this.browser) {
+      if (!this.hasBrowser()) {
+        throw new Error('No available browser found');
+      }
+      this.browser = new LocalBrowser({ logger: this.logger });
+      await this.browser.launch({
+        executablePath: this.browserPath,
+        browserType: this.browserType,
+      });
+    }
+
+    const session = await this.browser.createSession({
+      defaultViewport: options.viewport ?? {
+        width: 1280,
+        height: 800,
+      },
+    });
+
+    const operator = new BrowserOperator({
+      browser: session,
+      browserType: this.browserType,
+      logger: this.logger,
+      highlightClickableElements: options.highlight ?? false,
+      showActionInfo: options.showActionInfo ?? false,
+      showWaterFlow: options.showWaterFlow ?? false,
+    });
+
+    return operator;
   }
 
   /**

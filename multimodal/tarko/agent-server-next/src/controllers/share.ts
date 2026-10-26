@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ShareService } from "../services";
+import { ShareService } from '../services';
 import type { HonoContext } from '../types';
 
 /**

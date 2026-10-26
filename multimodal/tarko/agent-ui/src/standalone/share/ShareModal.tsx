@@ -164,9 +164,15 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, session
                     <FiShare2 size={14} className="sm:hidden text-gray-500 dark:text-gray-400" />
                   )}
                   {linkCopied ? (
-                    <FiCheck size={16} className="hidden sm:block text-green-500 dark:text-green-400" />
+                    <FiCheck
+                      size={16}
+                      className="hidden sm:block text-green-500 dark:text-green-400"
+                    />
                   ) : (
-                    <FiShare2 size={16} className="hidden sm:block text-gray-500 dark:text-gray-400" />
+                    <FiShare2
+                      size={16}
+                      className="hidden sm:block text-gray-500 dark:text-gray-400"
+                    />
                   )}
                 </div>
               </motion.button>

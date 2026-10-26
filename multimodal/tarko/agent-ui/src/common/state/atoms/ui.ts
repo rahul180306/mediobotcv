@@ -70,7 +70,7 @@ export const isProcessingAtom = atom(
   (get) => {
     const activeSessionId = get(activeSessionIdAtom);
     const sessionProcessingStates = get(sessionProcessingStatesAtom);
-    return activeSessionId ? sessionProcessingStates[activeSessionId] ?? false : false;
+    return activeSessionId ? (sessionProcessingStates[activeSessionId] ?? false) : false;
   },
   (get, set, update: boolean) => {
     const activeSessionId = get(activeSessionIdAtom);

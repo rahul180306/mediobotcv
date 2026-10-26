@@ -23,12 +23,7 @@
   },
   "psi-header.changes-tracking": {
     "isActive": true,
-    "excludeGlob": [
-      "node_modules/**",
-      "dist/**",
-      "build/**",
-      "out/**"
-    ],
+    "excludeGlob": ["node_modules/**", "dist/**", "build/**", "out/**"],
     "autoHeader": "manualSave"
   },
   "psi-header.templates": [
@@ -56,8 +51,5 @@
       "template": []
     }
   ],
-  "cSpell.words": [
-    "DEEPSEEK",
-    "rslib"
-  ]
+  "cSpell.words": ["DEEPSEEK", "rslib"]
 }

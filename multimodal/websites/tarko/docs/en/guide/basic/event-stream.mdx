@@ -106,18 +106,18 @@ const eventProcessor = {
         // Log tool usage
         await logToolUsage(event.data);
         break;
-        
+
       case 'agent_message':
         // Update UI
         await updateUI(event.data.content);
         break;
-        
+
       case 'error':
         // Handle errors
         await handleError(event.data);
         break;
     }
-  }
+  },
 };
 
 agent.on('event', eventProcessor.processEvent);
@@ -133,7 +133,7 @@ app.get('/agent/stream', (req, res) => {
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
-    'Connection': 'keep-alive'
+    Connection: 'keep-alive',
   });
 
   agent.on('event', (event) => {
@@ -162,8 +162,8 @@ const agent = new Agent({
   persistence: {
     enabled: true,
     storage: 'file', // or 'redis', 'mongodb'
-    path: './agent-events.jsonl'
-  }
+    path: './agent-events.jsonl',
+  },
 });
 ```
 

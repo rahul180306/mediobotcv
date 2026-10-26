@@ -10,7 +10,7 @@ import { MessageHistoryDumper } from '../shared/message-history-dumper';
 
 /**
  * ResourceCleaner - Handles cleanup of all AgentTARS resources
- * 
+ *
  * This class centralizes cleanup logic to ensure proper resource disposal
  * and prevent memory leaks.
  */

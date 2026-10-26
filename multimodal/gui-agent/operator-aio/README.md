@@ -32,12 +32,12 @@ const result = await operator.execute({
   parsedPrediction: {
     action_type: 'click',
     action_inputs: {
-      start_box: '[100, 100, 200, 200]'
-    }
+      start_box: '[100, 100, 200, 200]',
+    },
   },
   screenWidth: 1920,
   screenHeight: 1080,
-  scaleFactor: 1
+  scaleFactor: 1,
 });
 ```
 

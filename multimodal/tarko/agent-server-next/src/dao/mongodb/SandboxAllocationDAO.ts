@@ -14,7 +14,7 @@ import { ILogger } from '../../types';
  */
 export class SandboxAllocationDAO implements ISandboxAllocationDAO {
   private connection: Connection;
-  private logger: ILogger
+  private logger: ILogger;
 
   constructor(connection: Connection) {
     this.connection = connection;
@@ -144,7 +144,7 @@ export class SandboxAllocationDAO implements ISandboxAllocationDAO {
   ): Promise<SandboxAllocation[]> {
     try {
       const SandboxAllocationModel = this.getSandboxAllocationModel();
-      
+
       let query: any = {
         allocationStrategy: strategy,
         isActive: true,
@@ -160,7 +160,7 @@ export class SandboxAllocationDAO implements ISandboxAllocationDAO {
         query.$or = [
           { userId: { $exists: false } },
           { userId: null },
-          { userId: userId } // Include user's own shared allocations
+          { userId: userId }, // Include user's own shared allocations
         ];
       }
 
@@ -177,7 +177,10 @@ export class SandboxAllocationDAO implements ISandboxAllocationDAO {
         isActive: allocation.isActive,
       }));
     } catch (error) {
-      this.logger.error(`Failed to get available sandbox allocations for strategy ${strategy}:`, error);
+      this.logger.error(
+        `Failed to get available sandbox allocations for strategy ${strategy}:`,
+        error,
+      );
       throw new Error('Failed to get available sandbox allocations');
     }
   }
@@ -187,10 +190,7 @@ export class SandboxAllocationDAO implements ISandboxAllocationDAO {
       const SandboxAllocationModel = this.getSandboxAllocationModel();
       const now = Date.now();
 
-      await SandboxAllocationModel.findOneAndUpdate(
-        { sandboxId },
-        { lastUsedAt: now },
-      );
+      await SandboxAllocationModel.findOneAndUpdate({ sandboxId }, { lastUsedAt: now });
 
       this.logger.info(`Sandbox last used time updated: ${sandboxId}`);
     } catch (error) {
@@ -312,7 +312,12 @@ export class SandboxAllocationDAO implements ISandboxAllocationDAO {
 
   async updateSandboxAllocation(
     sandboxId: string,
-    updates: Partial<Pick<SandboxAllocation, 'sandboxUrl' | 'userId' | 'sessionId' | 'allocationStrategy' | 'isActive'>>,
+    updates: Partial<
+      Pick<
+        SandboxAllocation,
+        'sandboxUrl' | 'userId' | 'sessionId' | 'allocationStrategy' | 'isActive'
+      >
+    >,
   ): Promise<SandboxAllocation | null> {
     try {
       const SandboxAllocationModel = this.getSandboxAllocationModel();

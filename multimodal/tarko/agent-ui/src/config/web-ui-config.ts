@@ -86,10 +86,10 @@ export function getLogoUrl(): string {
 export function getWorkspaceNavItems(prefix?: string) {
   const items = getWebUIConfig().workspace?.navItems || [];
 
-  if(prefix) {
-      items.forEach(item => {
-        item.link = item.link.replace('{prefix}', prefix);
-      });
+  if (prefix) {
+    items.forEach((item) => {
+      item.link = item.link.replace('{prefix}', prefix);
+    });
   }
 
   return items;

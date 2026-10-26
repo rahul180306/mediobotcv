@@ -5,7 +5,7 @@ description: 了解 Tarko，一个工具增强的 Agent 运行时内核
 
 # 介绍
 
-**Tarko** *(Tool-augmented Agent Runtime Kernel, Open-source)*，发音是 **`/ˈtɑːrkoʊ/`**，是一个以 "Tool Call" 和 "事件流" 驱动的 Agent 运行时框架，内置了强大的 **Context Engineering** 能力。
+**Tarko** _(Tool-augmented Agent Runtime Kernel, Open-source)_，发音是 **`/ˈtɑːrkoʊ/`**，是一个以 "Tool Call" 和 "事件流" 驱动的 Agent 运行时框架，内置了强大的 **Context Engineering** 能力。
 
 ## 什么是 Tarko？
 
@@ -20,15 +20,19 @@ Tarko 提供以下核心能力：
 ## 核心特性
 
 ### 🔧 Tool Call Engine
+
 支持多种 Tool Call 引擎，包括原生 Function Call、自定义解析器，以及不支持原生 Function Tool 的模型。
 
 ### 🌊 Event Stream
+
 内置事件流处理，支持原生流式传输和标准化的 Agent Protocol。
 
 ### 🧠 Context Engineering
+
 先进的上下文管理，支持长程运行的 Agent 操作和自动上下文优化。
 
 ### 🔌 Agent Hooks
+
 可扩展的 Hook 系统，允许在执行的每个阶段自定义 Agent 行为。
 
 ## 架构概览
@@ -50,11 +54,13 @@ Tarko 驱动了多个生产系统：
 ## 文档概览
 
 ### 快速入门
+
 - [快速开始](/guide/get-started/quick-start) - 几分钟内创建你的第一个 Tarko Agent
 - [架构设计](/guide/get-started/architecture) - 了解 Tarko 的设计原理
 - [SDK 参考](/guide/get-started/sdk) - 完整的 API 参考和示例
 
 ### 核心概念
+
 - [配置](/guide/basic/configuration) - 配置 Agent、模型和运行时设置
 - [Model Provider](/guide/basic/model-provider) - OpenAI、Anthropic、Volcengine 和自定义 Provider
 - [工具](/guide/basic/tools) - 为你的 Agent 创建和注册自定义工具
@@ -62,19 +68,23 @@ Tarko 驱动了多个生产系统：
 - [Event Stream](/guide/basic/event-stream) - 实时 Agent 执行监控
 
 ### 高级特性
+
 - [Agent Hooks](/guide/advanced/agent-hooks) - 使用生命周期 Hook 自定义 Agent 行为
 - [Agent Protocol](/guide/advanced/agent-protocol) - 标准通信协议
 - [Context Engineering](/guide/advanced/context-engineering) - 长程运行 Agent 的上下文管理
 - [Agent Snapshot](/guide/advanced/agent-snapshot) - 保存和重放 Agent 执行状态
 
 ### UI 集成
+
 - [UI 集成](/guide/basic/ui-integration) - 为你的 Agent 构建 Web 界面
 
 ### 部署
+
 - [CLI 部署](/guide/deployment/cli) - 命令行工具和脚本
 - [服务器部署](/guide/deployment/server) - 生产服务器设置
 
 ### API 参考
+
 - [Agent API](/api/agent) - 完整的 Agent 类参考
 - [Hooks API](/api/hooks) - Agent 生命周期 Hook
 - [Tool Call Engine API](/api/tool-call-engine) - 工具执行引擎
@@ -82,6 +92,7 @@ Tarko 驱动了多个生产系统：
 - [Agent Server API](/api/agent-server) - 服务器端点和协议
 
 ### 示例
+
 - [快速入门](/examples/getting-started) - 基础使用示例
 - [自定义工具](/examples/custom-tools) - 构建领域特定工具
 - [自定义 Hook](/examples/custom-hooks) - 扩展 Agent 行为

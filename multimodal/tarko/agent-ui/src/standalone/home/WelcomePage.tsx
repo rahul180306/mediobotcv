@@ -88,16 +88,14 @@ const WelcomePage: React.FC = () => {
 
     try {
       // Get user selected RuntimeSettings
-      const selectedRuntimeSettings = globalSettings.isActive 
-        ? globalSettings.selectedValues 
-        : {};
-      
+      const selectedRuntimeSettings = globalSettings.isActive ? globalSettings.selectedValues : {};
+
       // Navigate to creating page with runtime settings
       navigate('/creating', {
         state: {
           query: content, // Keep original format for multimodal content
-          runtimeSettings: selectedRuntimeSettings
-        }
+          runtimeSettings: selectedRuntimeSettings,
+        },
       });
     } catch (error) {
       console.error('Failed to navigate to creating:', error);

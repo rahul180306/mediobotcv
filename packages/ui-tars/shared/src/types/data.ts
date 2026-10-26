@@ -14,6 +14,8 @@ export interface Conversation extends Message {
   };
   /** exists when <image> exists */
   screenshotBase64?: string;
+  /** absolute path to session-scoped scratch storage if persisted */
+  screenshotPath?: string;
   screenshotContext?: {
     size: {
       /** physical device width */
@@ -26,6 +28,12 @@ export interface Conversation extends Message {
     scaleFactor?: number;
   };
   predictionParsed?: PredictionParsed[];
+  actionOutcomeFeedback?: string;
+  verification?: Record<string, unknown>;
+  intermediateStateFeedback?: string;
+  intermediateState?: Record<string, unknown>;
+  finalGoalFeedback?: string;
+  finalGoalVerification?: Record<string, unknown>;
 }
 
 /**

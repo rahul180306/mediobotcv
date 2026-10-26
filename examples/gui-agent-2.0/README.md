@@ -43,15 +43,17 @@ npm install
 3. Run
 
 - Development (TypeScript, using tsx):
+
 ```bash
 pnpm dev
 ```
 
 - Build and run:
+
 ```bash
 pnpm build
 pnpm start
-``` 
+```
 
 4. Expected output
 

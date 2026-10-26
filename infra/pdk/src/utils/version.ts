@@ -72,9 +72,18 @@ export async function selectVersionAndTag(
 
   // Generate improved prerelease options
   const prereleaseVersions = [
-    { name: `beta (${semver.inc(currentVersion, 'prerelease', 'beta')})`, value: 'beta' },
-    { name: `alpha (${semver.inc(currentVersion, 'prerelease', 'alpha')})`, value: 'alpha' },
-    { name: `rc (${semver.inc(currentVersion, 'prerelease', 'rc')})`, value: 'rc' },
+    {
+      name: `beta (${semver.inc(currentVersion, 'prerelease', 'beta')})`,
+      value: 'beta',
+    },
+    {
+      name: `alpha (${semver.inc(currentVersion, 'prerelease', 'alpha')})`,
+      value: 'alpha',
+    },
+    {
+      name: `rc (${semver.inc(currentVersion, 'prerelease', 'rc')})`,
+      value: 'rc',
+    },
   ];
 
   const bumpChoices = [
@@ -87,12 +96,12 @@ export async function selectVersionAndTag(
     if (semver.prerelease(version)) {
       const prerelease = semver.prerelease(version);
       const prereleaseType = prerelease?.[0] as string;
-      
+
       // Return appropriate tags based on prerelease type
       if (prereleaseType === 'beta') return ['beta', 'latest', customItem];
       if (prereleaseType === 'alpha') return ['alpha', 'latest', customItem];
       if (prereleaseType === 'rc') return ['rc', 'latest', customItem];
-      
+
       return ['latest', 'beta', 'alpha', 'rc', customItem];
     }
     return ['latest', 'beta', 'alpha', 'rc', customItem];
@@ -118,9 +127,12 @@ export async function selectVersionAndTag(
       message: 'Select npm tag:',
       type: 'list',
       choices: (answers) => {
-        const version = (answers.bump === 'beta' || answers.bump === 'alpha' || answers.bump === 'rc')
-          ? semver.inc(currentVersion, 'prerelease', answers.bump)
-          : answers.customVersion || versions[answers.bump];
+        const version =
+          answers.bump === 'beta' ||
+          answers.bump === 'alpha' ||
+          answers.bump === 'rc'
+            ? semver.inc(currentVersion, 'prerelease', answers.bump)
+            : answers.customVersion || versions[answers.bump];
         return getNpmTags(version);
       },
     },
@@ -138,7 +150,7 @@ export async function selectVersionAndTag(
   } else {
     version = customVersion || versions[bump];
   }
-  
+
   const tag = customNpmTag || npmTag;
 
   return { version, tag };
@@ -153,7 +165,9 @@ export async function updatePackageVersion(
   dryRun = false,
 ): Promise<void> {
   if (dryRun) {
-    logger.info(`[dry-run] Would update version in ${packagePath} to ${version}`);
+    logger.info(
+      `[dry-run] Would update version in ${packagePath} to ${version}`,
+    );
     return;
   }
 
@@ -166,7 +180,9 @@ export async function updatePackageVersion(
 /**
  * Get next version options for current version
  */
-export function getNextVersionOptions(currentVersion: string): Record<string, string> {
+export function getNextVersionOptions(
+  currentVersion: string,
+): Record<string, string> {
   const versions = {
     patch: semver.inc(currentVersion, 'patch') || '',
     minor: semver.inc(currentVersion, 'minor') || '',
@@ -175,9 +191,12 @@ export function getNextVersionOptions(currentVersion: string): Record<string, st
   };
 
   // Add prerelease variants
-  versions['prerelease-beta'] = semver.inc(currentVersion, 'prerelease', 'beta') || '';
-  versions['prerelease-alpha'] = semver.inc(currentVersion, 'prerelease', 'alpha') || '';
-  versions['prerelease-rc'] = semver.inc(currentVersion, 'prerelease', 'rc') || '';
+  versions['prerelease-beta'] =
+    semver.inc(currentVersion, 'prerelease', 'beta') || '';
+  versions['prerelease-alpha'] =
+    semver.inc(currentVersion, 'prerelease', 'alpha') || '';
+  versions['prerelease-rc'] =
+    semver.inc(currentVersion, 'prerelease', 'rc') || '';
 
   return versions;
 }

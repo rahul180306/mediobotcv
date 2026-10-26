@@ -70,18 +70,30 @@ main();
 ```ts
 // Only enable specified servers
 const agent = new MCPAgent({
-  mcpServers: { filesystem: {/*...*/}, github: {/*...*/} },
+  mcpServers: {
+    filesystem: {
+      /*...*/
+    },
+    github: {
+      /*...*/
+    },
+  },
   mcpServer: { include: ['filesystem'] },
 });
 
 // Exclude specified servers
 const agent = new MCPAgent({
-  mcpServers: { filesystem: {/*...*/}, github: {/*...*/} },
+  mcpServers: {
+    filesystem: {
+      /*...*/
+    },
+    github: {
+      /*...*/
+    },
+  },
   mcpServer: { exclude: ['github'] },
 });
 ```
-
-
 
 ## API Reference
 
@@ -99,14 +111,12 @@ const agent = new MCPAgent(options: MCPAgentOptions);
 interface MCPAgentOptions extends AgentOptions {
   /** MCP server configurations */
   mcpServers?: MCPServerRegistry;
-  
+
   /** MCP server filtering options */
   mcpServer?: {
     include?: string[];
     exclude?: string[];
   };
-  
-
 }
 ```
 
@@ -116,13 +126,13 @@ interface MCPAgentOptions extends AgentOptions {
 interface MCPServerConfig {
   /** Launch command */
   command?: string;
-  
+
   /** Command arguments */
   args?: string[];
-  
+
   /** Environment variables */
   env?: Record<string, string>;
-  
+
   /** SSE connection URL (optional, mutually exclusive with command) */
   url?: string;
 }
@@ -208,8 +218,6 @@ const agent = new MCPAgent({
   },
 });
 ```
-
-
 
 ## Related Links
 

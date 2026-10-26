@@ -5,7 +5,7 @@
 
 /**
  * Complete usage example of the AgentServer hook system
- * 
+ *
  * This file demonstrates how to:
  * 1. Create custom middleware hooks
  * 2. Register hooks with different priorities
@@ -36,24 +36,22 @@ async function createServerWithHooks() {
   };
 
   const server = new AgentServer(serverOptions);
-  
+
   registerAuditLogHook(server);
 
   return server;
 }
 
-
 // Main usage example
 async function main() {
   try {
     console.log('Creating AgentServer with hook system...');
-    
+
     const server = await createServerWithHooks();
 
     await server.start();
-    
-    console.log('Server started successfully with hook system!');
 
+    console.log('Server started successfully with hook system!');
   } catch (error) {
     console.error('Failed to start server:', error);
     process.exit(1);

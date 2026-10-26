@@ -23,10 +23,10 @@ tarko --tool.include "browser,filesystem" --tool.exclude "run_command,run_script
 
 ### 可用选项
 
-| 选项 | 描述 | 示例 |
-|------|------|------|
+| 选项                        | 描述               | 示例                     |
+| --------------------------- | ------------------ | ------------------------ |
 | `--tool.include <patterns>` | 包含匹配模式的工具 | `--tool.include browser` |
-| `--tool.exclude <patterns>` | 排除匹配模式的工具 | `--tool.exclude delete` |
+| `--tool.exclude <patterns>` | 排除匹配模式的工具 | `--tool.exclude delete`  |
 
 ### 模式匹配规则
 
@@ -38,24 +38,28 @@ tarko --tool.include "browser,filesystem" --tool.exclude "run_command,run_script
 ### 常见用例
 
 #### 仅 Web 自动化
+
 ```bash
 # 浏览器工具 + 网络搜索（19 个工具）
 tarko --tool.include "browser,web_search"
 ```
 
 #### 安全文件操作
+
 ```bash
 # 文件系统但不执行命令（11 个工具）
 tarko --tool.include filesystem --tool.exclude "run_command,run_script"
 ```
 
 #### 只读 Agent
+
 ```bash
 # 不允许文件写入或命令执行
 tarko --tool.exclude "write_file,edit_file,create_directory,move_file,run_command,run_script"
 ```
 
 #### 最小化 Agent
+
 ```bash
 # 仅基本只读工具
 tarko --tool.include "read_file,read_multiple_files,list_directory,browser_screenshot,web_search"
@@ -71,8 +75,8 @@ import { Agent } from '@tarko/agent';
 const agent = new Agent({
   tool: {
     include: ['browser', 'filesystem'],
-    exclude: ['browser_get_markdown', 'run_command']
-  }
+    exclude: ['browser_get_markdown', 'run_command'],
+  },
 });
 ```
 
@@ -101,12 +105,12 @@ const customTool = new Tool({
   parameters: {
     type: 'object',
     properties: {
-      input: { type: 'string', description: '输入参数' }
-    }
+      input: { type: 'string', description: '输入参数' },
+    },
   },
   function: async (params) => {
     return `处理结果: ${params.input}`;
-  }
+  },
 });
 
 agent.registerTool(customTool);
@@ -121,9 +125,11 @@ console.log(`可用工具: ${tools.length}`);
 ### 内置分类
 
 #### 📦 general (1 个工具)
+
 - `web_search` - 搜索网络信息
 
 #### 📦 browser (18 个工具)
+
 - `browser_click` - 点击页面元素
 - `browser_close_tab` - 关闭浏览器标签页
 - `browser_evaluate` - 执行 JavaScript 代码
@@ -144,6 +150,7 @@ console.log(`可用工具: ${tools.length}`);
 - `browser_tab_list` - 列出所有打开的标签页
 
 #### 📦 filesystem (11 个工具)
+
 - `create_directory` - 创建新目录
 - `directory_tree` - 获取目录结构
 - `edit_file` - 编辑现有文件
@@ -157,6 +164,7 @@ console.log(`可用工具: ${tools.length}`);
 - `write_file` - 写入内容到文件
 
 #### 📦 commands (2 个工具)
+
 - `run_command` - 执行 shell 命令
 - `run_script` - 运行脚本和解释器
 
@@ -173,21 +181,24 @@ tarko --debug --tool.include browser
 ### 常见问题
 
 #### 没有可用工具
+
 ```bash
 # 使用更宽泛的模式
 tarko --tool.exclude "run_command" # 排除特定工具而不是严格包含
 ```
 
 #### 模式不工作
+
 - 验证大小写敏感性（`browser` 而不是 `Browser`）
 - 使用确切的工具名称（`browser_click` 而不是 `click`）
 - 检查分类名称：`browser`、`filesystem`、`commands`、`general`
 
 #### Tool 加载错误
+
 ```typescript
 try {
   const agent = new Agent({
-    tool: { include: ['invalid_tool'] }
+    tool: { include: ['invalid_tool'] },
   });
 } catch (error) {
   console.error('工具加载失败:', error.message);
@@ -207,18 +218,21 @@ try {
 ### 示例
 
 #### 仅浏览器 Agent
+
 ```bash
 tarko --tool.include browser
 # 结果：18 个浏览器工具（browser_click、browser_navigate 等）
 ```
 
 #### 文件操作但不编辑
+
 ```bash
 tarko --tool.include filesystem --tool.exclude edit_file
 # 结果：10 个文件系统工具（read_file、write_file、list_directory 等）
 ```
 
 #### 特定工具排除
+
 ```bash
 tarko --tool.include "browser,filesystem" --tool.exclude "browser_get_markdown,run_command"
 # 结果：28 个工具（17 个浏览器 + 11 个文件系统，排除 markdown 和命令）
@@ -229,5 +243,4 @@ tarko --tool.include "browser,filesystem" --tool.exclude "browser_get_markdown,r
 - 了解 [Tool 开发](/guide/tool/basic) 来创建自定义工具
 - 探索 [Tool Call Engine](/guide/tool/tool-call-engine) 的执行优化
 
-{/* Placeholder: 添加工具过滤流程图 */}
-{/* Placeholder: 添加性能对比图表 */}
+{/* Placeholder: 添加工具过滤流程图 */} {/* Placeholder: 添加性能对比图表 */}

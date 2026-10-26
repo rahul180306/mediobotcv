@@ -34,8 +34,8 @@ const server = new AgentServer({
   port: 8888,
   storage: {
     type: 'sqlite',
-    path: '~/.tarko'
-  }
+    path: '~/.tarko',
+  },
 });
 
 await server.start();
@@ -45,14 +45,18 @@ console.log('Server running on http://localhost:8888');
 ## Core Concepts
 
 ### Session
+
 Represents a complete agent interaction context, containing:
+
 - Message history
 - Tool calls and results
 - Agent state information
 - Metadata (name, tags, timestamps)
 
 ### Query
+
 A single request executed within a session:
+
 - Text input
 - Multimodal content (text + images)
 - Streaming or non-streaming execution
@@ -93,17 +97,17 @@ const server = new AgentServer({
   port: 8888,
   storage: {
     type: 'sqlite',
-    path: '~/.tarko/sessions.db'
+    path: '~/.tarko/sessions.db',
   },
   cors: {
     origin: ['http://localhost:3000'],
-    credentials: true
+    credentials: true,
   },
   auth: {
     enabled: true,
     provider: 'jwt',
-    secret: process.env.JWT_SECRET
-  }
+    secret: process.env.JWT_SECRET,
+  },
 });
 ```
 
@@ -116,6 +120,7 @@ POST /api/v1/sessions/create
 ```
 
 **Response:**
+
 ```json
 {
   "sessionId": "unique-session-id"
@@ -129,6 +134,7 @@ GET /api/v1/sessions
 ```
 
 **Response:**
+
 ```json
 {
   "sessions": [
@@ -157,6 +163,7 @@ POST /api/v1/sessions/update
 ```
 
 **Request:**
+
 ```json
 {
   "sessionId": "session-id",
@@ -172,6 +179,7 @@ POST /api/v1/sessions/delete
 ```
 
 **Request:**
+
 ```json
 {
   "sessionId": "session-id"
@@ -187,6 +195,7 @@ POST /api/v1/sessions/query
 ```
 
 **Text Query:**
+
 ```json
 {
   "sessionId": "session-id",
@@ -195,13 +204,14 @@ POST /api/v1/sessions/query
 ```
 
 **Multimodal Query:**
+
 ```json
 {
   "sessionId": "session-id",
   "query": [
     { "type": "text", "text": "What's in this image?" },
-    { 
-      "type": "image_url", 
+    {
+      "type": "image_url",
       "image_url": {
         "url": "data:image/jpeg;base64,..."
       }
@@ -225,6 +235,7 @@ POST /api/v1/sessions/abort
 ```
 
 **Request:**
+
 ```json
 {
   "sessionId": "session-id"
@@ -242,6 +253,7 @@ POST /api/v1/oneshot/query
 ```
 
 **Request:**
+
 ```json
 {
   "query": "What's the weather like?",
@@ -276,7 +288,7 @@ socket.on('agent-event', (event) => {
 // Send a query
 socket.emit('send-query', {
   sessionId: 'session-id',
-  query: 'Hello!'
+  query: 'Hello!',
 });
 
 // Abort query
@@ -298,6 +310,7 @@ interface AgentEvent {
 ```
 
 **Example Event Stream:**
+
 ```json
 [
   {
@@ -337,14 +350,16 @@ interface AgentEvent {
 ## Storage Providers
 
 ### Memory Storage (Default)
+
 ```typescript
 storage: {
-  type: 'memory'
+  type: 'memory';
   // Data lost on server restart
 }
 ```
 
 ### File Storage
+
 ```typescript
 storage: {
   type: 'file',
@@ -353,6 +368,7 @@ storage: {
 ```
 
 ### SQLite Storage
+
 ```typescript
 storage: {
   type: 'sqlite',
@@ -361,6 +377,7 @@ storage: {
 ```
 
 ### Redis Storage
+
 ```typescript
 storage: {
   type: 'redis',
@@ -382,8 +399,8 @@ const server = new AgentServer({
     enabled: true,
     provider: 'jwt',
     secret: process.env.JWT_SECRET,
-    expiresIn: '24h'
-  }
+    expiresIn: '24h',
+  },
 });
 ```
 
@@ -398,8 +415,8 @@ const server = new AgentServer({
       const token = req.headers.authorization;
       // Custom authentication logic
       return { userId: 'user-123', permissions: ['read', 'write'] };
-    }
-  }
+    },
+  },
 });
 ```
 
@@ -468,18 +485,18 @@ export default {
     port: process.env.PORT || 8888,
     storage: {
       type: 'sqlite',
-      path: process.env.STORAGE_PATH || '/data/sessions.db'
+      path: process.env.STORAGE_PATH || '/data/sessions.db',
     },
     auth: {
       enabled: true,
       provider: 'jwt',
-      secret: process.env.JWT_SECRET
+      secret: process.env.JWT_SECRET,
     },
     cors: {
       origin: process.env.ALLOWED_ORIGINS?.split(',') || ['https://your-domain.com'],
-      credentials: true
-    }
-  }
+      credentials: true,
+    },
+  },
 };
 ```
 
@@ -492,6 +509,7 @@ GET /api/v1/health
 ```
 
 **Response:**
+
 ```json
 {
   "status": "ok",
@@ -511,34 +529,35 @@ const server = new AgentServer({
   logging: {
     level: 'info',
     format: 'json',
-    transports: [
-      { type: 'console' },
-      { type: 'file', filename: 'tarko-server.log' }
-    ]
-  }
+    transports: [{ type: 'console' }, { type: 'file', filename: 'tarko-server.log' }],
+  },
 });
 ```
 
 ## Best Practices
 
 ### 1. Session Management
+
 - Implement session cleanup for old/inactive sessions
 - Use appropriate storage based on scale requirements
 - Consider session sharing and collaboration features
 
 ### 2. Security
+
 - Always enable authentication in production
 - Use HTTPS in production environments
 - Implement rate limiting for public APIs
 - Validate and sanitize all inputs
 
 ### 3. Performance
+
 - Use Redis for high-concurrency scenarios
 - Implement connection pooling for database storage
 - Monitor memory usage and implement cleanup
 - Use streaming for long-running queries
 
 ### 4. Error Handling
+
 - Implement comprehensive error logging
 - Provide meaningful error messages to clients
 - Handle agent timeouts gracefully

@@ -3,7 +3,7 @@
 > [!IMPORTANT]  
 > Currently, **UI-TARS Desktop** does not directly provide server-side capabilities, so we do not provide a Preset for the open source community. welcome community developers to contribute your presets [here](../examples/presets/).
 
-A **preset** is a collection of [settings](./setting.md)  (_Introduced at [#61](https://github.com/bytedance/UI-TARS-desktop/pull/61)_), **UI-TARS Desktop** supports import presets via `files` or `URLs`:
+A **preset** is a collection of [settings](./setting.md) (_Introduced at [#61](https://github.com/bytedance/UI-TARS-desktop/pull/61)_), **UI-TARS Desktop** supports import presets via `files` or `URLs`:
 
 ```mermaid
 graph TD
@@ -16,20 +16,16 @@ graph TD
 
 <br>
 
-
 ## Preset Types Comparison
 
-| Feature               | Local Presets          | Remote Presets         |
-|-----------------------|------------------------|------------------------|
-| **Storage**           | Device-local           | Cloud-hosted          |
-| **Update Mechanism**  | Manual                 | Automatic             |
-| **Access Control**    | Read/Write             | Read-Only             |
-| **Versioning**        | Manual                 | Git-integrated        |
-
-
+| Feature              | Local Presets | Remote Presets |
+| -------------------- | ------------- | -------------- |
+| **Storage**          | Device-local  | Cloud-hosted   |
+| **Update Mechanism** | Manual        | Automatic      |
+| **Access Control**   | Read/Write    | Read-Only      |
+| **Versioning**       | Manual        | Git-integrated |
 
 <br>
-
 
 ## Examples
 
@@ -37,28 +33,24 @@ graph TD
 
 **UI-TARS Desktop** supports importing presets from files. Once the file is parsed successfully, the settings will be automatically updated.
 
-| Function | Snapshot |
-| --- | ---|
-| Open Setting |<img width="320" alt="image" src="../apps/ui-tars/images/preset/import-preset-from-local.png" /> |
-| Import Success | <img width="320" alt="image" src="../apps/ui-tars/images/preset/local_success.png" />|
-| Exception: Invalid Content | <img width="320" alt="image" src="../apps/ui-tars/images/preset/local_error.png" /> |
-
+| Function                   | Snapshot                                                                                         |
+| -------------------------- | ------------------------------------------------------------------------------------------------ |
+| Open Setting               | <img width="320" alt="image" src="../apps/ui-tars/images/preset/import-preset-from-local.png" /> |
+| Import Success             | <img width="320" alt="image" src="../apps/ui-tars/images/preset/local_success.png" />            |
+| Exception: Invalid Content | <img width="320" alt="image" src="../apps/ui-tars/images/preset/local_error.png" />              |
 
 <br>
-
 
 ### Import from URL
 
 **UI-TARS Desktop** also supports importing presets from URLs. If automatic updates are set, presets will be automatically pulled every time the application is started.
 
-| Function | Snapshot |
-| --- | ---|
-| Open Setting | <img width="320" alt="image" src="../apps/ui-tars/images/preset/import-preset-from-local.png" /> |
-| Import Success (Default) | <img width="320" alt="image" src="../apps/ui-tars/images/preset/remote_success.png" /> |
-
+| Function                 | Snapshot                                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------------------------ |
+| Open Setting             | <img width="320" alt="image" src="../apps/ui-tars/images/preset/import-preset-from-local.png" /> |
+| Import Success (Default) | <img width="320" alt="image" src="../apps/ui-tars/images/preset/remote_success.png" />           |
 
 <br>
-
 
 ### Preset Example
 
@@ -74,4 +66,3 @@ utioBaseUrl: https://your-utio-endpoint.com/collect
 ```
 
 See all [example presets](../examples/presets).
-

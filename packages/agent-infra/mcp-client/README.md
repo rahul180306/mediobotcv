@@ -42,27 +42,23 @@ const mcpClient = new MCPClient([
     name: 'FileSystem-Stdio',
     description: 'filesystem tool',
     command: 'npx',
-    args: [
-      '-y',
-      '@agent-infra/mcp-server-filesystem'
-    ]
+    args: ['-y', '@agent-infra/mcp-server-filesystem'],
   },
   // sse
   {
     type: 'sse',
     name: 'FileSystem-sse',
     description: 'filesystem tool',
-    url: 'http://localhost:8889/sse'
+    url: 'http://localhost:8889/sse',
   },
   // streamable-http
   {
     type: 'sse',
     name: 'FileSystem-http',
     description: 'filesystem tool',
-    url: 'http://localhost:8889/mcp'
-  }
+    url: 'http://localhost:8889/mcp',
+  },
 ]);
-
 
 await mcpClient.listTools();
 await mcpClient.listPrompts();
@@ -70,7 +66,7 @@ const result = await mcpClient.callTool({
   client: 'FileSystem-sse',
   name: 'list_directory',
   arguments: {
-    path: '~/your_computer'
+    path: '~/your_computer',
   },
 });
 ```
@@ -92,20 +88,20 @@ const mcpClient = new MCPClient([
     filters: {
       tools: {
         allow: ['list_*', 'read_*'], // Only allow tools starting with 'list_' or 'read_'
-        block: ['delete_*']          // Block any tools starting with 'delete_'
+        block: ['delete_*'], // Block any tools starting with 'delete_'
       },
       prompts: {
-        allow: ['safe_*'],           // Only allow prompts starting with 'safe_'
-        block: ['admin_*']           // Block prompts starting with 'admin_'
-      }
-    }
-  }
+        allow: ['safe_*'], // Only allow prompts starting with 'safe_'
+        block: ['admin_*'], // Block prompts starting with 'admin_'
+      },
+    },
+  },
 ]);
 
 // List all tools (filtered)
 const tools = await mcpClient.listTools();
 
-// List all prompts (filtered)  
+// List all prompts (filtered)
 const prompts = await mcpClient.listPrompts();
 
 // List tools from specific server
@@ -113,6 +109,7 @@ const serverTools = await mcpClient.listTools('FileSystem');
 ```
 
 **Filter Rules:**
+
 - **Allow patterns**: If specified, only items matching these patterns are included
 - **Block patterns**: Items matching these patterns are excluded
 - **Pattern syntax**: Uses [minimatch](https://github.com/isaacs/minimatch) glob patterns (`*`, `**`, `?`, `[...]`, etc.)

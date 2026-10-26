@@ -25,13 +25,11 @@ npm install @tarko/model-provider
 import { createLLMClient, resolveModel } from '@tarko/model-provider';
 
 // Resolve model configuration
-const model = resolveModel(
-  {
-    provider: 'openai',
-    id: 'gpt-4o',
-    apiKey: 'your-api-key'
-  }
-);
+const model = resolveModel({
+  provider: 'openai',
+  id: 'gpt-4o',
+  apiKey: 'your-api-key',
+});
 
 // Create LLM client
 const client = createLLMClient(model);
@@ -39,19 +37,19 @@ const client = createLLMClient(model);
 // Use the client
 const response = await client.chat.completions.create({
   model: model.id,
-  messages: [{ role: 'user', content: 'Hello!' }]
+  messages: [{ role: 'user', content: 'Hello!' }],
 });
 ```
 
 ### Supported Providers
 
-| Provider | Base URL | Default Port |
-|----------|----------|-------------|
-| `openai` | https://api.openai.com/v1 | - |
-| `ollama` | http://127.0.0.1:11434/v1 | 11434 |
-| `lm-studio` | http://127.0.0.1:1234/v1 | 1234 |
-| `volcengine` | https://ark.cn-beijing.volces.com/api/v3 | - |
-| `deepseek` | https://api.deepseek.com/v1 | - |
+| Provider     | Base URL                                 | Default Port |
+| ------------ | ---------------------------------------- | ------------ |
+| `openai`     | https://api.openai.com/v1                | -            |
+| `ollama`     | http://127.0.0.1:11434/v1                | 11434        |
+| `lm-studio`  | http://127.0.0.1:1234/v1                 | 1234         |
+| `volcengine` | https://ark.cn-beijing.volces.com/api/v3 | -            |
+| `deepseek`   | https://api.deepseek.com/v1              | -            |
 
 ### Advanced Configuration
 
@@ -64,7 +62,7 @@ const customModel: AgentModel = {
   id: 'llama3.2',
   displayName: 'Llama 3.2 Local',
   baseURL: 'http://localhost:11434/v1',
-  apiKey: 'ollama'
+  apiKey: 'ollama',
 };
 
 const client = createLLMClient(customModel);
@@ -75,9 +73,9 @@ const client = createLLMClient(customModel);
 ```typescript
 // Override model at runtime
 const resolvedModel = resolveModel(
-  defaultModel,     // Base configuration
-  'gpt-4o-mini',   // Runtime model override
-  'openai'         // Runtime provider override
+  defaultModel, // Base configuration
+  'gpt-4o-mini', // Runtime model override
+  'openai', // Runtime provider override
 );
 ```
 
@@ -92,8 +90,8 @@ const modelWithHeaders = resolveModel({
   id: 'gpt-4',
   headers: {
     'X-Custom-Header': 'value',
-    'Authorization': 'Bearer custom-token'
-  }
+    Authorization: 'Bearer custom-token',
+  },
 });
 
 // Headers are passed through to the underlying HTTP client
@@ -101,6 +99,7 @@ const client = createLLMClient(modelWithHeaders);
 ```
 
 **Automatic Provider Enhancements:**
+
 - Claude models (`claude-*`, `anthropic/*`) automatically get `anthropic-beta` headers
 - Custom headers merge with automatic provider headers
 - Headers are validated and passed to the HTTP client
@@ -110,31 +109,40 @@ const client = createLLMClient(modelWithHeaders);
 ### Types
 
 #### `AgentModel`
+
 ```typescript
 interface AgentModel {
-  id: string;                           // Model identifier
-  provider: ModelProviderName;          // Provider name
-  displayName?: string;                 // Display name
+  id: string; // Model identifier
+  provider: ModelProviderName; // Provider name
+  displayName?: string; // Display name
   baseProvider?: BaseModelProviderName; // Base implementation
-  apiKey?: string;                      // API key
-  baseURL?: string;                     // Base URL
-  headers?: Record<string, string>;     // Custom headers (auto-merged with provider defaults)
+  apiKey?: string; // API key
+  baseURL?: string; // Base URL
+  headers?: Record<string, string>; // Custom headers (auto-merged with provider defaults)
 }
 ```
 
 #### `ModelProviderName`
+
 ```typescript
-type ModelProviderName = 
-  | 'openai' | 'anthropic' | 'azure-openai'
-  | 'ollama' | 'lm-studio' | 'volcengine' | 'deepseek';
+type ModelProviderName =
+  | 'openai'
+  | 'anthropic'
+  | 'azure-openai'
+  | 'ollama'
+  | 'lm-studio'
+  | 'volcengine'
+  | 'deepseek';
 ```
 
 ### Functions
 
 #### `resolveModel(agentModel?, runModel?, runProvider?)`
+
 Resolves model configuration with runtime overrides and defaults.
 
 #### `createLLMClient(agentModel, requestInterceptor?)`
+
 Creates an OpenAI-compatible client for the specified model.
 
 ## License

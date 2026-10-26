@@ -7,13 +7,10 @@
  */
 export const preprocessMarkdownLinks = (content: string): string => {
   // Handle image links with markdown syntax
-  return content.replace(
-    /!\[([^\]]*)\]\(([^)]+)\)/g,
-    (match, alt, src) => {
-      // Keep the original markdown syntax for images
-      return match;
-    }
-  );
+  return content.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, src) => {
+    // Keep the original markdown syntax for images
+    return match;
+  });
 };
 
 /**

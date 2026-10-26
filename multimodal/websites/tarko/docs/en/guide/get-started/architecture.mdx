@@ -16,14 +16,14 @@ graph TB
         Server["Agent Server"]
         UI["Agent UI"]
     end
-    
+
     subgraph "Application Layer"
         AgentTARS["Agent TARS"]
         OmniAgent["Omni Agent"]
         GithubAgent["Github Agent"]
         CustomAgent["Custom Agent"]
     end
-    
+
     subgraph "Kernel Layer"
         ContextEng["Context Engineering"]
         ToolCall["Tool Call Engine"]
@@ -32,11 +32,11 @@ graph TB
         ModelProvider["Model Provider"]
         AgentHooks["Agent Hooks"]
     end
-    
+
     CLI --> AgentTARS
     Server --> OmniAgent
     UI --> GithubAgent
-    
+
     AgentTARS --> ContextEng
     OmniAgent --> ToolCall
     GithubAgent --> EventStream
@@ -52,10 +52,12 @@ The engineering layer provides production-ready solutions for deploying Tarko-ba
 **Purpose**: One-click agent development and deployment
 
 **Use Cases**:
+
 - Development: `tarko run [agent]` for local development
 - Production: One-click deployment to production environments
 
 **Example**:
+
 ```bash
 # Development
 tarko run my-agent.ts
@@ -69,18 +71,20 @@ tarko deploy my-agent.ts --platform tars
 **Purpose**: Node.js API for custom server integrations
 
 **Use Cases**:
+
 - Custom user authentication
 - Custom storage solutions
 - Integration with existing systems
 
 **Example**:
+
 ```typescript
 import { AgentServer } from '@tarko/agent-server';
 
 const server = new AgentServer({
   agent: myAgent,
   auth: customAuthProvider,
-  storage: customStorageProvider
+  storage: customStorageProvider,
 });
 
 server.listen(3000);
@@ -91,6 +95,7 @@ server.listen(3000);
 **Purpose**: Official web UI for Tarko Agent Protocol
 
 **Customization Levels**:
+
 - **L1**: Static configuration (most scenarios)
 - **L2**: UI SDK-based development
 - **L3**: Build from scratch
@@ -100,18 +105,19 @@ server.listen(3000);
 The application layer contains Tarko-based agent implementations for specific use cases.
 
 ### Agent TARS
-**Purpose**: Open-source general-purpose multimodal agent
-**Capabilities**: Browser automation, file system, command execution, search, MCP
+
+**Purpose**: Open-source general-purpose multimodal agent **Capabilities**: Browser automation, file system, command execution, search, MCP
 
 ### Omni Agent
-**Purpose**: UI-TARS-2 specialized multimodal agent
-**Capabilities**: Same as Agent TARS but optimized for Seed Agent integration
+
+**Purpose**: UI-TARS-2 specialized multimodal agent **Capabilities**: Same as Agent TARS but optimized for Seed Agent integration
 
 ### Github Agent
-**Purpose**: Git workflow and coding agent
-**Capabilities**: Github workflow, code search, code generation, command execution
+
+**Purpose**: Git workflow and coding agent **Capabilities**: Github workflow, code search, code generation, command execution
 
 ### Custom Agents
+
 Developers can build custom agents using the Tarko kernel while maintaining compatibility with the engineering layer.
 
 ## 3. Kernel Layer
@@ -120,10 +126,10 @@ The kernel layer solves core agent runtime challenges.
 
 ### Context Engineering
 
-**Problem**: Building agents capable of long-running operations
-**Solution**: Advanced context management with automatic optimization
+**Problem**: Building agents capable of long-running operations **Solution**: Advanced context management with automatic optimization
 
 **Features**:
+
 - Automatic context compression
 - Intelligent context windowing
 - State persistence across sessions
@@ -131,74 +137,84 @@ The kernel layer solves core agent runtime challenges.
 
 ### Tool Call Engine
 
-**Problem**: Different LLM providers have varying Tool Call support
-**Solution**: Unified interface following OpenAI Function Call protocol
+**Problem**: Different LLM providers have varying Tool Call support **Solution**: Unified interface following OpenAI Function Call protocol
 
 **Supported Engines**:
+
 - Native Function Call (OpenAI, Anthropic)
 - Custom parsers (Seed-1.5 VL)
 - Prompt Engineering (Kor-based)
 
 ### Event Stream
 
-**Problem**: Standard communication between agent components
-**Solution**: Unified event stream protocol
+**Problem**: Standard communication between agent components **Solution**: Unified event stream protocol
 
 **Benefits**:
+
 - Real-time agent state updates
 - Standardized debugging and monitoring
 - Easy UI integration
 
 ### Agent Protocol
 
-**Problem**: Inconsistent agent interfaces
-**Solution**: Standard protocol definitions
+**Problem**: Inconsistent agent interfaces **Solution**: Standard protocol definitions
 
 **Components**:
+
 - **Event Stream**: Internal component communication
 - **Server Protocol**: HTTP/SSE/WebSocket APIs
 
 ### Model Provider
 
-**Design**: OpenAI Compatible protocol
-**Supported Providers**: Volcengine, OpenAI, Anthropic, Gemini
+**Design**: OpenAI Compatible protocol **Supported Providers**: Volcengine, OpenAI, Anthropic, Gemini
 
 **Benefits**:
+
 - Consistent interface across providers
 - Easy model switching for testing
 - Reduced architectural complexity
 
 ### Agent Hooks
 
-**Purpose**: Extensible customization points
-**Use Cases**: Custom logging, monitoring, behavior modification
+**Purpose**: Extensible customization points **Use Cases**: Custom logging, monitoring, behavior modification
 
 ## Design Principles
 
 ### 1. Separation of Concerns
+
 Each layer has clear responsibilities and minimal dependencies on other layers.
 
 ### 2. Protocol-First Design
+
 Standardized protocols enable interoperability and tooling ecosystem.
 
 ### 3. OpenAI Compatibility
+
 Leveraging existing standards reduces learning curve and increases compatibility.
 
 ### 4. Extensibility
+
 Hooks and protocols allow customization without core modifications.
 
 ## Integration Points
 
 ### Agent Development
+
 ```typescript
 import { Agent } from '@tarko/agent';
 
 // Application Layer
 const myAgent = new Agent({
   // Kernel Layer integration
-  contextEngineering: { /* config */ },
-  toolCallEngine: { /* config */ },
-  hooks: { /* custom hooks */ }
+  contextEngineering: {
+    /* config */
+  },
+  toolCallEngine: {
+    /* config */
+  },
+  hooks: {
+    /* custom hooks */
+  },
 });
 
 // Engineering Layer consumption
@@ -206,6 +222,7 @@ export default myAgent;
 ```
 
 ### Production Deployment
+
 ```bash
 # Engineering Layer handles deployment
 tarko run my-agent.ts --production

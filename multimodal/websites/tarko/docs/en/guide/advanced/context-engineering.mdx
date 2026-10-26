@@ -28,7 +28,7 @@ import { Agent } from '@tarko/agent';
 const agent = new Agent({
   context: {
     maxImagesCount: 5, // Limit images in context (default: 5)
-  }
+  },
 });
 ```
 
@@ -40,14 +40,10 @@ The `MessageHistory` class automatically converts event streams to message histo
 // From multimodal/tarko/agent/src/agent/message-history.ts
 const messageHistory = new MessageHistory(
   eventStream,
-  5 // maxImagesCount - limits images to prevent context overflow
+  5, // maxImagesCount - limits images to prevent context overflow
 );
 
-const messages = messageHistory.toMessageHistory(
-  toolCallEngine,
-  systemPrompt,
-  tools
-);
+const messages = messageHistory.toMessageHistory(toolCallEngine, systemPrompt, tools);
 ```
 
 ### 3. Image Context Management
@@ -58,11 +54,12 @@ Control how images are handled in long conversations:
 const agent = new Agent({
   context: {
     maxImagesCount: 10, // Allow up to 10 images in context
-  }
+  },
 });
 ```
 
 **How it works:**
+
 - Images beyond the limit are replaced with text placeholders
 - Newest images are preserved, oldest are omitted
 - Maintains context structure while reducing token usage
@@ -100,6 +97,7 @@ const agent = new Agent({
 ### 1. Configure Image Limits Appropriately
 
 **For text-heavy conversations**:
+
 ```typescript
 const agent = new Agent({
   context: {
@@ -109,6 +107,7 @@ const agent = new Agent({
 ```
 
 **For visual analysis tasks**:
+
 ```typescript
 const agent = new Agent({
   context: {
@@ -123,7 +122,7 @@ Use event stream to track context changes:
 
 ```typescript
 const response = await agent.run({
-  input: "Analyze these images",
+  input: 'Analyze these images',
   stream: true,
 });
 
@@ -139,14 +138,14 @@ for await (const event of response) {
 ```typescript
 // Environment input with images
 const response = await agent.run({
-  input: "What do you see?",
+  input: 'What do you see?',
   environmentInput: {
     content: [
       { type: 'text', text: 'Current screen:' },
-      { type: 'image_url', image_url: { url: 'data:image/png;base64,...' } }
+      { type: 'image_url', image_url: { url: 'data:image/png;base64,...' } },
     ],
-    description: 'Screen capture'
-  }
+    description: 'Screen capture',
+  },
 });
 ```
 
@@ -167,7 +166,7 @@ class CustomMessageHistory extends MessageHistory {
   // Override to add custom system prompt with time
   getSystemPromptWithTime(instructions: string): string {
     const customTime = new Date().toLocaleString('en-US', {
-      timeZone: 'America/New_York'
+      timeZone: 'America/New_York',
     });
     return `${instructions}\n\nCurrent time (EST): ${customTime}`;
   }
@@ -179,7 +178,9 @@ class CustomMessageHistory extends MessageHistory {
 Access and manipulate the event stream for custom context logic:
 
 ```typescript
-const agent = new Agent({ /* options */ });
+const agent = new Agent({
+  /* options */
+});
 
 // Get the event stream
 const eventStream = agent.getEventStream();
@@ -189,8 +190,8 @@ const events = eventStream.getEvents();
 console.log(`Total events: ${events.length}`);
 
 // Filter specific event types
-const userMessages = events.filter(e => e.type === 'user_message');
-const toolCalls = events.filter(e => e.type === 'tool_call');
+const userMessages = events.filter((e) => e.type === 'user_message');
+const toolCalls = events.filter((e) => e.type === 'tool_call');
 ```
 
 ## Integration with Agent Hooks
@@ -204,24 +205,24 @@ const agent = new Agent({
       // Log context before tool execution
       console.log('Context before tool call:', context.messages.length);
     },
-    
+
     onAfterToolCall: async (context) => {
       // Monitor context growth after tool execution
       console.log('Context after tool call:', context.messages.length);
     },
-    
+
     onRetrieveTools: async (tools) => {
       // Filter tools based on context size
       const eventStream = agent.getEventStream();
       const events = eventStream.getEvents();
-      
+
       if (events.length > 50) {
         // Reduce tools for large contexts
         return tools.slice(0, 3);
       }
       return tools;
-    }
-  }
+    },
+  },
 });
 ```
 
@@ -265,14 +266,15 @@ const eventStream = agent.getEventStream();
 const events = eventStream.getEvents();
 
 console.log('Total events:', events.length);
-console.log('Event types:', [...new Set(events.map(e => e.type))]);
+console.log('Event types:', [...new Set(events.map((e) => e.type))]);
 
 // Count images in context
 const imageCount = events.reduce((count, event) => {
   if (event.type === 'user_message' && Array.isArray(event.content)) {
-    return count + event.content.filter(part => 
-      typeof part === 'object' && part.type === 'image_url'
-    ).length;
+    return (
+      count +
+      event.content.filter((part) => typeof part === 'object' && part.type === 'image_url').length
+    );
   }
   return count;
 }, 0);

@@ -101,7 +101,7 @@ export const ChatBottomSettings: React.FC<ChatBottomSettingsProps> = ({
 
     const { dependsOn, when } = property.visible;
     const dependentValue = currentValues[dependsOn];
-    
+
     // Support both exact match and deep equality for complex values
     return dependentValue === when;
   };

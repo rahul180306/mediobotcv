@@ -1,7 +1,7 @@
 ---
 start_date: 2025-01-28
-rfc_pr: 
-issue: 
+rfc_pr:
+issue:
 ---
 
 # RFC Template

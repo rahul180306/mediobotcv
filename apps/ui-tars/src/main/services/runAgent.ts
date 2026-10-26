@@ -164,7 +164,10 @@ export const runAgent = async (
       break;
   }
 
-  let modelVersion = getModelVersion(settings.vlmProvider);
+  let modelVersion = getModelVersion(
+    settings.vlmProvider,
+    settings.vlmModelName,
+  );
   let modelConfig: UITarsModelConfig = {
     baseURL: settings.vlmBaseUrl,
     apiKey: settings.vlmApiKey,

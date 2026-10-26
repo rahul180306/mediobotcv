@@ -18,6 +18,7 @@ npm install @tarko/agent-ui
 ```
 
 **Features:**
+
 - Real-time agent communication
 - Built-in chat interface
 - Tool execution visualization
@@ -153,13 +154,13 @@ interface AgentEvent {
 
 ### Event Types
 
-| Event Type | Description | Data |
-|------------|-------------|------|
-| `message` | Agent response message | `{ content: string, role: 'assistant' }` |
-| `tool_call` | Tool execution started | `{ name: string, args: object }` |
-| `tool_result` | Tool execution completed | `{ result: any, success: boolean }` |
-| `thinking` | Agent reasoning process | `{ content: string }` |
-| `error` | Error occurred | `{ message: string, code?: string }` |
+| Event Type    | Description              | Data                                     |
+| ------------- | ------------------------ | ---------------------------------------- |
+| `message`     | Agent response message   | `{ content: string, role: 'assistant' }` |
+| `tool_call`   | Tool execution started   | `{ name: string, args: object }`         |
+| `tool_result` | Tool execution completed | `{ result: any, success: boolean }`      |
+| `thinking`    | Agent reasoning process  | `{ content: string }`                    |
+| `error`       | Error occurred           | `{ message: string, code?: string }`     |
 
 ## Custom Web UI Development
 
@@ -181,7 +182,7 @@ const CustomAgentUI = () => {
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-    
+
     setLoading(true);
     const userMessage = { role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
@@ -230,11 +231,7 @@ const CustomAgentUI = () => {
 <template>
   <div class="agent-ui">
     <div class="messages">
-      <div
-        v-for="(message, index) in messages"
-        :key="index"
-        :class="`message ${message.role}`"
-      >
+      <div v-for="(message, index) in messages" :key="index" :class="`message ${message.role}`">
         {{ message.content }}
       </div>
     </div>
@@ -261,13 +258,13 @@ export default {
       client: new AgentClient({ endpoint: 'http://localhost:3000' }),
       messages: [],
       input: '',
-      loading: false
+      loading: false,
     };
   },
   methods: {
     async sendMessage() {
       if (!this.input.trim()) return;
-      
+
       this.loading = true;
       this.messages.push({ role: 'user', content: this.input });
       const message = this.input;
@@ -281,8 +278,8 @@ export default {
       } finally {
         this.loading = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 ```
@@ -307,7 +304,7 @@ class AgentWebSocket {
     this.ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       const handlers = this.eventHandlers.get(data.type) || [];
-      handlers.forEach(handler => handler(data));
+      handlers.forEach((handler) => handler(data));
     };
 
     this.ws.onopen = () => {
@@ -447,7 +444,7 @@ interface ToolExecutionProps {
 }
 
 const ToolExecution: React.FC<ToolExecutionProps> = ({ toolCall }) => {
-  const duration = toolCall.endTime 
+  const duration = toolCall.endTime
     ? toolCall.endTime.getTime() - toolCall.startTime.getTime()
     : null;
 
@@ -460,12 +457,12 @@ const ToolExecution: React.FC<ToolExecutionProps> = ({ toolCall }) => {
           <span className="tool-duration">{duration}ms</span>
         )}
       </div>
-      
+
       <details className="tool-args">
         <summary>Arguments</summary>
         <pre>{JSON.stringify(toolCall.args, null, 2)}</pre>
       </details>
-      
+
       {toolCall.result && (
         <details className="tool-result">
           <summary>Result</summary>
@@ -510,22 +507,22 @@ const ThinkingProcess: React.FC<{ thoughts: string[] }> = ({ thoughts }) => {
   --agent-danger: #dc3545;
   --agent-warning: #ffc107;
   --agent-info: #17a2b8;
-  
+
   --agent-bg: #ffffff;
   --agent-text: #333333;
   --agent-border: #e9ecef;
-  
+
   --agent-message-user-bg: #007bff;
   --agent-message-user-text: #ffffff;
   --agent-message-assistant-bg: #f8f9fa;
   --agent-message-assistant-text: #333333;
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   --agent-bg: #1a1a1a;
   --agent-text: #ffffff;
   --agent-border: #333333;
-  
+
   --agent-message-assistant-bg: #2d2d2d;
   --agent-message-assistant-text: #ffffff;
 }

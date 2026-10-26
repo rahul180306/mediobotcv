@@ -10,6 +10,7 @@ This pull request addresses issue #696 which reported UI flickering in the panel
 4. Adding explicit overflow handling with `overflow-hidden` class
 
 The changes were made in two files:
+
 - `multimodal/agent-tars-web-ui/src/standalone/app/Layout/index.tsx` (main UI fix)
 - `multimodal/agent-tars-cli/src/utils/console-interceptor.ts` (minor changes related to CI)
 
@@ -87,15 +88,17 @@ While the PR successfully addresses the UI flickering issue, there are a few add
 Example implementation for suggestion #1:
 
 ```tsx
-{/* 
+{
+  /* 
   Chat panel - Using regular div instead of motion.div to prevent UI flickering
   See issue #696 for details on the flickering problem
-*/}
+*/
+}
 <div className="flex-1 flex flex-col overflow-hidden">
   <Shell className="h-full rounded-xl bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-[#E5E6EC] dark:border-none bg-[#FFFFFFE5] dark:shadow-gray-950/5">
     <ChatPanel />
   </Shell>
-</div>
+</div>;
 ```
 
 ## Overall Assessment

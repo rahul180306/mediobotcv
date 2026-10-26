@@ -37,14 +37,12 @@ import { Agent, ExecutionMode } from '@agent-tars/core';
 const agent = new Agent({
   execution: {
     mode: ExecutionMode.SEQUENTIAL,
-    timeout: 30000 // 每个工具 30 秒
-  }
+    timeout: 30000, // 每个工具 30 秒
+  },
 });
 
 // 工具按顺序执行：导航 → 截图 → 保存
-const result = await agent.execute(
-  '导航到 example.com，截图并保存为 example.png'
-);
+const result = await agent.execute('导航到 example.com，截图并保存为 example.png');
 ```
 
 ### 并行执行
@@ -56,14 +54,12 @@ const agent = new Agent({
   execution: {
     mode: ExecutionMode.PARALLEL,
     maxConcurrency: 5,
-    timeout: 30000
-  }
+    timeout: 30000,
+  },
 });
 
 // 独立的文件操作并行运行
-const result = await agent.execute(
-  '读取 config.json、package.json 和 README.md 文件'
-);
+const result = await agent.execute('读取 config.json、package.json 和 README.md 文件');
 ```
 
 ### 管道执行
@@ -74,14 +70,12 @@ const result = await agent.execute(
 const agent = new Agent({
   execution: {
     mode: ExecutionMode.PIPELINE,
-    enableStreaming: true
-  }
+    enableStreaming: true,
+  },
 });
 
 // 数据流经：搜索 → 提取 → 分析 → 报告
-const result = await agent.execute(
-  '搜索 React 教程，提取关键概念，分析趋势并生成报告'
-);
+const result = await agent.execute('搜索 React 教程，提取关键概念，分析趋势并生成报告');
 ```
 
 ### 自适应执行
@@ -93,8 +87,8 @@ const agent = new Agent({
   execution: {
     mode: ExecutionMode.ADAPTIVE,
     dependencyAnalysis: true,
-    optimizeForLatency: true
-  }
+    optimizeForLatency: true,
+  },
 });
 ```
 
@@ -110,30 +104,30 @@ const agent = new Agent({
       timeout: {
         default: 30000,
         perTool: {
-          'browser_screenshot': 10000,
-          'run_command': 60000
-        }
+          browser_screenshot: 10000,
+          run_command: 60000,
+        },
       },
-      
+
       // 重试配置
       retry: {
         enabled: true,
         maxAttempts: 3,
         backoffStrategy: 'exponential',
-        retryableErrors: ['timeout', 'network']
+        retryableErrors: ['timeout', 'network'],
       },
-      
+
       // 并发限制
       concurrency: {
         global: 10,
         perCategory: {
-          'browser': 3,
-          'filesystem': 5,
-          'commands': 1
-        }
-      }
-    }
-  }
+          browser: 3,
+          filesystem: 5,
+          commands: 1,
+        },
+      },
+    },
+  },
 });
 ```
 
@@ -148,24 +142,24 @@ const agent = new Agent({
         enabled: true,
         ttl: 300000, // 5 分钟
         maxSize: 100,
-        strategy: 'lru'
+        strategy: 'lru',
       },
-      
+
       // 预测性加载
       preloading: {
         enabled: true,
         patterns: ['browser_navigate', 'browser_screenshot'],
-        lookahead: 2
+        lookahead: 2,
       },
-      
+
       // 资源池
       pooling: {
         enabled: true,
         warmupTools: ['browser_navigate'],
-        maxPoolSize: 5
-      }
-    }
-  }
+        maxPoolSize: 5,
+      },
+    },
+  },
 });
 ```
 
@@ -179,21 +173,21 @@ import { Tool, ToolDependency } from '@agent-tars/core';
 export class AnalyticsTool implements Tool {
   name = 'analytics';
   description = '分析来自多个来源的数据';
-  
+
   // 声明工具依赖
   dependencies: ToolDependency[] = [
     {
       tool: 'read_file',
       required: true,
-      timeout: 10000
+      timeout: 10000,
     },
     {
       tool: 'web_search',
       required: false,
-      fallback: 'local_search'
-    }
+      fallback: 'local_search',
+    },
   ];
-  
+
   async execute(params: any): Promise<ToolResult> {
     // 工具实现
   }
@@ -208,8 +202,8 @@ const engine = new ToolCallEngine({
   dependencyResolution: {
     enabled: true,
     strategy: 'topological',
-    circularDependencyHandling: 'error'
-  }
+    circularDependencyHandling: 'error',
+  },
 });
 ```
 
@@ -223,21 +217,21 @@ const agent = new Agent({
     errorHandling: {
       // 在非关键故障时继续执行
       continueOnError: true,
-      
+
       // 故障时的备用工具
       fallbacks: {
-        'browser_screenshot': 'browser_get_markdown',
-        'run_command': 'safe_command'
+        browser_screenshot: 'browser_get_markdown',
+        run_command: 'safe_command',
       },
-      
+
       // 断路器模式
       circuitBreaker: {
         enabled: true,
         failureThreshold: 5,
-        resetTimeout: 60000
-      }
-    }
-  }
+        resetTimeout: 60000,
+      },
+    },
+  },
 });
 ```
 
@@ -250,20 +244,20 @@ class CustomErrorHandler implements ErrorHandler {
   async handle(error: ToolExecutionError): Promise<ToolResult> {
     // 记录错误
     console.error(`工具 ${error.toolName} 失败:`, error.message);
-    
+
     // 尝试恢复
     if (error.isRetryable) {
       return this.retry(error);
     }
-    
+
     // 返回备用结果
     return {
       success: false,
       error: '工具执行失败',
-      fallback: true
+      fallback: true,
     };
   }
-  
+
   private async retry(error: ToolExecutionError): Promise<ToolResult> {
     // 实现重试逻辑
   }
@@ -271,8 +265,8 @@ class CustomErrorHandler implements ErrorHandler {
 
 const agent = new Agent({
   execution: {
-    errorHandler: new CustomErrorHandler()
-  }
+    errorHandler: new CustomErrorHandler(),
+  },
 });
 ```
 
@@ -301,8 +295,8 @@ monitor.on('executionCompleted', (event) => {
 
 const agent = new Agent({
   execution: {
-    monitor
-  }
+    monitor,
+  },
 });
 ```
 
@@ -319,7 +313,7 @@ console.log(`缓存命中率: ${metrics.cacheHitRate}%`);
 console.log(`并行效率: ${metrics.parallelEfficiency}%`);
 
 // 工具特定指标
-metrics.toolMetrics.forEach(tool => {
+metrics.toolMetrics.forEach((tool) => {
   console.log(`${tool.name}: ${tool.averageDuration}ms (${tool.executionCount} 次调用)`);
 });
 ```
@@ -334,31 +328,29 @@ import { ExecutionStrategy, ToolCall } from '@agent-tars/core';
 class PriorityExecutionStrategy implements ExecutionStrategy {
   async execute(calls: ToolCall[]): Promise<ToolResult[]> {
     // 按优先级排序
-    const sortedCalls = calls.sort((a, b) => 
-      (b.priority || 0) - (a.priority || 0)
-    );
-    
+    const sortedCalls = calls.sort((a, b) => (b.priority || 0) - (a.priority || 0));
+
     // 先执行高优先级工具
     const results: ToolResult[] = [];
-    
+
     for (const call of sortedCalls) {
       const result = await this.executeTool(call);
       results.push(result);
-      
+
       // 在关键故障时停止
       if (!result.success && call.critical) {
         break;
       }
     }
-    
+
     return results;
   }
 }
 
 const agent = new Agent({
   execution: {
-    strategy: new PriorityExecutionStrategy()
-  }
+    strategy: new PriorityExecutionStrategy(),
+  },
 });
 ```
 
@@ -372,31 +364,31 @@ const workflow = {
     {
       tool: 'browser_navigate',
       params: { url: '${input.url}' },
-      output: 'navigation'
+      output: 'navigation',
     },
     {
       tool: 'browser_screenshot',
       dependsOn: ['navigation'],
-      output: 'screenshot'
+      output: 'screenshot',
     },
     {
       tool: 'browser_get_markdown',
       dependsOn: ['navigation'],
-      output: 'content'
+      output: 'content',
     },
     {
       tool: 'analyze_content',
       params: {
         content: '${content}',
-        screenshot: '${screenshot}'
+        screenshot: '${screenshot}',
       },
-      output: 'analysis'
-    }
-  ]
+      output: 'analysis',
+    },
+  ],
 };
 
 const result = await agent.executeWorkflow(workflow, {
-  url: 'https://example.com'
+  url: 'https://example.com',
 });
 ```
 
@@ -404,9 +396,7 @@ const result = await agent.executeWorkflow(workflow, {
 
 ```typescript
 // 在工具完成时流式传输结果
-const stream = agent.executeStream(
-  '分析多个文件并生成报告'
-);
+const stream = agent.executeStream('分析多个文件并生成报告');
 
 stream.on('toolResult', (result) => {
   console.log(`工具 ${result.toolName} 完成:`, result.data);
@@ -433,8 +423,8 @@ const profiler = new ExecutionProfiler();
 const agent = new Agent({
   execution: {
     profiler,
-    enableProfiling: true
-  }
+    enableProfiling: true,
+  },
 });
 
 // 生成性能报告
@@ -451,12 +441,12 @@ const agent = new Agent({
       // 工具结果的垃圾回收
       gcInterval: 60000, // 1 分钟
       maxResultsInMemory: 1000,
-      
+
       // 工具实例生命周期
       toolInstanceLifetime: 300000, // 5 分钟
-      maxToolInstances: 50
-    }
-  }
+      maxToolInstances: 50,
+    },
+  },
 });
 ```
 
@@ -468,15 +458,15 @@ const agent = new Agent({
     resources: {
       // CPU 使用限制
       maxCpuUsage: 80, // 80%
-      
+
       // 内存限制
       maxMemoryUsage: '2GB',
-      
+
       // 网络限制
       maxConcurrentRequests: 10,
-      requestTimeout: 30000
-    }
-  }
+      requestTimeout: 30000,
+    },
+  },
 });
 ```
 
@@ -494,9 +484,9 @@ const testResult = await tester.testExecution({
   tools: ['browser_navigate', 'browser_screenshot'],
   strategy: 'parallel',
   mockData: {
-    'browser_navigate': { success: true },
-    'browser_screenshot': { success: true }
-  }
+    browser_navigate: { success: true },
+    browser_screenshot: { success: true },
+  },
 });
 
 expect(testResult.executionTime).toBeLessThan(5000);
@@ -513,9 +503,9 @@ const agent = new Agent({
       logLevel: 'verbose',
       traceExecution: true,
       captureToolInputs: true,
-      captureToolOutputs: true
-    }
-  }
+      captureToolOutputs: true,
+    },
+  },
 });
 ```
 
@@ -548,5 +538,4 @@ const agent = new Agent({
 - 了解 [Tool 开发](/guide/tool/basic) 来创建自定义工具
 - 探索 [Tool 管理](/guide/tool/management) 来组织工具集合
 
-{/* Placeholder: 添加执行流程图 */}
-{/* Placeholder: 添加性能监控仪表板截图 */}
+{/* Placeholder: 添加执行流程图 */} {/* Placeholder: 添加性能监控仪表板截图 */}

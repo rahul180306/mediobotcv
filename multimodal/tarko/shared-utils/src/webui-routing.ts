@@ -16,14 +16,14 @@ export function isRegexPattern(path: string): boolean {
  */
 export function extractActualBasename(base: string | undefined, currentPath: string): string {
   if (!base) return '';
-  
+
   if (isRegexPattern(base)) {
     try {
       // Replace .+ with [^/]+ (non-greedy match)
       const extractPattern = base.replace(/\.\+/g, '[^/]+');
       const extractRegex = new RegExp(`^${extractPattern}`);
       const match = currentPath.match(extractRegex);
-      
+
       return match ? match[0] : '';
     } catch (error) {
       console.warn('Invalid regex pattern in base:', base, error);

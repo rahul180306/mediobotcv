@@ -81,21 +81,21 @@ export class ShareService {
         processedEvents = await this.processWorkspaceImages(keyFrameEvents, metadata.workspace);
       }
 
-      if(!this.appConfig.webui) {
+      if (!this.appConfig.webui) {
         throw new Error('Cannot found webui config');
       }
 
-      if (this.appConfig.webui?.type === 'static' && !this.appConfig.webui?.staticPath ) {
+      if (this.appConfig.webui?.type === 'static' && !this.appConfig.webui?.staticPath) {
         throw new Error('Cannot found static path.');
       }
 
-      if(this.appConfig.webui?.type === 'remote' && !this.appConfig.webui?.remoteUrl) {
+      if (this.appConfig.webui?.type === 'remote' && !this.appConfig.webui?.remoteUrl) {
         throw new Error('Cannot found remote url.');
       }
 
       // Merge web UI config with agent constructor config
       const mergedWebUIConfig = mergeWebUIConfig(this.appConfig.webui, this.server);
-      
+
       const builder = new AgentUIBuilder({
         events: keyFrameEvents,
         sessionInfo: metadata,

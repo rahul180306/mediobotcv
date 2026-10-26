@@ -27,7 +27,11 @@ export const Blockquote: React.FC<{ children: React.ReactNode }> = ({ children }
   const isDarkMode = useDarkMode();
   const borderColor = isDarkMode ? 'border-slate-600' : 'border-gray-200';
   const textColor = isDarkMode ? 'text-gray-400' : 'text-gray-600';
-  return <blockquote className={`border-l-4 ${borderColor} pl-4 my-5 italic ${textColor}`}>{children}</blockquote>;
+  return (
+    <blockquote className={`border-l-4 ${borderColor} pl-4 my-5 italic ${textColor}`}>
+      {children}
+    </blockquote>
+  );
 };
 
 export const HorizontalRule: React.FC = () => {

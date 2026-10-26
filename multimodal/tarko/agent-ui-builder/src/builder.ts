@@ -82,18 +82,21 @@ export class AgentUIBuilder {
     }
   }
 
-  async getHtmlContent(staticPath: string | undefined, webui: AgentWebUIImplementation | undefined) {
-    if(webui?.type === 'remote' && webui?.remoteUrl) {
+  async getHtmlContent(
+    staticPath: string | undefined,
+    webui: AgentWebUIImplementation | undefined,
+  ) {
+    if (webui?.type === 'remote' && webui?.remoteUrl) {
       const url = webui.remoteUrl;
 
       const resp = await fetch(url, {
         method: 'GET',
         headers: {
-          'Accept': "text/html"
-        }
+          Accept: 'text/html',
+        },
       });
 
-      return await resp.text()
+      return await resp.text();
     }
 
     staticPath = staticPath || getStaticPath();
@@ -104,7 +107,7 @@ export class AgentUIBuilder {
       throw new Error(`Static web UI not found at: ${indexPath}`);
     }
 
-    return fs.readFileSync(indexPath, 'utf8');   
+    return fs.readFileSync(indexPath, 'utf8');
   }
 
   /**

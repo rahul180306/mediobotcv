@@ -28,7 +28,7 @@ export const checkConnectionStatusAction = atom(null, async (get, set) => {
           // Load both options and sessions on initial connection or reconnection
           const [options, sessions] = await Promise.all([
             apiService.getAgentOptions(),
-            apiService.getSessions()
+            apiService.getSessions(),
           ]);
           set(agentOptionsAtom, options);
           set(sessionsAtom, sessions);

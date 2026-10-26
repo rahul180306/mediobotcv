@@ -37,15 +37,15 @@ await startSseAndStreamableHttpMcpServer({
 
 #### Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `port` | `number` | Port to listen on (default: 8080) |
-| `host` | `string` | Host to bind to (default: '127.0.0.1') |
-| `stateless` | `boolean` | Enable stateless mode for streamable HTTP (default: true) |
-| `middlewares` | `MiddlewareFunction[]` | Custom Express middlewares |
-| `routes` | `RoutesConfig` | Custom route configuration |
-| `logger` | `Logger` | Custom logger instance |
-| `createMcpServer` | `function` | Factory function to create MCP server instances |
+| Parameter         | Type                   | Description                                               |
+| ----------------- | ---------------------- | --------------------------------------------------------- |
+| `port`            | `number`               | Port to listen on (default: 8080)                         |
+| `host`            | `string`               | Host to bind to (default: '127.0.0.1')                    |
+| `stateless`       | `boolean`              | Enable stateless mode for streamable HTTP (default: true) |
+| `middlewares`     | `MiddlewareFunction[]` | Custom Express middlewares                                |
+| `routes`          | `RoutesConfig`         | Custom route configuration                                |
+| `logger`          | `Logger`               | Custom logger instance                                    |
+| `createMcpServer` | `function`             | Factory function to create MCP server instances           |
 
 ## Route Configuration
 
@@ -65,6 +65,7 @@ By default, the server uses the following routes:
 ```
 
 This creates the following endpoints:
+
 - **POST** `/mcp` - MCP HTTP transport
 - **GET** `/mcp` - Returns 405 (Method Not Allowed) or SSE stream
 - **GET** `/sse` - SSE connection endpoint
@@ -81,13 +82,14 @@ await startSseAndStreamableHttpMcpServer({
     prefix: '/api/v1',
     mcp: '/custom-mcp',
     message: '/custom-message',
-    sse: '/custom-sse'
+    sse: '/custom-sse',
   },
   createMcpServer: async () => createServer(),
 });
 ```
 
 This creates endpoints at:
+
 - **POST** `/api/v1/custom-mcp` - MCP HTTP transport
 - **GET** `/api/v1/custom-mcp` - Returns 405 or SSE stream
 - **GET** `/api/v1/custom-sse` - SSE connection endpoint
@@ -96,21 +98,25 @@ This creates endpoints at:
 ### Route Configuration Options
 
 #### `routes.prefix`
+
 - **Type**: `string`
 - **Default**: `'/'`
 - **Description**: Route prefix for all endpoints
 
 #### `routes.mcp`
+
 - **Type**: `string`
 - **Default**: `'/mcp'`
 - **Description**: MCP endpoint path (relative to prefix)
 
 #### `routes.message`
+
 - **Type**: `string`
 - **Default**: `'/message'`
 - **Description**: Message endpoint path for SSE (relative to prefix)
 
 #### `routes.sse`
+
 - **Type**: `string`
 - **Default**: `'/sse'`
 - **Description**: SSE endpoint path (relative to prefix)
@@ -135,6 +141,7 @@ routes: {
 ```
 
 Both result in:
+
 - `/api/v2/mcp-endpoint`
 - `/api/v2/sse-endpoint/`
 
@@ -151,7 +158,7 @@ const server = await startSseAndStreamableHttpMcpServer({
   createMcpServer: async () => {
     return new Server(
       { name: 'my-server', version: '1.0.0' },
-      { capabilities: { tools: {} } }
+      { capabilities: { tools: {} } },
     );
   },
 });
@@ -178,7 +185,7 @@ await startSseAndStreamableHttpMcpServer({
   routes: {
     prefix: '/api/v1',
     mcp: '/mcp',
-    sse: '/events'
+    sse: '/events',
   },
   middlewares: [authMiddleware],
   createMcpServer: async (context) => {
@@ -244,6 +251,7 @@ await startSseAndStreamableHttpMcpServer({
 ```
 
 In stateful mode:
+
 - Each client gets a unique session ID
 - Sessions are maintained across requests
 - Requires proper session cleanup
@@ -258,6 +266,7 @@ await startSseAndStreamableHttpMcpServer({
 ```
 
 In stateless mode:
+
 - No session state maintained
 - Each request is independent
 - Better for scaling and reliability
@@ -268,14 +277,15 @@ In stateless mode:
 
 ```ts
 interface McpServerEndpoint {
-  url: string;      // Full URL to MCP endpoint
-  sseUrl: string;   // Full URL to SSE endpoint
-  port: number;     // Server port
+  url: string; // Full URL to MCP endpoint
+  sseUrl: string; // Full URL to SSE endpoint
+  port: number; // Server port
   close: () => void; // Function to close server
 }
 ```
 
 Example:
+
 ```ts
 const endpoint = await startSseAndStreamableHttpMcpServer({
   port: 3000,
@@ -283,8 +293,8 @@ const endpoint = await startSseAndStreamableHttpMcpServer({
   createMcpServer: async () => createServer(),
 });
 
-console.log('MCP endpoint:', endpoint.url);     // http://localhost:3000/api/mcp
-console.log('SSE endpoint:', endpoint.sseUrl);  // http://localhost:3000/api/sse
+console.log('MCP endpoint:', endpoint.url); // http://localhost:3000/api/mcp
+console.log('SSE endpoint:', endpoint.sseUrl); // http://localhost:3000/api/sse
 
 // Gracefully shutdown
 process.on('SIGTERM', () => {

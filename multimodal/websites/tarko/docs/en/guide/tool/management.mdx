@@ -23,10 +23,10 @@ tarko --tool.include "browser,filesystem" --tool.exclude "run_command,run_script
 
 ### Available Options
 
-| Option | Description | Example |
-|--------|-------------|----------|
+| Option                      | Description                     | Example                  |
+| --------------------------- | ------------------------------- | ------------------------ |
 | `--tool.include <patterns>` | Include tools matching patterns | `--tool.include browser` |
-| `--tool.exclude <patterns>` | Exclude tools matching patterns | `--tool.exclude delete` |
+| `--tool.exclude <patterns>` | Exclude tools matching patterns | `--tool.exclude delete`  |
 
 ### Pattern Matching Rules
 
@@ -38,24 +38,28 @@ tarko --tool.include "browser,filesystem" --tool.exclude "run_command,run_script
 ### Common Use Cases
 
 #### Web Automation Only
+
 ```bash
 # Browser tools + web search (19 tools)
 tarko --tool.include "browser,web_search"
 ```
 
 #### Safe File Operations
+
 ```bash
 # Filesystem without command execution (11 tools)
 tarko --tool.include filesystem --tool.exclude "run_command,run_script"
 ```
 
 #### Read-Only Agent
+
 ```bash
 # No file writing or command execution
 tarko --tool.exclude "write_file,edit_file,create_directory,move_file,run_command,run_script"
 ```
 
 #### Minimal Agent
+
 ```bash
 # Essential read-only tools only
 tarko --tool.include "read_file,read_multiple_files,list_directory,browser_screenshot,web_search"
@@ -71,8 +75,8 @@ import { Agent } from '@tarko/agent';
 const agent = new Agent({
   tool: {
     include: ['browser', 'filesystem'],
-    exclude: ['browser_get_markdown', 'run_command']
-  }
+    exclude: ['browser_get_markdown', 'run_command'],
+  },
 });
 ```
 
@@ -101,12 +105,12 @@ const customTool = new Tool({
   parameters: {
     type: 'object',
     properties: {
-      input: { type: 'string', description: 'Input parameter' }
-    }
+      input: { type: 'string', description: 'Input parameter' },
+    },
   },
   function: async (params) => {
     return `Processed: ${params.input}`;
-  }
+  },
 });
 
 agent.registerTool(customTool);
@@ -121,9 +125,11 @@ console.log(`Available tools: ${tools.length}`);
 ### Built-in Categories
 
 #### 📦 general (1 tool)
+
 - `web_search` - Search the web for information
 
 #### 📦 browser (18 tools)
+
 - `browser_click` - Click on page elements
 - `browser_close_tab` - Close browser tab
 - `browser_evaluate` - Execute JavaScript code
@@ -144,6 +150,7 @@ console.log(`Available tools: ${tools.length}`);
 - `browser_tab_list` - List all open tabs
 
 #### 📦 filesystem (11 tools)
+
 - `create_directory` - Create new directories
 - `directory_tree` - Get directory structure
 - `edit_file` - Edit existing files
@@ -157,6 +164,7 @@ console.log(`Available tools: ${tools.length}`);
 - `write_file` - Write content to files
 
 #### 📦 commands (2 tools)
+
 - `run_command` - Execute shell commands
 - `run_script` - Run scripts with interpreters
 
@@ -173,21 +181,24 @@ tarko --debug --tool.include browser
 ### Common Issues
 
 #### No Tools Available
+
 ```bash
 # Use broader patterns
 tarko --tool.exclude "run_command" # Instead of strict includes
 ```
 
 #### Pattern Not Working
+
 - Verify case sensitivity (`browser` not `Browser`)
 - Use exact tool names (`browser_click` not `click`)
 - Check category names: `browser`, `filesystem`, `commands`, `general`
 
 #### Tool Loading Errors
+
 ```typescript
 try {
   const agent = new Agent({
-    tool: { include: ['invalid_tool'] }
+    tool: { include: ['invalid_tool'] },
   });
 } catch (error) {
   console.error('Tool loading failed:', error.message);
@@ -207,18 +218,21 @@ try {
 ### Examples
 
 #### Browser-Only Agent
+
 ```bash
 tarko --tool.include browser
 # Result: 18 browser tools (browser_click, browser_navigate, etc.)
 ```
 
 #### File Operations Without Editing
+
 ```bash
 tarko --tool.include filesystem --tool.exclude edit_file
 # Result: 10 filesystem tools (read_file, write_file, list_directory, etc.)
 ```
 
 #### Specific Tool Exclusion
+
 ```bash
 tarko --tool.include "browser,filesystem" --tool.exclude "browser_get_markdown,run_command"
 # Result: 28 tools (17 browser + 11 filesystem, excluding markdown and commands)
@@ -229,5 +243,4 @@ tarko --tool.include "browser,filesystem" --tool.exclude "browser_get_markdown,r
 - Learn about [Tool Development](/guide/tool/basic) to create custom tools
 - Explore [Tool Call Engine](/guide/tool/tool-call-engine) for execution optimization
 
-{/* Placeholder: Add tool filtering flow diagram */}
-{/* Placeholder: Add performance comparison charts */}
+{/* Placeholder: Add tool filtering flow diagram */} {/* Placeholder: Add performance comparison charts */}

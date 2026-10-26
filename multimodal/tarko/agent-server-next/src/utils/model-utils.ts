@@ -55,19 +55,19 @@ export function isModelConfigValid(
  * Process session to prevent model sensitive information from being exposed
  */
 export function filterSessionModel(sessionInfos: SessionInfo[] | undefined) {
-  if(!sessionInfos) {
+  if (!sessionInfos) {
     return;
   }
 
-  for(const sess of sessionInfos) {
-    if(sess.metadata?.modelConfig) {
+  for (const sess of sessionInfos) {
+    if (sess.metadata?.modelConfig) {
       const { id, displayName, provider } = sess.metadata?.modelConfig;
 
       sess.metadata.modelConfig = {
-          id, 
-          displayName,
-           provider
-      }
+        id,
+        displayName,
+        provider,
+      };
     }
   }
 }

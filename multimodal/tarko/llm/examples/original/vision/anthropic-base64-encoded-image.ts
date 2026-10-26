@@ -12,8 +12,7 @@ async function main() {
     apiKey: process.env['ANTHROPIC_API_KEY'], // This is the default and can be omitted
   });
 
-  const imageUrl =
-    'https://sf16-sg.tiktokcdn.com/obj/eden-sg/psvhouloj/images/simple-image.png';
+  const imageUrl = 'https://sf16-sg.tiktokcdn.com/obj/eden-sg/psvhouloj/images/simple-image.png';
   const imageMediaType = 'image/png';
   const imageArrayBuffer = await (await fetch(imageUrl)).arrayBuffer();
   const imageData = Buffer.from(imageArrayBuffer).toString('base64');

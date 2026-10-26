@@ -19,6 +19,7 @@ UI-TARS-desktop is currently only available for single monitor setup. Multi-moni
 You can download the [latest release](https://github.com/bytedance/UI-TARS-desktop/releases/latest) version of UI-TARS Desktop from our releases page.
 
 > **Note**: If you have [Homebrew](https://brew.sh/) installed, you can install UI-TARS Desktop by running the following command:
+>
 > ```bash
 > brew install --cask ui-tars
 > ```
@@ -30,16 +31,16 @@ You can download the [latest release](https://github.com/bytedance/UI-TARS-deskt
 ### MacOS
 
 1. Drag **UI TARS** application into the **Applications** folder
-  <img src="../apps/ui-tars/images/mac_install.png" width="500px" />
+   <img src="../apps/ui-tars/images/mac_install.png" width="500px" />
 
 2. Enable the permission of **UI TARS** in MacOS:
-  - System Settings -> Privacy & Security -> **Accessibility**
-  - System Settings -> Privacy & Security -> **Screen Recording**
+
+- System Settings -> Privacy & Security -> **Accessibility**
+- System Settings -> Privacy & Security -> **Screen Recording**
   <img src="../apps/ui-tars/images/mac_permission.png" width="500px" />
 
 3. Then open **UI TARS** application, you can see the following interface:
-  <img src="../apps/ui-tars/images/mac_app.png" width="500px" />
-
+   <img src="../apps/ui-tars/images/mac_app.png" width="500px" />
 
 ### Windows
 
@@ -49,30 +50,27 @@ You can download the [latest release](https://github.com/bytedance/UI-TARS-deskt
 
 <br />
 
-
 ## Run remote operator
 
 The Remote Operator service will be discontinued on August 20, 2025. If you wish to deploy your own Remote Computer and Browser Agent after the free trial, you can explore Volcano Engine's OS Agent Services.
 
 Deployment Links (in Chinese): [Computer Use Agent](https://console.volcengine.com/vefaas/region:vefaas+cn-beijing/application/create?templateId=680b0a890e881f000862d9f0&channel=github&source=ui-tars) and [Browser Use Agent](https://console.volcengine.com/vefaas/region:vefaas+cn-beijing/application/create?templateId=67f7b4678af5a6000850556c&channel=github&source=ui-tars)
 
-
 <br />
-
 
 ## Get model and run local operator
 
 ### UI-TARS-1.5 on [Hugging Face](https://endpoints.huggingface.co/catalog)
 
 1. Click the button `Deploy from Hugging Face` on the top right corner of the page
-  <img src="../apps/ui-tars/images/quick_start/huggingface_deploy.png" width="500px" />
+   <img src="../apps/ui-tars/images/quick_start/huggingface_deploy.png" width="500px" />
 
 2. Select the model UI-TARS-1.5-7B
-  <img src="../apps/ui-tars/images/quick_start/huggingface_uitars_1.5.png" width="500px" />
+   <img src="../apps/ui-tars/images/quick_start/huggingface_uitars_1.5.png" width="500px" />
 
 3. Refer to [README_deploy.md](https://github.com/bytedance/UI-TARS/blob/main/README_deploy.md) for detailed deployment instructions to obtain the **Base URL**, **API Key**, and **Model Name**.
 
-4. Open the UI-TARS Desktop App [Settings]((./setting.md)) and configure:
+4. Open the UI-TARS Desktop App [Settings](<(./setting.md)>) and configure:
 
 ```yaml
 Language: en
@@ -83,6 +81,7 @@ VLM Model Name: xxx
 ```
 
 > [!NOTE]
+>
 > 1. For VLM Provider, make sure to select "**Hugging Face for UI-TARS-1.5**" to ensure proper VLM Action parsing.
 > 2. For VLM Base URL & VLM Model Name, you can checkout your huggingface endpoint page to see detail information. Please make sure Base URL ends with '/v1/'
 >
@@ -98,31 +97,25 @@ VLM Model Name: xxx
 
   <img src="../apps/ui-tars/images/quick_start/start_task.png" width="500px" />
 
-
-
 <br />
-
-
 
 ### Doubao-1.5-UI-TARS on [VolcEngine](https://console.volcengine.com/ark/region:ark+cn-beijing/model/detail?Id=doubao-1-5-ui-tars)
 
-
 1. Visit the [VolcEngine Doubao-1.5-UI-TARS page](https://console.volcengine.com/ark/region:ark+cn-beijing/model/detail?Id=doubao-1-5-ui-tars)
 
-
 2. Click the button `Try (立即体验)` on the top right corner of the page
-  <img src="../apps/ui-tars/images/quick_start/volcengine_try.png" width="500px" />
+   <img src="../apps/ui-tars/images/quick_start/volcengine_try.png" width="500px" />
 
 3. Click the `API inference (API 接入)` link
-  <img src="../apps/ui-tars/images/quick_start/volcengine_api.png" width="500px" />
+   <img src="../apps/ui-tars/images/quick_start/volcengine_api.png" width="500px" />
 
 4. Get your **API Key** from STEP 1 in the drawer panel.
-  <img src="../apps/ui-tars/images/quick_start/volcengine_api_key.png" width="500px" />
+   <img src="../apps/ui-tars/images/quick_start/volcengine_api_key.png" width="500px" />
 
 5. In STEP 2, authenticate your user info and switch to the OpenAI SDK tab to obtain **Base Url** and **Model name**：
-  <img src="../apps/ui-tars/images/quick_start/volcengine_api_info.png" width="500px" />
+   <img src="../apps/ui-tars/images/quick_start/volcengine_api_info.png" width="500px" />
 
-6. Open the UI-TARS Desktop App [Settings]((./setting.md)) and configure:
+6. Open the UI-TARS Desktop App [Settings](<(./setting.md)>) and configure:
 
 ```yaml
 Language: cn
@@ -137,7 +130,6 @@ VLM Model Name: doubao-1.5-ui-tars-250328
 
   <img src="../apps/ui-tars/images/quick_start/volcengine_settings.png" width="500px" />
 
-
 7. Select the desired usage scenario before starting a new chat
 
   <img src="../apps/ui-tars/images/quick_start/start_button.png" width="500px" />
@@ -150,7 +142,6 @@ VLM Model Name: doubao-1.5-ui-tars-250328
   <img src="../apps/ui-tars/images/quick_start/start_task.png" width="500px" />
 
 <br>
-
 
 ## More
 

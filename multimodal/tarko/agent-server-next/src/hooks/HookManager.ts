@@ -3,13 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { getLogger } from '../utils/logger';
-import type {
-  Hook,
-  HookRegistrationOptions,
-  IHookManager,
-  HookEvent,
-  HookStats,
-} from './types';
+import type { Hook, HookRegistrationOptions, IHookManager, HookEvent, HookStats } from './types';
 
 const logger = getLogger('HookManager');
 
@@ -22,7 +16,7 @@ export class HookManager implements IHookManager {
   private stats = new Map<string, HookStats>();
   private events: HookEvent[] = [];
   private readonly maxEvents = 1000; // Keep last 1000 events
-  
+
   /**
    * Register a new hook
    */
@@ -46,15 +40,15 @@ export class HookManager implements IHookManager {
     if (!id || typeof id !== 'string') {
       throw new Error('Hook id must be a non-empty string');
     }
-    
+
     if (!name || typeof name !== 'string') {
       throw new Error('Hook name must be a non-empty string');
     }
-    
+
     if (typeof handler !== 'function') {
       throw new Error('Hook handler must be a function');
     }
-    
+
     if (typeof priority !== 'number' || !Number.isInteger(priority)) {
       throw new Error('Hook priority must be an integer');
     }
@@ -90,7 +84,7 @@ export class HookManager implements IHookManager {
     });
 
     logger.info(
-      `Hook ${isReplacing ? 'replaced' : 'registered'}: ${name} (id: ${id}, priority: ${priority})`
+      `Hook ${isReplacing ? 'replaced' : 'registered'}: ${name} (id: ${id}, priority: ${priority})`,
     );
   }
 
@@ -213,12 +207,14 @@ export class HookManager implements IHookManager {
     return {
       totalHooks: hooks.length,
       hooksByPriority: hooks.map(({ id, name, priority }) => ({ id, name, priority })),
-      executionStats: Array.from(this.stats.values()).map(({ id, executions, avgTime, errors }) => ({
-        id,
-        executions,
-        avgTime: Math.round(avgTime * 100) / 100,
-        errors,
-      })),
+      executionStats: Array.from(this.stats.values()).map(
+        ({ id, executions, avgTime, errors }) => ({
+          id,
+          executions,
+          avgTime: Math.round(avgTime * 100) / 100,
+          errors,
+        }),
+      ),
     };
   }
 
@@ -232,7 +228,7 @@ export class HookManager implements IHookManager {
 
     // Check for duplicate priorities
     const priorityMap = new Map<number, string[]>();
-    hooks.forEach(hook => {
+    hooks.forEach((hook) => {
       const existing = priorityMap.get(hook.priority) || [];
       existing.push(hook.id);
       priorityMap.set(hook.priority, existing);
@@ -245,11 +241,13 @@ export class HookManager implements IHookManager {
     });
 
     // Check for potential ordering issues
-    const authHook = hooks.find(h => h.id.includes('auth'));
-    const loggingHook = hooks.find(h => h.id.includes('log'));
-    
+    const authHook = hooks.find((h) => h.id.includes('auth'));
+    const loggingHook = hooks.find((h) => h.id.includes('log'));
+
     if (authHook && loggingHook && authHook.priority > loggingHook.priority) {
-      warnings.push('Authentication hook has higher priority than logging - sensitive data might be logged');
+      warnings.push(
+        'Authentication hook has higher priority than logging - sensitive data might be logged',
+      );
     }
 
     return { isValid: warnings.length === 0, warnings };
@@ -260,7 +258,7 @@ export class HookManager implements IHookManager {
    */
   private addEvent(event: HookEvent): void {
     this.events.push(event);
-    
+
     // Keep only recent events
     if (this.events.length > this.maxEvents) {
       this.events = this.events.slice(-this.maxEvents);

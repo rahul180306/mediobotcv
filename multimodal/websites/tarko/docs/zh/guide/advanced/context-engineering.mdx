@@ -28,7 +28,7 @@ import { Agent } from '@tarko/agent';
 const agent = new Agent({
   context: {
     maxImagesCount: 5, // 限制上下文中的图像数量（默认：5）
-  }
+  },
 });
 ```
 
@@ -40,14 +40,10 @@ const agent = new Agent({
 // 来自 multimodal/tarko/agent/src/agent/message-history.ts
 const messageHistory = new MessageHistory(
   eventStream,
-  5 // maxImagesCount - 限制图像以防止上下文溢出
+  5, // maxImagesCount - 限制图像以防止上下文溢出
 );
 
-const messages = messageHistory.toMessageHistory(
-  toolCallEngine,
-  systemPrompt,
-  tools
-);
+const messages = messageHistory.toMessageHistory(toolCallEngine, systemPrompt, tools);
 ```
 
 ### 3. 图像上下文管理
@@ -58,11 +54,12 @@ const messages = messageHistory.toMessageHistory(
 const agent = new Agent({
   context: {
     maxImagesCount: 10, // 允许上下文中最多 10 张图像
-  }
+  },
 });
 ```
 
 **工作原理：**
+
 - 超出限制的图像被替换为文本占位符
 - 保留最新的图像，省略最旧的图像
 - 在减少 token 使用的同时维护上下文结构
@@ -100,6 +97,7 @@ const agent = new Agent({
 ### 1. 适当配置图像限制
 
 **对于文本密集型对话：**
+
 ```typescript
 const agent = new Agent({
   context: {
@@ -109,6 +107,7 @@ const agent = new Agent({
 ```
 
 **对于视觉分析任务：**
+
 ```typescript
 const agent = new Agent({
   context: {
@@ -123,7 +122,7 @@ const agent = new Agent({
 
 ```typescript
 const response = await agent.run({
-  input: "分析这些图像",
+  input: '分析这些图像',
   stream: true,
 });
 
@@ -139,14 +138,14 @@ for await (const event of response) {
 ```typescript
 // 带图像的环境输入
 const response = await agent.run({
-  input: "你看到了什么？",
+  input: '你看到了什么？',
   environmentInput: {
     content: [
       { type: 'text', text: '当前屏幕：' },
-      { type: 'image_url', image_url: { url: 'data:image/png;base64,...' } }
+      { type: 'image_url', image_url: { url: 'data:image/png;base64,...' } },
     ],
-    description: '屏幕截图'
-  }
+    description: '屏幕截图',
+  },
 });
 ```
 
@@ -167,7 +166,7 @@ class CustomMessageHistory extends MessageHistory {
   // 重写以添加带时间的自定义系统提示
   getSystemPromptWithTime(instructions: string): string {
     const customTime = new Date().toLocaleString('zh-CN', {
-      timeZone: 'Asia/Shanghai'
+      timeZone: 'Asia/Shanghai',
     });
     return `${instructions}\n\n当前时间（北京时间）：${customTime}`;
   }
@@ -179,7 +178,9 @@ class CustomMessageHistory extends MessageHistory {
 访问和操作事件流进行自定义上下文逻辑：
 
 ```typescript
-const agent = new Agent({ /* 选项 */ });
+const agent = new Agent({
+  /* 选项 */
+});
 
 // 获取事件流
 const eventStream = agent.getEventStream();
@@ -189,8 +190,8 @@ const events = eventStream.getEvents();
 console.log(`总事件数：${events.length}`);
 
 // 过滤特定事件类型
-const userMessages = events.filter(e => e.type === 'user_message');
-const toolCalls = events.filter(e => e.type === 'tool_call');
+const userMessages = events.filter((e) => e.type === 'user_message');
+const toolCalls = events.filter((e) => e.type === 'tool_call');
 ```
 
 ## 与 Agent Hooks 集成
@@ -204,24 +205,24 @@ const agent = new Agent({
       // 在工具执行前记录上下文
       console.log('工具调用前的上下文：', context.messages.length);
     },
-    
+
     onAfterToolCall: async (context) => {
       // 监控工具执行后的上下文增长
       console.log('工具调用后的上下文：', context.messages.length);
     },
-    
+
     onRetrieveTools: async (tools) => {
       // 根据上下文大小过滤工具
       const eventStream = agent.getEventStream();
       const events = eventStream.getEvents();
-      
+
       if (events.length > 50) {
         // 为大型上下文减少工具
         return tools.slice(0, 3);
       }
       return tools;
-    }
-  }
+    },
+  },
 });
 ```
 
@@ -265,14 +266,15 @@ const eventStream = agent.getEventStream();
 const events = eventStream.getEvents();
 
 console.log('总事件数：', events.length);
-console.log('事件类型：', [...new Set(events.map(e => e.type))]);
+console.log('事件类型：', [...new Set(events.map((e) => e.type))]);
 
 // 计算上下文中的图像
 const imageCount = events.reduce((count, event) => {
   if (event.type === 'user_message' && Array.isArray(event.content)) {
-    return count + event.content.filter(part => 
-      typeof part === 'object' && part.type === 'image_url'
-    ).length;
+    return (
+      count +
+      event.content.filter((part) => typeof part === 'object' && part.type === 'image_url').length
+    );
   }
   return count;
 }, 0);

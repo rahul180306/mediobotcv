@@ -10,7 +10,7 @@ Configure Web UI through the `webui` option in your `tarko.config.ts`:
 
 ```typescript
 // tarko.config.ts
-import { AgentAppConfig } from '@tarko/interface'
+import { AgentAppConfig } from '@tarko/interface';
 
 export default {
   // ... other config
@@ -19,12 +19,9 @@ export default {
     title: 'My Agent',
     subtitle: 'AI Assistant for Development',
     welcomTitle: 'Welcome to My Agent',
-    welcomePrompts: [
-      'Search for the latest GUI Agent papers',
-      'Find information about UI TARS'
-    ]
-  }
-} as AgentAppConfig
+    welcomePrompts: ['Search for the latest GUI Agent papers', 'Find information about UI TARS'],
+  },
+} as AgentAppConfig;
 ```
 
 ### Via Agent Constructor
@@ -33,7 +30,7 @@ Set Agent UI Configuration through the static `webuiConfig` property:
 
 ```typescript
 // Agent class
-import { AgentWebUIImplementation } from '@tarko/interface'
+import { AgentWebUIImplementation } from '@tarko/interface';
 
 export class MyAgent extends MCPAgent {
   static webuiConfig: AgentWebUIImplementation = {
@@ -44,11 +41,11 @@ export class MyAgent extends MCPAgent {
         {
           title: 'Code Editor',
           link: 'http://localhost:3000',
-          icon: 'code'
-        }
-      ]
-    }
-  }
+          icon: 'code',
+        },
+      ],
+    },
+  };
 }
 ```
 
@@ -103,12 +100,13 @@ welcomePrompts?: string[]
 Array of suggested prompts displayed on the welcome screen.
 
 **Example:**
+
 ```typescript
 welcomePrompts: [
   'Search for the latest GUI Agent papers',
   'Find information about UI TARS',
-  'Tell me the top 5 most popular projects on ProductHunt today'
-]
+  'Tell me the top 5 most popular projects on ProductHunt today',
+];
 ```
 
 #### welcomeCards
@@ -120,17 +118,19 @@ welcomeCards?: WelcomeCard[]
 Welcome screen cards with predefined prompts and Agent options.
 
 **WelcomeCard Interface:**
+
 ```typescript
 interface WelcomeCard {
-  title: string          // Card display title
-  prompt: string         // Prompt content
-  image?: string         // Background image URL
-  category: string       // Grouping category
-  agentOptions?: Record<string, any>  // One-time Agent options for the new session
+  title: string; // Card display title
+  prompt: string; // Prompt content
+  image?: string; // Background image URL
+  category: string; // Grouping category
+  agentOptions?: Record<string, any>; // One-time Agent options for the new session
 }
 ```
 
 **Example:**
+
 ```typescript
 welcomeCards: [
   {
@@ -138,9 +138,9 @@ welcomeCards: [
     prompt: 'Review my latest pull request',
     category: 'Development',
     image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71',
-    agentOptions: { agentMode: 'review' }
-  }
-]
+    agentOptions: { agentMode: 'review' },
+  },
+];
 ```
 
 The server only accepts `agentMode` in `agentOptions`. A card carrying any other key fails to create a session with `400 Unsupported agentOptions`; configure other options on the server instead.
@@ -158,31 +158,33 @@ workspace?: {
 Workspace header navigation configuration.
 
 **WorkspaceNavItem Interface:**
+
 ```typescript
 interface WorkspaceNavItem {
-  title: string                    // Display text
-  link: string                     // URL to open in new tab
-  icon?: WorkspaceNavItemIcon      // Icon type
+  title: string; // Display text
+  link: string; // URL to open in new tab
+  icon?: WorkspaceNavItemIcon; // Icon type
 }
 
-type WorkspaceNavItemIcon = 'code' | 'monitor' | 'terminal' | 'browser' | 'desktop' | 'default'
+type WorkspaceNavItemIcon = 'code' | 'monitor' | 'terminal' | 'browser' | 'desktop' | 'default';
 ```
 
 **Example:**
+
 ```typescript
 workspace: {
   navItems: [
     {
       title: 'Code Server',
       link: 'http://localhost:8080',
-      icon: 'code'
+      icon: 'code',
     },
     {
       title: 'VNC',
       link: 'http://localhost:6080',
-      icon: 'monitor'
-    }
-  ]
+      icon: 'monitor',
+    },
+  ];
 }
 ```
 
@@ -202,11 +204,13 @@ layout?: {
 Layout behavior and display options.
 
 **LayoutMode:**
+
 ```typescript
-type LayoutMode = 'default' | 'narrow-chat'
+type LayoutMode = 'default' | 'narrow-chat';
 ```
 
 **Properties:**
+
 - `defaultLayout` - Initial layout mode (default: `'default'`)
   - `default` - Standard layout with full workspace
   - `narrow-chat` - Compact chat-focused layout
@@ -215,6 +219,7 @@ type LayoutMode = 'default' | 'narrow-chat'
 - `enableHome` - Register home route (default: `true`)
 
 **Example:**
+
 ```typescript
 layout: {
   defaultLayout: 'narrow-chat',
@@ -239,6 +244,7 @@ guiAgent?: {
 GUI Agent display and screenshot rendering options.
 
 **Properties:**
+
 - `defaultScreenshotRenderStrategy` - Screenshot display strategy (default: `'afterAction'`)
   - `both` - Show before and after screenshots for comparison
   - `beforeAction` - Show only pre-action screenshots (suitable for Agent-TARS)
@@ -248,6 +254,7 @@ GUI Agent display and screenshot rendering options.
 - `renderBrowserShell` - Wrap screenshots in browser shell UI (default: `true`)
 
 **Example:**
+
 ```typescript
 guiAgent: {
   defaultScreenshotRenderStrategy: 'beforeAction',
@@ -278,8 +285,9 @@ base?: string
 Base path for routing deployment. Supports both static paths and regex patterns.
 
 **Examples:**
+
 ```typescript
-base: "/agent-ui"           // Static path
-base: "/tenant-.+"         // Regex pattern
-base: "/(foo|bar)/app"     // Regex with groups
+base: '/agent-ui'; // Static path
+base: '/tenant-.+'; // Regex pattern
+base: '/(foo|bar)/app'; // Regex with groups
 ```

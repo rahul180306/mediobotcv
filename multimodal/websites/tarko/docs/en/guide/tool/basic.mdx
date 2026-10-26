@@ -18,7 +18,9 @@ const tool = new Tool({
   id: 'tool_name',
   description: 'Tool description',
   parameters: JSONSchema7,
-  function: async (args) => { /* implementation */ }
+  function: async (args) => {
+    /* implementation */
+  },
 });
 ```
 
@@ -39,28 +41,24 @@ export function createCalculatorTool(): Tool {
         operation: {
           type: 'string',
           enum: ['add', 'subtract', 'multiply', 'divide'],
-          description: 'Mathematical operation to perform'
+          description: 'Mathematical operation to perform',
         },
         a: {
           type: 'number',
-          description: 'First number'
+          description: 'First number',
         },
         b: {
           type: 'number',
-          description: 'Second number'
-        }
+          description: 'Second number',
+        },
       },
-      required: ['operation', 'a', 'b']
+      required: ['operation', 'a', 'b'],
     } as JSONSchema7,
-    function: async (params: {
-      operation: string;
-      a: number;
-      b: number;
-    }) => {
+    function: async (params: { operation: string; a: number; b: number }) => {
       const { operation, a, b } = params;
-      
+
       let result: number;
-      
+
       switch (operation) {
         case 'add':
           result = a + b;
@@ -80,12 +78,14 @@ export function createCalculatorTool(): Tool {
         default:
           throw new Error(`Unknown operation: ${operation}`);
       }
-      
-      return [{
-        type: 'text',
-        text: `${a} ${operation} ${b} = ${result}`
-      }];
-    }
+
+      return [
+        {
+          type: 'text',
+          text: `${a} ${operation} ${b} = ${result}`,
+        },
+      ];
+    },
   });
 }
 ```
@@ -103,8 +103,8 @@ const agent = new AgentTARS({
   mcpServers: {
     calculator: {
       // Custom MCP server with calculator tool
-    }
-  }
+    },
+  },
 });
 
 // Or register during initialization
@@ -137,26 +137,28 @@ export function createApiTool(): Tool {
       type: 'object',
       properties: {
         url: { type: 'string', description: 'Request URL' },
-        method: { type: 'string', enum: ['GET', 'POST', 'PUT', 'DELETE'] }
+        method: { type: 'string', enum: ['GET', 'POST', 'PUT', 'DELETE'] },
       },
-      required: ['url', 'method']
+      required: ['url', 'method'],
     } as JSONSchema7,
     function: async (params: { url: string; method: string }) => {
       try {
         const response = await fetch(params.url, {
-          method: params.method
+          method: params.method,
         });
-        
+
         const data = await response.text();
-        
-        return [{
-          type: 'text',
-          text: `Status: ${response.status}\n${data}`
-        }];
+
+        return [
+          {
+            type: 'text',
+            text: `Status: ${response.status}\n${data}`,
+          },
+        ];
       } catch (error) {
         throw new Error(`API request failed: ${error.message}`);
       }
-    }
+    },
   });
 }
 ```
@@ -213,13 +215,13 @@ import { createCalculatorTool } from './calculator-tool';
 describe('Calculator Tool', () => {
   it('should perform calculations', async () => {
     const tool = createCalculatorTool();
-    
+
     const result = await tool.function({
       operation: 'add',
       a: 5,
-      b: 3
+      b: 3,
     });
-    
+
     expect(result[0].text).toContain('8');
   });
 });
@@ -230,5 +232,4 @@ describe('Calculator Tool', () => {
 - Learn about [Tool Management](/guide/tool/management) for filtering and organizing tools
 - Explore [Tool Call Engine](/guide/tool/tool-call-engine) for advanced execution patterns
 
-{/* Placeholder: Add screenshots of tool development workflow */}
-{/* Placeholder: Add video tutorial for creating custom tools */}
+{/* Placeholder: Add screenshots of tool development workflow */} {/* Placeholder: Add video tutorial for creating custom tools */}

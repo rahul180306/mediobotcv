@@ -30,7 +30,7 @@ const { content, filePath } = await loadConfig<MyConfig>({
     'agent-tars.config.js',
     'agent-tars.config.json',
     'agent-tars.config.yml',
-  ]
+  ],
 });
 
 console.log('Config loaded from:', filePath);
@@ -66,19 +66,19 @@ export default ({ env, meta }) => {
 interface LoadConfigOptions {
   // Working directory to resolve config files from
   cwd?: string;
-  
+
   // Specific path to config file (absolute or relative to cwd)
   path?: string;
-  
+
   // Custom metadata passed to config function
   meta?: Record<string, unknown>;
-  
+
   // Environment mode (defaults to process.env.NODE_ENV)
   envMode?: string;
-  
+
   // Loader type: 'jiti' (default) or 'native'
   loader?: 'jiti' | 'native';
-  
+
   // Array of config file names to search for
   configFiles?: string[];
 }
@@ -110,5 +110,4 @@ const { content } = await loadConfig<ServerConfig>({
 
 // TypeScript knows the shape of content
 const { port, host, database } = content;
-
 ```

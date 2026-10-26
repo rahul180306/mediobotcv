@@ -120,6 +120,7 @@ Any format can be supported using transformers that convert to `AgentEventStream
 ### HTML Generation
 
 All commands will generate HTML files that can be opened in a browser to view the agent execution replay with:
+
 - Interactive event timeline
 - Tool call details
 - Agent thinking process
@@ -128,6 +129,7 @@ All commands will generate HTML files that can be opened in a browser to view th
 ### Transformed JSON Output
 
 When using `--dump-transformed`, a JSON file will be created alongside the HTML:
+
 - Input: `custom-format.json` → Output: `custom-format-transformed.json`
 - Input: `trace.jsonl` → Output: `trace-transformed.json`
 - Contains the standardized `AgentEventStream.Event[]` format
@@ -162,7 +164,7 @@ export default defineTransformer<CustomLogFormat>((input) => {
 
   for (const log of input.logs) {
     const timestamp = new Date(log.timestamp).getTime();
-    
+
     if (log.type === 'user_input') {
       events.push({
         id: `event-${eventIdCounter++}`,
@@ -327,14 +329,17 @@ agui custom-format.json --transformer transformer.ts --dump-transformed
 ### Common Issues
 
 1. **Tool calls show as "executing" forever**
+
    - Ensure `toolCall.id` matches `toolResult.toolCallId`
    - Set `finishReason: 'tool_calls'` when assistant makes tool calls
 
 2. **JSONL files not loading**
+
    - Ensure file has `.jsonl` extension for auto-detection
    - Check that each line contains valid JSON
 
 3. **Transformer not found**
+
    - Verify the transformer file path is correct
    - Ensure the transformer exports a default function
 
@@ -345,6 +350,7 @@ agui custom-format.json --transformer transformer.ts --dump-transformed
 ### Validation
 
 The CLI automatically validates that transformed data contains:
+
 - An `events` array
 - Valid `AgentEventStream.Event[]` structure
 
@@ -361,6 +367,7 @@ See the `examples/` directory for complete working examples:
 - **`examples/custom-transformer/`** - Custom formats with transformers
 
 Each example includes:
+
 - One-click `run.sh` script
 - Detailed README with explanations
 - Sample trace files
@@ -376,4 +383,7 @@ cd examples/custom-transformer && ./run.sh
 ```
 
 For detailed documentation, see [examples/README.md](examples/README.md).
+
+```
+
 ```

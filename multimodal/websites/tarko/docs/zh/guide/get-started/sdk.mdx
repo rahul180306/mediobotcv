@@ -47,16 +47,16 @@ const weatherTool = new Tool({
 
 const agent = new Agent({
   name: 'MyAgent',
-  
+
   model: {
     provider: 'openai',
     id: 'gpt-4',
     apiKey: process.env.OPENAI_API_KEY,
   },
-  
+
   instructions: `你是一个有用的助手，可以获取天气信息。`,
-  
-  tools: [weatherTool]
+
+  tools: [weatherTool],
 });
 ```
 
@@ -70,7 +70,7 @@ console.log(response);
 // 使用配置选项运行
 const response2 = await agent.run({
   input: '今天天气怎么样？',
-  sessionId: 'my-session'
+  sessionId: 'my-session',
 });
 ```
 
@@ -79,7 +79,7 @@ const response2 = await agent.run({
 ```typescript
 const stream = await agent.run({
   input: '写一个关于 AI 的长故事',
-  stream: true
+  stream: true,
 });
 
 for await (const chunk of stream) {
@@ -106,7 +106,7 @@ const databaseTool = new Tool({
   description: '查询应用数据库',
   parameters: z.object({
     query: z.string().describe('要执行的 SQL 查询'),
-    limit: z.number().optional().describe('结果限制数量')
+    limit: z.number().optional().describe('结果限制数量'),
   }),
   function: async (params) => {
     const { query, limit = 10 } = params;
@@ -122,7 +122,7 @@ const agent = new Agent({
     id: 'gpt-4',
     apiKey: process.env.OPENAI_API_KEY,
   },
-  tools: [databaseTool]
+  tools: [databaseTool],
 });
 ```
 
@@ -164,8 +164,8 @@ const agent = new Agent({
     apiKey: process.env.OPENAI_API_KEY,
   },
   context: {
-    maxImagesCount: 5,  // 支持的最大图片数量
-  }
+    maxImagesCount: 5, // 支持的最大图片数量
+  },
 });
 
 // 生成对话摘要
@@ -190,19 +190,19 @@ class CustomAgent extends Agent {
     }
     return args;
   }
-  
+
   async onAfterToolCall(id: string, toolCall: any, result: any) {
     // 记录结果
     await this.logToolResult(toolCall, result);
     return result;
   }
-  
+
   async onToolCallError(id: string, toolCall: any, error: any) {
     // 自定义错误处理
     console.error('工具调用错误:', toolCall.name, error);
     return { error: '工具执行失败，请重试' };
   }
-  
+
   private async logToolResult(toolCall: any, result: any) {
     console.log(`工具 ${toolCall.name} 执行完成:`, result);
   }
@@ -214,7 +214,7 @@ const agent = new CustomAgent({
     id: 'gpt-4',
     apiKey: process.env.OPENAI_API_KEY,
   },
-  tools: [weatherTool]
+  tools: [weatherTool],
 });
 ```
 
@@ -235,16 +235,16 @@ app.use(express.json());
 app.post('/chat', async (req, res) => {
   try {
     const { message, conversationId } = req.body;
-    
-    const conversation = conversationId 
+
+    const conversation = conversationId
       ? agent.getConversation(conversationId)
       : agent.createConversation();
-    
+
     const response = await conversation.chat(message);
-    
+
     res.json({
       response,
-      conversationId: conversation.id
+      conversationId: conversation.id,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -254,19 +254,19 @@ app.post('/chat', async (req, res) => {
 // 流式端点
 app.get('/chat/stream', async (req, res) => {
   const { message } = req.query;
-  
+
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
-    'Connection': 'keep-alive'
+    Connection: 'keep-alive',
   });
-  
+
   const stream = agent.chatStream(message as string);
-  
+
   for await (const chunk of stream) {
     res.write(`data: ${JSON.stringify(chunk)}\n\n`);
   }
-  
+
   res.end();
 });
 
@@ -282,19 +282,19 @@ import { Agent } from '@tarko/agent';
 function useAgent(config: AgentConfig) {
   const [agent, setAgent] = useState<Agent | null>(null);
   const [loading, setLoading] = useState(false);
-  
+
   useEffect(() => {
     const agentInstance = new Agent(config);
     setAgent(agentInstance);
-    
+
     return () => {
       agentInstance.dispose();
     };
   }, []);
-  
+
   const chat = async (message: string) => {
     if (!agent) return;
-    
+
     setLoading(true);
     try {
       const response = await agent.chat(message);
@@ -303,7 +303,7 @@ function useAgent(config: AgentConfig) {
       setLoading(false);
     }
   };
-  
+
   return { agent, chat, loading };
 }
 
@@ -312,17 +312,17 @@ function ChatComponent() {
     model: { provider: 'openai', apiKey: 'your-key', model: 'gpt-4' },
     tools: []
   });
-  
+
   const [message, setMessage] = useState('');
   const [response, setResponse] = useState('');
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await chat(message);
     setResponse(result || '');
     setMessage('');
   };
-  
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -360,7 +360,7 @@ try {
     // 处理一般错误
     console.error('意外错误:', error.message);
   }
-  
+
   throw error;
 }
 ```
@@ -370,22 +370,25 @@ try {
 ```typescript
 class AgentManager {
   private agents = new Map<string, Agent>();
-  
+
   getAgent(userId: string): Agent {
     if (!this.agents.has(userId)) {
       const agent = new Agent(this.getConfigForUser(userId));
       this.agents.set(userId, agent);
-      
+
       // 非活跃后清理
-      setTimeout(() => {
-        this.agents.delete(userId);
-        agent.dispose();
-      }, 30 * 60 * 1000); // 30 分钟
+      setTimeout(
+        () => {
+          this.agents.delete(userId);
+          agent.dispose();
+        },
+        30 * 60 * 1000,
+      ); // 30 分钟
     }
-    
+
     return this.agents.get(userId)!;
   }
-  
+
   dispose() {
     for (const agent of this.agents.values()) {
       agent.dispose();

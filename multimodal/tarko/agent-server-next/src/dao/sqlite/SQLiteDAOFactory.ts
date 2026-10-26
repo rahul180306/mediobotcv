@@ -13,12 +13,12 @@ import {
   SqliteAgentStorageImplementation,
   TARKO_CONSTANTS,
 } from '@tarko/interface';
-import { 
-  IDAOFactory, 
-  IUserConfigDAO, 
-  ISessionDAO, 
-  IEventDAO, 
-  ISandboxAllocationDAO 
+import {
+  IDAOFactory,
+  IUserConfigDAO,
+  ISessionDAO,
+  IEventDAO,
+  ISandboxAllocationDAO,
 } from '../interfaces';
 import { UserConfigDAO } from './UserConfigDAO';
 import { SessionDAO } from './SessionDAO';
@@ -34,7 +34,7 @@ export class SQLiteDAOFactory implements IDAOFactory {
   private initialized = false;
   private config: SqliteAgentStorageImplementation;
   public readonly dbPath: string;
-  
+
   // DAO instance cache
   private userConfigDAO: IUserConfigDAO | null = null;
   private sessionDAO: ISessionDAO | null = null;
@@ -43,7 +43,7 @@ export class SQLiteDAOFactory implements IDAOFactory {
 
   constructor(config: SqliteAgentStorageImplementation) {
     this.config = config;
-    
+
     // Setup database path
     const baseDir = getGlobalStorageDirectory(config.baseDir);
     const dbName = config.dbName ?? TARKO_CONSTANTS.SESSION_DATA_DB_NAME;
@@ -122,7 +122,7 @@ export class SQLiteDAOFactory implements IDAOFactory {
       this.db.exec(`
         CREATE INDEX IF NOT EXISTS idx_events_sessionId ON events (sessionId)
       `);
-      
+
       this.db.exec(`
         CREATE INDEX IF NOT EXISTS idx_events_sessionId_timestamp ON events (sessionId, timestamp)
       `);
@@ -175,41 +175,41 @@ export class SQLiteDAOFactory implements IDAOFactory {
 
   getUserConfigDAO(): IUserConfigDAO {
     this.ensureInitialized();
-    
+
     if (!this.userConfigDAO) {
       this.userConfigDAO = new UserConfigDAO(this.db);
     }
-    
+
     return this.userConfigDAO;
   }
 
   getSessionDAO(): ISessionDAO {
     this.ensureInitialized();
-    
+
     if (!this.sessionDAO) {
       this.sessionDAO = new SessionDAO(this.db);
     }
-    
+
     return this.sessionDAO;
   }
 
   getEventDAO(): IEventDAO {
     this.ensureInitialized();
-    
+
     if (!this.eventDAO) {
       this.eventDAO = new EventDAO(this.db);
     }
-    
+
     return this.eventDAO;
   }
 
   getSandboxAllocationDAO(): ISandboxAllocationDAO {
     this.ensureInitialized();
-    
+
     if (!this.sandboxAllocationDAO) {
       this.sandboxAllocationDAO = new SandboxAllocationDAO(this.db);
     }
-    
+
     return this.sandboxAllocationDAO;
   }
 
@@ -245,13 +245,13 @@ export class SQLiteDAOFactory implements IDAOFactory {
     if (this.db && this.db.isOpen) {
       this.db.close();
       this.initialized = false;
-      
+
       // Clear DAO instances
       this.userConfigDAO = null;
       this.sessionDAO = null;
       this.eventDAO = null;
       this.sandboxAllocationDAO = null;
-      
+
       console.log('SQLite DAO Factory closed successfully');
     }
   }
@@ -295,7 +295,7 @@ export class SQLiteDAOFactory implements IDAOFactory {
 
     // Save the event
     await this.getEventDAO().saveEvent(sessionId, event);
-    
+
     // Update session timestamp
     await this.getSessionDAO().updateSessionTimestamp(sessionId);
   }

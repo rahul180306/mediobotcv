@@ -25,7 +25,7 @@ export const resetFirstH1Flag = (): void => {
 export const Heading: React.FC<HeadingProps> = ({ children, level }) => {
   const id = generateId(children?.toString());
   const isDarkMode = useDarkMode();
-  
+
   const baseHeadingStyles = 'group scroll-mt-20 flex items-center font-semibold leading-tight';
   const textColor = isDarkMode ? 'text-gray-100' : 'text-gray-900';
   const borderColor = isDarkMode ? 'border-gray-700' : 'border-gray-200';

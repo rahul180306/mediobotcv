@@ -167,6 +167,10 @@ export class NutJSOperator extends Operator {
       }
     };
 
+    if (!action_type) {
+      throw new Error('[NutjsOperator] Cannot execute empty or unparsed action');
+    }
+
     switch (action_type) {
       case 'wait':
         logger.info('[NutjsOperator] wait', action_inputs);
@@ -175,6 +179,9 @@ export class NutJSOperator extends Operator {
 
       case 'mouse_move':
       case 'hover':
+        if (startX === null || startY === null || isNaN(startX) || isNaN(startY)) {
+          throw new Error(`[NutjsOperator] Cannot execute ${action_type}: missing or invalid coordinates (${startX}, ${startY})`);
+        }
         logger.info('[NutjsOperator] mouse_move');
         await moveStraightTo(startX, startY);
         break;
@@ -182,6 +189,9 @@ export class NutJSOperator extends Operator {
       case 'click':
       case 'left_click':
       case 'left_single':
+        if (startX === null || startY === null || isNaN(startX) || isNaN(startY)) {
+          throw new Error(`[NutjsOperator] Cannot execute ${action_type}: missing or invalid coordinates (${startX}, ${startY})`);
+        }
         logger.info('[NutjsOperator] left_click');
         await moveStraightTo(startX, startY);
         await sleep(100);
@@ -190,6 +200,9 @@ export class NutJSOperator extends Operator {
 
       case 'left_double':
       case 'double_click':
+        if (startX === null || startY === null || isNaN(startX) || isNaN(startY)) {
+          throw new Error(`[NutjsOperator] Cannot execute ${action_type}: missing or invalid coordinates (${startX}, ${startY})`);
+        }
         logger.info(`[NutjsOperator] ${action_type}(${startX}, ${startY})`);
         await moveStraightTo(startX, startY);
         await sleep(100);
@@ -198,6 +211,9 @@ export class NutJSOperator extends Operator {
 
       case 'right_click':
       case 'right_single':
+        if (startX === null || startY === null || isNaN(startX) || isNaN(startY)) {
+          throw new Error(`[NutjsOperator] Cannot execute ${action_type}: missing or invalid coordinates (${startX}, ${startY})`);
+        }
         logger.info('[NutjsOperator] right_click');
         await moveStraightTo(startX, startY);
         await sleep(100);
@@ -205,6 +221,9 @@ export class NutJSOperator extends Operator {
         break;
 
       case 'middle_click':
+        if (startX === null || startY === null || isNaN(startX) || isNaN(startY)) {
+          throw new Error(`[NutjsOperator] Cannot execute ${action_type}: missing or invalid coordinates (${startX}, ${startY})`);
+        }
         logger.info('[NutjsOperator] middle_click');
         await moveStraightTo(startX, startY);
         await mouse.click(Button.MIDDLE);
@@ -235,30 +254,41 @@ export class NutJSOperator extends Operator {
       }
 
       case 'type': {
-        const content = action_inputs.content?.trim();
-        logger.info('[NutjsOperator] type', content);
-        if (content) {
-          const stripContent = content.replace(/\\n$/, '').replace(/\n$/, '');
-          keyboard.config.autoDelayMs = 0;
-          if (process.platform === 'win32') {
-            const originalClipboard = await clipboard.getContent();
-            await clipboard.setContent(stripContent);
-            await keyboard.pressKey(Key.LeftControl, Key.V);
-            await sleep(50);
-            await keyboard.releaseKey(Key.LeftControl, Key.V);
-            await sleep(50);
-            await clipboard.setContent(originalClipboard);
-          } else {
+        const rawContent = action_inputs.content;
+        logger.info('[NutjsOperator] type', rawContent);
+        if (
+          rawContent === undefined ||
+          rawContent === null ||
+          typeof rawContent !== 'string' ||
+          rawContent.length === 0
+        ) {
+          logger.error('No content to type: missing or invalid content in action_inputs');
+          throw new Error('No content to type: missing or invalid content in action_inputs');
+        }
+
+        const hasEnter = rawContent.endsWith('\n') || rawContent.endsWith('\\n');
+        const stripContent = rawContent.replace(/\\n$/, '').replace(/\n$/, '');
+        keyboard.config.autoDelayMs = 0;
+        if (process.platform === 'win32') {
+          const originalClipboard = await clipboard.getContent();
+          await clipboard.setContent(stripContent);
+          await keyboard.pressKey(Key.LeftControl, Key.V);
+          await sleep(50);
+          await keyboard.releaseKey(Key.LeftControl, Key.V);
+          await sleep(50);
+          await clipboard.setContent(originalClipboard);
+        } else {
+          if (stripContent.length > 0) {
             await keyboard.type(stripContent);
           }
-
-          if (content.endsWith('\n') || content.endsWith('\\n')) {
-            await keyboard.pressKey(Key.Enter);
-            await keyboard.releaseKey(Key.Enter);
-          }
-
-          keyboard.config.autoDelayMs = 500;
         }
+
+        if (hasEnter) {
+          await keyboard.pressKey(Key.Enter);
+          await keyboard.releaseKey(Key.Enter);
+        }
+
+        keyboard.config.autoDelayMs = 500;
         break;
       }
 

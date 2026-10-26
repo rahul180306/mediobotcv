@@ -7,3 +7,14 @@ export type { GUIAgentConfig } from './types';
 export type { GUIAgentData } from '@ui-tars/shared/types';
 export { StatusEnum } from '@ui-tars/shared/types';
 export { UITarsModelVersion } from '@ui-tars/shared/types';
+export {
+  ObservationStorage,
+  SessionObservationState,
+} from './observation/observationStorage';
+export {
+  ImagePreprocessCache,
+  type ImagePreprocessCacheOptions,
+  type ImagePreprocessCacheStats,
+} from './cache/imagePreprocessCache';
+export { parseImageDimensions } from './utils';
+

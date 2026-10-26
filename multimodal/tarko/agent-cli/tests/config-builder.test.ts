@@ -875,12 +875,12 @@ describe('buildAppConfig', () => {
         includeLogs: true,
         useCache: false,
         open: true,
-        
+
         // Known options that should be preserved
         model: {
           provider: 'openai',
         },
-        
+
         // Unknown options that should be preserved
         aioSandbox: 'sandbox-value',
         customAgentOption: 'agent-specific-value',
@@ -915,7 +915,7 @@ describe('buildAppConfig', () => {
         // Deprecated options
         provider: 'openai',
         apiKey: 'deprecated-key', // secretlint-disable-line
-        
+
         // Unknown options
         aioSandbox: 'test-value',
         customFeature: true,
@@ -1017,7 +1017,7 @@ describe('buildAppConfig', () => {
       // Original unknown options should be preserved
       expect(result).toHaveProperty('aioSandbox', 'test-value');
       expect(result).toHaveProperty('customOption', 'original-value');
-      
+
       // Enhancer modifications should also be present
       expect(result).toHaveProperty('enhancedCustomOption', 'enhanced-original-value');
     });
@@ -1049,7 +1049,7 @@ describe('buildAppConfig', () => {
         includeLogs: true,
         useCache: true,
         workspace: '/workspace',
-        
+
         // Unknown option
         unknownOption: 'should-be-preserved',
       };

@@ -27,13 +27,15 @@ export class AgentEventStreamProcessor implements AgentEventStream.Processor {
 
   constructor(options: AgentEventStream.ProcessorOptions = {}) {
     this.options = { ...DEFAULT_OPTIONS, ...options };
-    
+
     // Restore initial events if provided
     if (options.initialEvents && options.initialEvents.length > 0) {
       this.events = [...options.initialEvents];
-      this.logger.debug(`EventStream initialized with ${options.initialEvents.length} initial events`);
+      this.logger.debug(
+        `EventStream initialized with ${options.initialEvents.length} initial events`,
+      );
     }
-    
+
     this.logger.debug('EventStream initialized with options:', this.options);
   }
 
@@ -210,8 +212,6 @@ export class AgentEventStreamProcessor implements AgentEventStream.Processor {
       this.logger.debug('Unsubscribed from streaming events');
     };
   }
-
-
 
   /**
    * Clear all events from the stream

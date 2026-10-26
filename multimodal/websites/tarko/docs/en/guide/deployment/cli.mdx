@@ -35,6 +35,7 @@ tarko serve --config production.config.ts --port 8080
 ```
 
 The server exposes REST and WebSocket APIs at:
+
 - `GET /api/v1/health` - Health check
 - `POST /api/v1/chat` - Chat endpoint
 - `GET /api/v1/events` - Event stream (WebSocket)
@@ -53,7 +54,7 @@ const config: AgentAppConfig = {
     id: 'gpt-4',
     apiKey: process.env.OPENAI_API_KEY,
   },
-  
+
   server: {
     port: 8080,
     host: '0.0.0.0',
@@ -63,11 +64,11 @@ const config: AgentAppConfig = {
       max: 100, // requests per window
     },
   },
-  
+
   ui: {
     enabled: false, // Disable UI for production
   },
-  
+
   logging: {
     level: 'info',
     format: 'json',
@@ -81,7 +82,7 @@ const config: AgentAppConfig = {
       },
     },
   },
-  
+
   metrics: {
     enabled: true,
     endpoint: '/metrics',
@@ -162,7 +163,7 @@ services:
   agent:
     build: .
     ports:
-      - "8080:8080"
+      - '8080:8080'
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - NODE_ENV=production
@@ -171,7 +172,7 @@ services:
       - ./logs:/app/logs
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/api/v1/health"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:8080/api/v1/health']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -182,7 +183,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
       - redis_data:/data
     restart: unless-stopped
@@ -191,8 +192,8 @@ services:
   nginx:
     image: nginx:alpine
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./ssl:/etc/nginx/ssl:ro
@@ -243,49 +244,49 @@ spec:
         app: tarko-agent
     spec:
       containers:
-      - name: agent
-        image: my-agent:latest
-        ports:
-        - containerPort: 8080
-        env:
-        - name: OPENAI_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: api-secrets
-              key: openai-key
-        - name: NODE_ENV
-          value: "production"
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /api/v1/health
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /api/v1/health
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
-        volumeMounts:
-        - name: workspace
-          mountPath: /app/workspace
-        - name: logs
-          mountPath: /app/logs
+        - name: agent
+          image: my-agent:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: openai-key
+            - name: NODE_ENV
+              value: 'production'
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          volumeMounts:
+            - name: workspace
+              mountPath: /app/workspace
+            - name: logs
+              mountPath: /app/logs
       volumes:
-      - name: workspace
-        persistentVolumeClaim:
-          claimName: agent-workspace
-      - name: logs
-        persistentVolumeClaim:
-          claimName: agent-logs
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: agent-workspace
+        - name: logs
+          persistentVolumeClaim:
+            claimName: agent-logs
 ---
 apiVersion: v1
 kind: Service
@@ -295,9 +296,9 @@ spec:
   selector:
     app: tarko-agent
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 8080
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
   type: ClusterIP
 ---
 apiVersion: networking.k8s.io/v1
@@ -308,16 +309,16 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: agent.example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: tarko-agent-service
-            port:
-              number: 80
+    - host: agent.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: tarko-agent-service
+                port:
+                  number: 80
 ```
 
 Deploy to Kubernetes:
@@ -347,24 +348,26 @@ For traditional server deployments:
 ```javascript
 // ecosystem.config.js
 module.exports = {
-  apps: [{
-    name: 'tarko-agent',
-    script: 'tarko',
-    args: 'serve --port 8080 --config production.config.ts',
-    instances: 'max', // Use all CPU cores
-    exec_mode: 'cluster',
-    autorestart: true,
-    watch: false,
-    max_memory_restart: '1G',
-    env: {
-      NODE_ENV: 'production',
-      OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+  apps: [
+    {
+      name: 'tarko-agent',
+      script: 'tarko',
+      args: 'serve --port 8080 --config production.config.ts',
+      instances: 'max', // Use all CPU cores
+      exec_mode: 'cluster',
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '1G',
+      env: {
+        NODE_ENV: 'production',
+        OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+      },
+      error_file: './logs/err.log',
+      out_file: './logs/out.log',
+      log_file: './logs/combined.log',
+      time: true,
     },
-    error_file: './logs/err.log',
-    out_file: './logs/out.log',
-    log_file: './logs/combined.log',
-    time: true,
-  }]
+  ],
 };
 ```
 
@@ -454,7 +457,7 @@ upstream tarko_agents {
 server {
     listen 80;
     server_name agent.example.com;
-    
+
     # Redirect HTTP to HTTPS
     return 301 https://$server_name$request_uri;
 }
@@ -462,18 +465,18 @@ server {
 server {
     listen 443 ssl http2;
     server_name agent.example.com;
-    
+
     # SSL configuration
     ssl_certificate /etc/nginx/ssl/cert.pem;
     ssl_certificate_key /etc/nginx/ssl/key.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
-    
+
     # Security headers
     add_header X-Frame-Options DENY;
     add_header X-Content-Type-Options nosniff;
     add_header X-XSS-Protection "1; mode=block";
-    
+
     location / {
         proxy_pass http://tarko_agents;
         proxy_http_version 1.1;
@@ -485,17 +488,17 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_cache_bypass $http_upgrade;
         proxy_read_timeout 86400;
-        
+
         # Rate limiting
         limit_req zone=api burst=20 nodelay;
     }
-    
+
     # Health check endpoint
     location /health {
         access_log off;
         proxy_pass http://tarko_agents/api/v1/health;
     }
-    
+
     # Metrics endpoint (restrict access)
     location /metrics {
         allow 10.0.0.0/8;
@@ -554,11 +557,11 @@ version: '3.8'
 services:
   agent:
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-size: "10m"
-        max-file: "3"
-        labels: "service=tarko-agent"
+        max-size: '10m'
+        max-file: '3'
+        labels: 'service=tarko-agent'
 ```
 
 ### Metrics and Alerting
@@ -596,37 +599,37 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm ci
-    
-    - name: Install Tarko CLI
-      run: npm install -g @tarko/agent-cli
-    
-    - name: Test agent
-      run: |
-        tarko run --headless --input "Health check" --format json
-      env:
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-    
-    - name: Build Docker image
-      run: |
-        docker build -t my-agent:${{ github.sha }} .
-        docker tag my-agent:${{ github.sha }} my-agent:latest
-    
-    - name: Deploy to production
-      run: |
-        # Deploy to your infrastructure
-        echo "Deploying to production..."
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Tarko CLI
+        run: npm install -g @tarko/agent-cli
+
+      - name: Test agent
+        run: |
+          tarko run --headless --input "Health check" --format json
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t my-agent:${{ github.sha }} .
+          docker tag my-agent:${{ github.sha }} my-agent:latest
+
+      - name: Deploy to production
+        run: |
+          # Deploy to your infrastructure
+          echo "Deploying to production..."
 ```
 
 ### Deployment Scripts
@@ -690,6 +693,7 @@ server: {
 ### Common Issues
 
 **Port conflicts:**
+
 ```bash
 # Check port usage
 lsof -i :8080
@@ -699,6 +703,7 @@ tarko serve --port 8081
 ```
 
 **Memory issues:**
+
 ```bash
 # Increase Node.js memory
 NODE_OPTIONS="--max-old-space-size=4096" tarko serve
@@ -708,6 +713,7 @@ top -p $(pgrep -f "tarko serve")
 ```
 
 **Configuration errors:**
+
 ```bash
 # Validate configuration
 tarko --show-config --dry-run

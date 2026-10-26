@@ -52,9 +52,9 @@ const agent = new Agent({
   instructions: 'You are a helpful coding assistant.',
   model: {
     provider: 'openai',
-    id: 'gpt-4o'
+    id: 'gpt-4o',
   },
-  maxIterations: 5
+  maxIterations: 5,
 });
 
 // Simple text interaction
@@ -64,7 +64,7 @@ console.log(response.content);
 // Streaming response
 for await (const event of await agent.run({
   input: 'Explain async/await in JavaScript',
-  stream: true
+  stream: true,
 })) {
   if (event.type === 'assistant_message_chunk') {
     process.stdout.write(event.content);
@@ -84,22 +84,22 @@ const weatherTool: Tool = {
   parameters: {
     type: 'object',
     properties: {
-      location: { type: 'string', description: 'City name' }
+      location: { type: 'string', description: 'City name' },
     },
-    required: ['location']
+    required: ['location'],
   },
   execute: async ({ location }) => {
     // Your weather API logic here
     return `Weather in ${location}: 22°C, sunny`;
-  }
+  },
 };
 
 const agent = new Agent({
   instructions: 'You can check weather using the available tools.',
-  tools: [weatherTool]
+  tools: [weatherTool],
 });
 
-const result = await agent.run('What\'s the weather like in Tokyo?');
+const result = await agent.run("What's the weather like in Tokyo?");
 ```
 
 ### Multimodal Input
@@ -108,11 +108,11 @@ const result = await agent.run('What\'s the weather like in Tokyo?');
 const response = await agent.run({
   input: [
     { type: 'text', text: 'What do you see in this image?' },
-    { 
-      type: 'image_url', 
-      image_url: { url: 'data:image/jpeg;base64,...' } 
-    }
-  ]
+    {
+      type: 'image_url',
+      image_url: { url: 'data:image/jpeg;base64,...' },
+    },
+  ],
 });
 ```
 
@@ -122,14 +122,14 @@ const response = await agent.run({
 
 ```typescript
 interface AgentOptions {
-  instructions?: string;           // System prompt
-  tools?: Tool[];                 // Available tools
-  model?: ModelConfig;            // LLM configuration
-  maxIterations?: number;         // Max reasoning loops (default: 10)
-  maxTokens?: number;            // Token limit per request
-  temperature?: number;          // LLM temperature (default: 0.7)
-  logLevel?: LogLevel;           // Logging verbosity
-  context?: ContextOptions;      // Multimodal context settings
+  instructions?: string; // System prompt
+  tools?: Tool[]; // Available tools
+  model?: ModelConfig; // LLM configuration
+  maxIterations?: number; // Max reasoning loops (default: 10)
+  maxTokens?: number; // Token limit per request
+  temperature?: number; // LLM temperature (default: 0.7)
+  logLevel?: LogLevel; // Logging verbosity
+  context?: ContextOptions; // Multimodal context settings
 }
 ```
 
@@ -150,11 +150,11 @@ Execute with advanced options:
 ```typescript
 interface AgentRunOptions {
   input: string | ChatCompletionMessageParam[];
-  stream?: boolean;              // Enable streaming
-  sessionId?: string;           // Session identifier
-  model?: string;               // Override model
-  provider?: string;            // Override provider
-  abortSignal?: AbortSignal;    // Cancellation support
+  stream?: boolean; // Enable streaming
+  sessionId?: string; // Session identifier
+  model?: string; // Override model
+  provider?: string; // Override provider
+  abortSignal?: AbortSignal; // Cancellation support
 }
 ```
 
@@ -166,8 +166,12 @@ Add tools dynamically:
 agent.registerTool({
   name: 'calculate',
   description: 'Perform mathematical calculations',
-  parameters: { /* JSON schema */ },
-  execute: async (params) => { /* implementation */ }
+  parameters: {
+    /* JSON schema */
+  },
+  execute: async (params) => {
+    /* implementation */
+  },
 });
 ```
 
@@ -178,7 +182,7 @@ Access the underlying LLM client for direct API calls:
 ```typescript
 const client = agent.getLLMClient();
 const response = await agent.callLLM({
-  messages: [{ role: 'user', content: 'Hello' }]
+  messages: [{ role: 'user', content: 'Hello' }],
 });
 ```
 
@@ -220,10 +224,10 @@ stream.on('assistant_message', (event) => {
 ```typescript
 const agent = new Agent({
   context: {
-    maxImagesCount: 10,        // Max images in context
-    retainHistory: true,       // Keep conversation history
-    summarizeAfter: 50         // Summarize after N messages
-  }
+    maxImagesCount: 10, // Max images in context
+    retainHistory: true, // Keep conversation history
+    summarizeAfter: 50, // Summarize after N messages
+  },
 });
 ```
 
@@ -231,8 +235,8 @@ const agent = new Agent({
 
 ```typescript
 const agent = new Agent({
-  toolCallEngine: 'native',    // 'native' | 'prompt-engineering' | 'structured-outputs'
-  enableStreamingToolCallEvents: true
+  toolCallEngine: 'native', // 'native' | 'prompt-engineering' | 'structured-outputs'
+  enableStreamingToolCallEvents: true,
 });
 ```
 
@@ -246,8 +250,6 @@ const agent = new Agent({
 - **[@tarko/llm-client](https://www.npmjs.com/package/@tarko/llm-client)** - Low-level LLM communication
 
 <!-- [PLACEHOLDER: Add links to other Tarko documentation] -->
-
-
 
 ## Contributing
 

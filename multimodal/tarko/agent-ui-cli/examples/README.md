@@ -3,7 +3,7 @@
 ## Examples
 
 - **`basic-json/`** - Standard JSON format
-- **`jsonl-format/`** - JSONL format auto-detection  
+- **`jsonl-format/`** - JSONL format auto-detection
 - **`custom-transformer/`** - Custom formats with transformers
 
 ## Quick Start

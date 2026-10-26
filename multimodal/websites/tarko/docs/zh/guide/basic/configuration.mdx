@@ -16,23 +16,23 @@ const agent = new Agent({
   // Agent 身份
   name: 'MyAgent',
   id: 'my-agent-v1',
-  
+
   // 模型配置
   model: {
     provider: 'openai',
     id: 'gpt-4',
     apiKey: process.env.OPENAI_API_KEY,
   },
-  
+
   // 系统提示（使用 instructions）
   instructions: '你是一个有用的助手...',
-  
+
   // 工具
   tools: [],
-  
+
   // 最大迭代次数
   maxIterations: 10,
-  
+
   // 温度参数
   temperature: 0.7,
 });
@@ -80,7 +80,7 @@ const agent = new Agent({
 
 ```typescript
 {
-  toolCallEngine: 'native' | 'prompt_engineering' | 'structured_outputs'
+  toolCallEngine: 'native' | 'prompt_engineering' | 'structured_outputs';
 }
 ```
 
@@ -124,12 +124,9 @@ module.exports = {
   model: {
     provider: 'openai',
     apiKey: process.env.OPENAI_API_KEY,
-    model: 'gpt-4'
+    model: 'gpt-4',
   },
-  tools: [
-    '@tarko/tools/file-system',
-    '@tarko/tools/browser'
-  ]
+  tools: ['@tarko/tools/file-system', '@tarko/tools/browser'],
 };
 ```
 

@@ -2,13 +2,13 @@
 
 :root {
   --primary: rgb(0, 255, 255);
-  --accent: #00FFFF;
-  --accent-alt: #7C00FF;
-  --cyber-black: #0D0D0D;
-  --cyber-panel: #1A1A1A;
+  --accent: #00ffff;
+  --accent-alt: #7c00ff;
+  --cyber-black: #0d0d0d;
+  --cyber-panel: #1a1a1a;
   --cyber-border: #333333;
   --scan-line-color: rgba(0, 255, 255, 0.1);
-  
+
   /* Font variables */
   --font-tech: 'Orbitron', sans-serif;
   --font-body: 'Rajdhani', sans-serif;

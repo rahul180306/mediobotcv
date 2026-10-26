@@ -21,7 +21,7 @@ const agent = new MCPAgent({
       args: ['@agent-infra/mcp-server-filesystem@latest'],
     },
     browser: {
-      command: 'npx', 
+      command: 'npx',
       args: ['@agent-infra/mcp-server-browser@latest'],
     },
   },
@@ -39,6 +39,7 @@ await agent.cleanup();
 ## MCP Server Configuration
 
 ### Stdio Transport
+
 ```typescript
 {
   mcpServers: {
@@ -52,11 +53,12 @@ await agent.cleanup();
 ```
 
 ### HTTP/SSE Transport
+
 ```typescript
 {
   mcpServers: {
     remote: {
-      url: 'http://localhost:8089/sse'
+      url: 'http://localhost:8089/sse';
     }
   }
 }
@@ -66,11 +68,13 @@ await agent.cleanup();
 
 ```typescript
 const agent = new MCPAgent({
-  mcpServers: { /* all servers */ },
+  mcpServers: {
+    /* all servers */
+  },
   mcpServer: {
     include: ['filesystem', 'browser'],
-    exclude: ['dangerous-server']
-  }
+    exclude: ['dangerous-server'],
+  },
 });
 ```
 

@@ -112,7 +112,7 @@ export interface AgentServer<T extends AgentAppConfig = AgentAppConfig> {
   clearRunningSession(sessionId: string): void;
   getRunningSessionId(): string | null;
 
-  getCurrentAgentResolution(): AgentResolutionResult | undefined
+  getCurrentAgentResolution(): AgentResolutionResult | undefined;
 
   // Custom providers
   getCustomAgioProvider(): AgioProviderConstructor | undefined;
@@ -122,9 +122,8 @@ export interface AgentServer<T extends AgentAppConfig = AgentAppConfig> {
   getStorageInfo(): { type: string; path?: string };
 
   //hook system
-  registerHook(options: HookRegistrationOptions): void
-  unregisterHook(id: string): boolean
-
+  registerHook(options: HookRegistrationOptions): void;
+  unregisterHook(id: string): boolean;
 }
 
 // Re-export types from interface

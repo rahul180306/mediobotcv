@@ -23,7 +23,7 @@ describe('claude-headers', () => {
     it('should return correct anthropic-beta headers', () => {
       const headers = getClaudeHeaders();
       expect(headers['anthropic-beta']).toBe(
-        'fine-grained-tool-streaming-2025-05-14,token-efficient-tools-2025-02-19'
+        'fine-grained-tool-streaming-2025-05-14,token-efficient-tools-2025-02-19',
       );
     });
   });
@@ -32,7 +32,7 @@ describe('claude-headers', () => {
     it('should add Claude headers for Claude models', () => {
       const result = addClaudeHeadersIfNeeded('claude-3-sonnet');
       expect(result['anthropic-beta']).toBe(
-        'fine-grained-tool-streaming-2025-05-14,token-efficient-tools-2025-02-19'
+        'fine-grained-tool-streaming-2025-05-14,token-efficient-tools-2025-02-19',
       );
     });
 
@@ -46,7 +46,7 @@ describe('claude-headers', () => {
       const result = addClaudeHeadersIfNeeded('claude-3-sonnet', existingHeaders);
       expect(result['X-Custom']).toBe('value');
       expect(result['anthropic-beta']).toBe(
-        'fine-grained-tool-streaming-2025-05-14,token-efficient-tools-2025-02-19'
+        'fine-grained-tool-streaming-2025-05-14,token-efficient-tools-2025-02-19',
       );
     });
 

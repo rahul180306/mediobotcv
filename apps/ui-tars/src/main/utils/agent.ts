@@ -22,8 +22,19 @@ import { SearchEngine } from '@ui-tars/operator-browser';
 
 export const getModelVersion = (
   provider: VLMProviderV2 | undefined,
+  modelName?: string,
 ): UITarsModelVersion => {
   switch (provider) {
+    case VLMProviderV2.nvidia: {
+      const lowerModel = (modelName || '').toLowerCase();
+      if (
+        lowerModel.includes('ui-tars-1.5') ||
+        lowerModel.includes('ui_tars_1.5')
+      ) {
+        return UITarsModelVersion.V1_5;
+      }
+      return UITarsModelVersion.V1_0;
+    }
     case VLMProviderV2.ui_tars_1_5:
       return UITarsModelVersion.V1_5;
     case VLMProviderV2.ui_tars_1_0:

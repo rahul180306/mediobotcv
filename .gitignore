@@ -6,6 +6,9 @@ out
 *.log*
 .eslintcache
 .env
+.env.*
+!.env.example
+runs/
 test-results/
 coverage/
 .turbo/

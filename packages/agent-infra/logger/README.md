@@ -84,12 +84,12 @@ Controls the verbosity of logging output.
 
 ```typescript
 enum LogLevel {
-  DEBUG = 0,   // Most verbose, includes all logs
-  INFO = 1,    // Standard information messages
+  DEBUG = 0, // Most verbose, includes all logs
+  INFO = 1, // Standard information messages
   SUCCESS = 2, // Success messages and operations
-  WARN = 3,    // Warning messages
-  ERROR = 4,   // Error messages
-  SILENT = 5   // No logs will be displayed
+  WARN = 3, // Warning messages
+  ERROR = 4, // Error messages
+  SILENT = 5, // No logs will be displayed
 }
 ```
 
@@ -195,10 +195,10 @@ const logger = new ConsoleLogger('[App]');
 
 // Override error method to also report to Sentry
 const originalError = logger.error;
-logger.error = function(...args) {
+logger.error = function (...args) {
   // Call original implementation
   originalError.apply(this, args);
-  
+
   // Report to error tracking
   if (args[0] && typeof args[0] === 'string') {
     Sentry.captureMessage(args[0], Sentry.Severity.Error);
@@ -218,7 +218,7 @@ Object.assign(CSS_COLOR_VALUES, {
   blue: '#3498db',
   green: '#2ecc71',
   red: '#e74c3c',
-  yellow: '#f39c12'
+  yellow: '#f39c12',
 });
 
 const logger = new ConsoleLogger('[MyApp]');
@@ -239,7 +239,7 @@ const rootLogger = new ConsoleLogger('[MyApp]');
 
 // Set level based on environment
 rootLogger.setLevel(
-  process.env.NODE_ENV === 'production' ? LogLevel.WARN : LogLevel.INFO
+  process.env.NODE_ENV === 'production' ? LogLevel.WARN : LogLevel.INFO,
 );
 
 // Create and export feature-specific loggers
@@ -263,17 +263,17 @@ function logApiEvent(eventType, data) {
   const event = {
     timestamp: new Date().toISOString(),
     type: eventType,
-    ...data
+    ...data,
   };
-  
+
   logger.infoWithData(`API ${eventType}`, event);
 }
 
 // Usage
-logApiEvent('request', { 
-  method: 'GET', 
-  path: '/users', 
-  duration: 120 
+logApiEvent('request', {
+  method: 'GET',
+  path: '/users',
+  duration: 120,
 });
 ```
 

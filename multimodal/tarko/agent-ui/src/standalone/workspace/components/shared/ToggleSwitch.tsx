@@ -37,7 +37,11 @@ export const ToggleSwitch = <T extends string = string>({
           } rounded-l-lg border border-slate-200/60 dark:border-slate-600/40`}
         >
           <div className="flex items-center">
-            {leftIcon && <span className={`mr-1.5 ${value === leftValue ? 'opacity-90' : 'opacity-70'}`}>{leftIcon}</span>}
+            {leftIcon && (
+              <span className={`mr-1.5 ${value === leftValue ? 'opacity-90' : 'opacity-70'}`}>
+                {leftIcon}
+              </span>
+            )}
             <span>{leftLabel}</span>
           </div>
         </button>
@@ -51,7 +55,11 @@ export const ToggleSwitch = <T extends string = string>({
           } rounded-r-lg border border-slate-200/60 dark:border-slate-600/40 border-l-0`}
         >
           <div className="flex items-center">
-            {rightIcon && <span className={`mr-1.5 ${value === rightValue ? 'opacity-90' : 'opacity-70'}`}>{rightIcon}</span>}
+            {rightIcon && (
+              <span className={`mr-1.5 ${value === rightValue ? 'opacity-90' : 'opacity-70'}`}>
+                {rightIcon}
+              </span>
+            )}
             <span>{rightLabel}</span>
           </div>
         </button>

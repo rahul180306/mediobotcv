@@ -4,12 +4,10 @@
 
 A Model Context Protocol (MCP) server for {{name}}
 
-
 ### Requirements
 
 - Node.js 18 or newer
 - VS Code, Cursor, Windsurf, Claude Desktop or any other MCP client
-
 
 ### Getting started
 
@@ -40,6 +38,7 @@ code --add-mcp '{"name":"{{name}}","command":"npx","args":["mcp-server-{{name}}@
 ```
 
 After installation, the Commands MCP server will be available for use with your GitHub Copilot agent in VS Code.
+
 </details>
 
 <details>
@@ -59,6 +58,7 @@ Go to `Cursor Settings` -> `MCP` -> `Add new MCP Server`. Name to your liking, `
   }
 }
 ```
+
 </details>
 
 <details>
@@ -78,6 +78,7 @@ Follow Windsuff MCP [documentation](https://docs.windsurf.com/windsurf/cascade/m
   }
 }
 ```
+
 </details>
 
 <details>
@@ -97,6 +98,7 @@ Follow the MCP install [guide](https://modelcontextprotocol.io/quickstart/user),
   }
 }
 ```
+
 </details>
 
 #### Remote (SSE / Streamable HTTP)
@@ -109,9 +111,9 @@ npx mcp-server-{{name}} --port 8089
 ```
 
 You can use one of the two MCP Server remote endpoint:
+
 - Streamable HTTP(Recommended): `http://127.0.0.1::8089/mcp`
 - SSE: `http://127.0.0.1::8089/sse`
-
 
 And then in MCP client config, set the `url` to the SSE endpoint:
 
@@ -177,7 +179,7 @@ console.log(result);
 const toolResult = await client.callTool({
   name: 'test_tool',
   arguments: {
-    hello: 'hello'
+    hello: 'hello',
   },
 });
 console.log(toolResult);

@@ -279,7 +279,12 @@ export class SandboxAllocationDAO implements ISandboxAllocationDAO {
 
   async updateSandboxAllocation(
     sandboxId: string,
-    updates: Partial<Pick<SandboxAllocation, 'sandboxUrl' | 'userId' | 'sessionId' | 'allocationStrategy' | 'isActive'>>,
+    updates: Partial<
+      Pick<
+        SandboxAllocation,
+        'sandboxUrl' | 'userId' | 'sessionId' | 'allocationStrategy' | 'isActive'
+      >
+    >,
   ): Promise<SandboxAllocation | null> {
     try {
       const params: any[] = [];

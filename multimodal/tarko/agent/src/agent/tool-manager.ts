@@ -11,8 +11,7 @@ import { getLogger } from '@tarko/shared-utils';
  */
 export class ToolManager {
   private tools: Map<string, Tool> = new Map();
-  private logger = getLogger('ToolManager')
-
+  private logger = getLogger('ToolManager');
 
   /**
    * Registers a new tool that the agent can use during execution

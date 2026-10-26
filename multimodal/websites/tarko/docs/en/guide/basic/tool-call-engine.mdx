@@ -39,6 +39,7 @@ const agent = new Agent({
 ```
 
 **How it works**:
+
 - Uses the model's built-in function calling capabilities
 - Sends tools as function definitions in the API request
 - Parses structured function call responses
@@ -52,7 +53,7 @@ const agent = new Agent({
 const agent = new Agent({
   toolCallEngine: 'prompt_engineering',
   model: {
-    provider: 'volcengine', 
+    provider: 'volcengine',
     id: 'doubao-seed-1-6-vision-250815',
     apiKey: process.env.ARK_API_KEY,
   },
@@ -61,6 +62,7 @@ const agent = new Agent({
 ```
 
 **How it works**:
+
 - Embeds tool descriptions in the system prompt
 - Instructs the model to output tool calls in a specific format
 - Parses tool calls from the text response using regex/patterns
@@ -75,7 +77,7 @@ const agent = new Agent({
   toolCallEngine: 'structured_outputs',
   model: {
     provider: 'anthropic',
-    id: 'claude-3-5-sonnet-20241022', 
+    id: 'claude-3-5-sonnet-20241022',
     apiKey: process.env.ANTHROPIC_API_KEY,
   },
   tools: [weatherTool],
@@ -83,6 +85,7 @@ const agent = new Agent({
 ```
 
 **How it works**:
+
 - Uses structured output schemas to enforce tool call format
 - More reliable than prompt engineering for parsing
 - Reduces parsing errors and improves consistency
@@ -127,7 +130,7 @@ const agent = new Agent({
 ## Engine Comparison
 
 | Engine | Reliability | Performance | Compatibility | Use Case |
-|--------|-------------|-------------|---------------|----------|
+| --- | --- | --- | --- | --- |
 | `native` | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | Production with supported models |
 | `structured_outputs` | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | Models with schema support |
 | `prompt_engineering` | ⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | Universal compatibility |
@@ -207,16 +210,19 @@ for await (const event of response) {
 ### Common Issues
 
 **Tool calls not being detected**:
+
 - Check if the model supports the selected engine type
 - Try switching to `prompt_engineering` for broader compatibility
 - Verify tool descriptions are clear and specific
 
 **Parsing errors with prompt engineering**:
+
 - The model may not be following the expected format
 - Try `structured_outputs` if the model supports schemas
 - Simplify tool parameter schemas
 
 **Performance issues**:
+
 - `native` engine is fastest for supported models
 - `prompt_engineering` adds parsing overhead
 - Consider caching for expensive tool operations

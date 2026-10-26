@@ -60,7 +60,8 @@ export function csrfProtectionMiddleware(req: Request, res: Response, next: Next
   if (!token || !isValidToken(token)) {
     res.status(403).json({
       error: 'CSRF token missing or invalid',
-      message: 'A valid CSRF token is required for mutation requests. Obtain one via GET /api/v1/csrf-token.',
+      message:
+        'A valid CSRF token is required for mutation requests. Obtain one via GET /api/v1/csrf-token.',
     });
     return;
   }

@@ -90,7 +90,7 @@ const server = new AgentServer({
         auth: true,
       },
       models: [
-         {
+        {
           id: 'ep-20250926155907-tnrqq',
           provider: 'volcengine',
           displayName: 'T6.5-RL',

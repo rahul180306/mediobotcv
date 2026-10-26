@@ -7,7 +7,8 @@ export interface PromptCommit {
 }
 
 export function buildChangelogPrompt(commits: PromptCommit[]): string {
-  const header = 'Analyze these git commits and generate a structured changelog:';
+  const header =
+    'Analyze these git commits and generate a structured changelog:';
   const guide = [
     'Group similar commits into sections (e.g., Features, Bug Fixes, etc.).',
     'If there are major architectural or breaking changes, highlight them in a summary.',

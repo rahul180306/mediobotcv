@@ -241,7 +241,15 @@ export async function release(options: ReleaseOptions = {}): Promise<void> {
 
     logger.success(`Release ${version || 'unknown'} completed successfully!`);
   } catch (err) {
-    await handleReleaseError(err, branchManager, cwd, dryRun, version, tag, skipConfirm);
+    await handleReleaseError(
+      err,
+      branchManager,
+      cwd,
+      dryRun,
+      version,
+      tag,
+      skipConfirm,
+    );
     throw err;
   }
 }
@@ -311,10 +319,7 @@ async function handleTagPush(
   skipConfirm = false,
 ): Promise<void> {
   const shouldPush =
-    pushTag ||
-    canary ||
-    skipConfirm ||
-    await confirmTagPush(tagName, canary);
+    pushTag || canary || skipConfirm || (await confirmTagPush(tagName, canary));
 
   if (!shouldPush) {
     return;

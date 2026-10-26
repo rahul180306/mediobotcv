@@ -16,4 +16,3 @@ We will get touch with you shortly.
 ## Security Advisories
 
 We will publish security advisories for the latest version.
-

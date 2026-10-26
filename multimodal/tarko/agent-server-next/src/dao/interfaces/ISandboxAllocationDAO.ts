@@ -22,7 +22,9 @@ export interface ISandboxAllocationDAO {
   /**
    * Create a new sandbox allocation
    */
-  createSandboxAllocation(allocation: Omit<SandboxAllocation, 'createdAt' | 'lastUsedAt'>): Promise<SandboxAllocation>;
+  createSandboxAllocation(
+    allocation: Omit<SandboxAllocation, 'createdAt' | 'lastUsedAt'>,
+  ): Promise<SandboxAllocation>;
 
   /**
    * Get sandbox allocation by sandbox ID
@@ -82,6 +84,11 @@ export interface ISandboxAllocationDAO {
    */
   updateSandboxAllocation(
     sandboxId: string,
-    updates: Partial<Pick<SandboxAllocation, 'sandboxUrl' | 'userId' | 'sessionId' | 'allocationStrategy' | 'isActive'>>,
+    updates: Partial<
+      Pick<
+        SandboxAllocation,
+        'sandboxUrl' | 'userId' | 'sessionId' | 'allocationStrategy' | 'isActive'
+      >
+    >,
   ): Promise<SandboxAllocation | null>;
 }

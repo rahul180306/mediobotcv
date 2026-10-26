@@ -66,7 +66,7 @@ function CodeHighlightWithLinks({ code, language }: { code: string; language: st
   const renderJsonWithLinks = (jsonString: string) => {
     const urlRegex = /"(https?:\/\/[^"\s]+)"/g;
     const parts = jsonString.split(urlRegex);
-    
+
     return parts.map((part, index) => {
       // Check if this part is a URL (every odd index after split)
       if (index > 0 && index % 2 === 1 && /^https?:\/\//.test(part)) {
@@ -92,7 +92,7 @@ function CodeHighlightWithLinks({ code, language }: { code: string; language: st
 
   // Check if the code contains URLs in JSON strings
   const hasUrls = /"https?:\/\/[^"\s]+"/.test(code);
-  
+
   if (!hasUrls) {
     return <CodeHighlight code={code} language={language} />;
   }

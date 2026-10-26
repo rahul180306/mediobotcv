@@ -23,14 +23,14 @@ const greetingTool = createTool({
     properties: {
       name: {
         type: 'string',
-        description: 'The user\'s name'
-      }
+        description: "The user's name",
+      },
     },
-    required: ['name']
+    required: ['name'],
   },
   handler: async ({ name }) => {
     return `Hello, ${name}! Nice to meet you!`;
-  }
+  },
 });
 
 // Create the agent
@@ -41,8 +41,8 @@ const agent = new Agent({
   model: {
     apiKey: process.env.OPENAI_API_KEY,
     baseURL: 'https://api.openai.com/v1',
-    model: 'gpt-4'
-  }
+    model: 'gpt-4',
+  },
 });
 
 export default agent;
@@ -64,16 +64,16 @@ const weatherTool = createTool({
     properties: {
       location: {
         type: 'string',
-        description: 'City name or coordinates (e.g., "New York" or "40.7128,-74.0060")'
+        description: 'City name or coordinates (e.g., "New York" or "40.7128,-74.0060")',
       },
       units: {
         type: 'string',
         enum: ['metric', 'imperial'],
         default: 'metric',
-        description: 'Temperature units'
-      }
+        description: 'Temperature units',
+      },
     },
-    required: ['location']
+    required: ['location'],
   },
   handler: async ({ location, units = 'metric' }) => {
     const apiKey = process.env.OPENWEATHER_API_KEY;
@@ -83,22 +83,22 @@ const weatherTool = createTool({
 
     try {
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${apiKey}&units=${units}`
+        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${apiKey}&units=${units}`,
       );
-      
+
       if (!response.ok) {
         throw new Error(`Weather API error: ${response.statusText}`);
       }
-      
+
       const data = await response.json();
-      
+
       const temperature = Math.round(data.main.temp);
       const description = data.weather[0].description;
       const humidity = data.main.humidity;
       const windSpeed = data.wind.speed;
       const unitSymbol = units === 'metric' ? '°C' : '°F';
       const speedUnit = units === 'metric' ? 'm/s' : 'mph';
-      
+
       return `Weather in ${data.name}, ${data.sys.country}:
 🌡️ Temperature: ${temperature}${unitSymbol}
 🌤️ Condition: ${description}
@@ -107,7 +107,7 @@ const weatherTool = createTool({
     } catch (error) {
       return `Sorry, I couldn't fetch weather data for "${location}". Please check the location name and try again.`;
     }
-  }
+  },
 });
 
 const weatherAgent = new Agent({
@@ -119,8 +119,8 @@ Always be helpful and provide clear, formatted weather information.`,
   model: {
     apiKey: process.env.OPENAI_API_KEY,
     baseURL: 'https://api.openai.com/v1',
-    model: 'gpt-4'
-  }
+    model: 'gpt-4',
+  },
 });
 
 export default weatherAgent;
@@ -142,16 +142,18 @@ const calculatorTool = createTool({
     properties: {
       expression: {
         type: 'string',
-        description: 'Mathematical expression (e.g., "2 + 3 * 4", "sqrt(16)", "sin(pi/2)")'
-      }
+        description: 'Mathematical expression (e.g., "2 + 3 * 4", "sqrt(16)", "sin(pi/2)")',
+      },
     },
-    required: ['expression']
+    required: ['expression'],
   },
   validate: ({ expression }) => {
     // Basic validation for safety
     const allowedPattern = /^[0-9+\-*/().\s,sqrt,sin,cos,tan,log,ln,pi,e]+$/i;
     if (!allowedPattern.test(expression)) {
-      throw new Error('Expression contains invalid characters. Only numbers, basic operators, and common math functions are allowed.');
+      throw new Error(
+        'Expression contains invalid characters. Only numbers, basic operators, and common math functions are allowed.',
+      );
     }
     return true;
   },
@@ -167,19 +169,19 @@ const calculatorTool = createTool({
         .replace(/tan\(/gi, 'Math.tan(')
         .replace(/log\(/gi, 'Math.log10(')
         .replace(/ln\(/gi, 'Math.log(');
-      
+
       // Use Function constructor for safer evaluation
       const result = new Function('return ' + safeExpression)();
-      
+
       if (typeof result !== 'number' || !isFinite(result)) {
         throw new Error('Invalid calculation result');
       }
-      
+
       return `${expression} = ${result}`;
     } catch (error) {
       return `Error calculating "${expression}": ${error.message}`;
     }
-  }
+  },
 });
 
 // Unit conversion tool
@@ -191,66 +193,66 @@ const unitConverterTool = createTool({
     properties: {
       value: {
         type: 'number',
-        description: 'The numeric value to convert'
+        description: 'The numeric value to convert',
       },
       fromUnit: {
         type: 'string',
-        description: 'Source unit (e.g., "celsius", "fahrenheit", "meters", "feet", "kg", "lbs")'
+        description: 'Source unit (e.g., "celsius", "fahrenheit", "meters", "feet", "kg", "lbs")',
       },
       toUnit: {
         type: 'string',
-        description: 'Target unit'
-      }
+        description: 'Target unit',
+      },
     },
-    required: ['value', 'fromUnit', 'toUnit']
+    required: ['value', 'fromUnit', 'toUnit'],
   },
   handler: async ({ value, fromUnit, toUnit }) => {
     const conversions: Record<string, Record<string, (v: number) => number>> = {
       // Temperature
       celsius: {
-        fahrenheit: (c) => (c * 9/5) + 32,
-        kelvin: (c) => c + 273.15
+        fahrenheit: (c) => (c * 9) / 5 + 32,
+        kelvin: (c) => c + 273.15,
       },
       fahrenheit: {
-        celsius: (f) => (f - 32) * 5/9,
-        kelvin: (f) => ((f - 32) * 5/9) + 273.15
+        celsius: (f) => ((f - 32) * 5) / 9,
+        kelvin: (f) => ((f - 32) * 5) / 9 + 273.15,
       },
       kelvin: {
         celsius: (k) => k - 273.15,
-        fahrenheit: (k) => ((k - 273.15) * 9/5) + 32
+        fahrenheit: (k) => ((k - 273.15) * 9) / 5 + 32,
       },
       // Length
       meters: {
         feet: (m) => m * 3.28084,
         inches: (m) => m * 39.3701,
-        kilometers: (m) => m / 1000
+        kilometers: (m) => m / 1000,
       },
       feet: {
         meters: (ft) => ft / 3.28084,
         inches: (ft) => ft * 12,
-        kilometers: (ft) => ft / 3280.84
+        kilometers: (ft) => ft / 3280.84,
       },
       // Weight
       kg: {
         lbs: (kg) => kg * 2.20462,
-        grams: (kg) => kg * 1000
+        grams: (kg) => kg * 1000,
       },
       lbs: {
         kg: (lbs) => lbs / 2.20462,
-        grams: (lbs) => (lbs / 2.20462) * 1000
-      }
+        grams: (lbs) => (lbs / 2.20462) * 1000,
+      },
     };
-    
+
     const fromKey = fromUnit.toLowerCase();
     const toKey = toUnit.toLowerCase();
-    
+
     if (!conversions[fromKey] || !conversions[fromKey][toKey]) {
       return `Conversion from ${fromUnit} to ${toUnit} is not supported. Available conversions: temperature (celsius, fahrenheit, kelvin), length (meters, feet, inches, kilometers), weight (kg, lbs, grams).`;
     }
-    
+
     const result = conversions[fromKey][toKey](value);
     return `${value} ${fromUnit} = ${result.toFixed(4)} ${toUnit}`;
-  }
+  },
 });
 
 const calculatorAgent = new Agent({
@@ -265,8 +267,8 @@ Provide clear explanations of your calculations when helpful.`,
   model: {
     apiKey: process.env.OPENAI_API_KEY,
     baseURL: 'https://api.openai.com/v1',
-    model: 'gpt-4'
-  }
+    model: 'gpt-4',
+  },
 });
 
 export default calculatorAgent;
@@ -290,27 +292,27 @@ const readFileTool = createTool({
     properties: {
       filePath: {
         type: 'string',
-        description: 'Path to the file to read'
-      }
+        description: 'Path to the file to read',
+      },
     },
-    required: ['filePath']
+    required: ['filePath'],
   },
   handler: async ({ filePath }) => {
     try {
       // Basic security check - prevent directory traversal
       const resolvedPath = path.resolve(filePath);
       const workingDir = process.cwd();
-      
+
       if (!resolvedPath.startsWith(workingDir)) {
         throw new Error('Access denied: File is outside working directory');
       }
-      
+
       const content = await fs.readFile(resolvedPath, 'utf-8');
       return `File content of ${filePath}:\n\n${content}`;
     } catch (error) {
       return `Error reading file ${filePath}: ${error.message}`;
     }
-  }
+  },
 });
 
 // Directory listing tool
@@ -323,43 +325,43 @@ const listDirectoryTool = createTool({
       dirPath: {
         type: 'string',
         description: 'Path to the directory to list',
-        default: '.'
-      }
-    }
+        default: '.',
+      },
+    },
   },
   handler: async ({ dirPath = '.' }) => {
     try {
       const resolvedPath = path.resolve(dirPath);
       const workingDir = process.cwd();
-      
+
       if (!resolvedPath.startsWith(workingDir)) {
         throw new Error('Access denied: Directory is outside working directory');
       }
-      
+
       const items = await fs.readdir(resolvedPath, { withFileTypes: true });
-      
-      const files = items.filter(item => item.isFile()).map(item => item.name);
-      const dirs = items.filter(item => item.isDirectory()).map(item => item.name);
-      
+
+      const files = items.filter((item) => item.isFile()).map((item) => item.name);
+      const dirs = items.filter((item) => item.isDirectory()).map((item) => item.name);
+
       let result = `Contents of ${dirPath}:\n\n`;
-      
+
       if (dirs.length > 0) {
-        result += `📁 Directories (${dirs.length}):\n${dirs.map(d => `  ${d}/`).join('\n')}\n\n`;
+        result += `📁 Directories (${dirs.length}):\n${dirs.map((d) => `  ${d}/`).join('\n')}\n\n`;
       }
-      
+
       if (files.length > 0) {
-        result += `📄 Files (${files.length}):\n${files.map(f => `  ${f}`).join('\n')}`;
+        result += `📄 Files (${files.length}):\n${files.map((f) => `  ${f}`).join('\n')}`;
       }
-      
+
       if (dirs.length === 0 && files.length === 0) {
         result += 'Directory is empty.';
       }
-      
+
       return result;
     } catch (error) {
       return `Error listing directory ${dirPath}: ${error.message}`;
     }
-  }
+  },
 });
 
 // File writing tool
@@ -371,34 +373,34 @@ const writeFileTool = createTool({
     properties: {
       filePath: {
         type: 'string',
-        description: 'Path where to write the file'
+        description: 'Path where to write the file',
       },
       content: {
         type: 'string',
-        description: 'Content to write to the file'
-      }
+        description: 'Content to write to the file',
+      },
     },
-    required: ['filePath', 'content']
+    required: ['filePath', 'content'],
   },
   handler: async ({ filePath, content }) => {
     try {
       const resolvedPath = path.resolve(filePath);
       const workingDir = process.cwd();
-      
+
       if (!resolvedPath.startsWith(workingDir)) {
         throw new Error('Access denied: File is outside working directory');
       }
-      
+
       // Ensure directory exists
       const dir = path.dirname(resolvedPath);
       await fs.mkdir(dir, { recursive: true });
-      
+
       await fs.writeFile(resolvedPath, content, 'utf-8');
       return `Successfully wrote ${content.length} characters to ${filePath}`;
     } catch (error) {
       return `Error writing file ${filePath}: ${error.message}`;
     }
-  }
+  },
 });
 
 const fileSystemAgent = new Agent({
@@ -414,8 +416,8 @@ For security, you can only access files within the current working directory.`,
   model: {
     apiKey: process.env.OPENAI_API_KEY,
     baseURL: 'https://api.openai.com/v1',
-    model: 'gpt-4'
-  }
+    model: 'gpt-4',
+  },
 });
 
 export default fileSystemAgent;
@@ -462,9 +464,9 @@ import weatherAgent from './weather-agent';
 
 async function main() {
   // Start a conversation
-  const response = await weatherAgent.query('What\'s the weather like in Tokyo?');
+  const response = await weatherAgent.query("What's the weather like in Tokyo?");
   console.log(response);
-  
+
   // Continue the conversation
   const followUp = await weatherAgent.query('How about in London?');
   console.log(followUp);
@@ -484,7 +486,7 @@ describe('Calculator Agent', () => {
     const response = await calculatorAgent.query('What is 15 * 7?');
     expect(response).toContain('105');
   });
-  
+
   it('should convert units', async () => {
     const response = await calculatorAgent.query('Convert 100 fahrenheit to celsius');
     expect(response).toContain('37.7778');
@@ -501,10 +503,13 @@ describe('Calculator Agent', () => {
 ## Common Issues
 
 ### API Key Not Found
+
 Make sure your `.env` file is in the project root and contains the required API keys.
 
 ### File Access Denied
+
 The file system agent only allows access to files within the current working directory for security reasons.
 
 ### Tool Call Failures
+
 Check your internet connection and API key validity. Tools will provide error messages to help debug issues.

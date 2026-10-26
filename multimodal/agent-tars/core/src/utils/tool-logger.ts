@@ -7,7 +7,7 @@ import { Tool, ConsoleLogger } from '@tarko/mcp-agent';
 
 /**
  * ToolLogger - Handles beautiful logging of registered tools
- * 
+ *
  * This utility class provides formatted logging for tool registration,
  * making it easier to understand what tools are available.
  */

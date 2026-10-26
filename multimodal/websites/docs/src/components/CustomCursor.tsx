@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
-
 interface CustomCursorProps {
   className?: string;
 }

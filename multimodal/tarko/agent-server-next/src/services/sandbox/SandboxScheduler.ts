@@ -52,7 +52,6 @@ export class SandboxScheduler {
 
     this.logger.info('Getting sandbox URL', { userId, sessionId, strategy });
 
-
     // TODO:session exclusive mode: limits the total amount of sandbox users can apply for. This place also needs to be modified with the previous findExistingSandbox. It is divided into several situations.
     // 1. If quota is not exceeded, a new sandbox will be created first.
     // 2. Has exceeded quota, select an idle sandbox
@@ -84,7 +83,8 @@ export class SandboxScheduler {
       switch (strategy) {
         case 'Shared-Pool':
           // For shared pool, find any active shared sandbox
-          const sharedAllocations = await this.sandboxAllocationDAO.getAvailableSandboxAllocations('Shared-Pool');
+          const sharedAllocations =
+            await this.sandboxAllocationDAO.getAvailableSandboxAllocations('Shared-Pool');
           allocation = sharedAllocations.length > 0 ? sharedAllocations[0] : null;
           break;
 
@@ -92,7 +92,8 @@ export class SandboxScheduler {
           if (!userId) return null;
           // Find user's exclusive sandbox
           const userAllocations = await this.sandboxAllocationDAO.getUserSandboxAllocations(userId);
-          allocation = userAllocations.find(a => a.allocationStrategy === 'User-Exclusive') || null;
+          allocation =
+            userAllocations.find((a) => a.allocationStrategy === 'User-Exclusive') || null;
           break;
 
         case 'Session-Exclusive':
@@ -147,7 +148,6 @@ export class SandboxScheduler {
     const { userId, sessionId, strategy } = options;
 
     try {
-      
       const instance = await this.sandboxManager.createInstance({
         userId,
         sessionId,
@@ -171,13 +171,11 @@ export class SandboxScheduler {
       });
 
       return allocation;
-
     } catch (error) {
       this.logger.error('Failed to create new sandbox:', error);
       throw error;
     }
   }
-
 
   /**
    * Release a sandbox (mark as inactive)

@@ -58,19 +58,31 @@ describe('WebUI Routing Shared Utils', () => {
       it('should extract regex basename correctly', () => {
         expect(extractActualBasename('/tenant-.+', '/tenant-abc')).toBe('/tenant-abc');
         expect(extractActualBasename('/tenant-.+', '/tenant-xyz/chat')).toBe('/tenant-xyz');
-        expect(extractActualBasename('/tenant-.+', '/tenant-123/workspace/files')).toBe('/tenant-123');
+        expect(extractActualBasename('/tenant-.+', '/tenant-123/workspace/files')).toBe(
+          '/tenant-123',
+        );
       });
 
       it('should handle complex regex patterns', () => {
         expect(extractActualBasename('/(dev|staging|prod)/app', '/dev/app')).toBe('/dev/app');
-        expect(extractActualBasename('/(dev|staging|prod)/app', '/staging/app/chat')).toBe('/staging/app');
-        expect(extractActualBasename('/(dev|staging|prod)/app', '/prod/app/workspace')).toBe('/prod/app');
+        expect(extractActualBasename('/(dev|staging|prod)/app', '/staging/app/chat')).toBe(
+          '/staging/app',
+        );
+        expect(extractActualBasename('/(dev|staging|prod)/app', '/prod/app/workspace')).toBe(
+          '/prod/app',
+        );
       });
 
       it('should handle user-specific regex patterns', () => {
-        expect(extractActualBasename('/user/[^/]+/dashboard', '/user/john/dashboard')).toBe('/user/john/dashboard');
-        expect(extractActualBasename('/user/[^/]+/dashboard', '/user/jane/dashboard/settings')).toBe('/user/jane/dashboard');
-        expect(extractActualBasename('/user/[^/]+/dashboard', '/user/user123/dashboard')).toBe('/user/user123/dashboard');
+        expect(extractActualBasename('/user/[^/]+/dashboard', '/user/john/dashboard')).toBe(
+          '/user/john/dashboard',
+        );
+        expect(
+          extractActualBasename('/user/[^/]+/dashboard', '/user/jane/dashboard/settings'),
+        ).toBe('/user/jane/dashboard');
+        expect(extractActualBasename('/user/[^/]+/dashboard', '/user/user123/dashboard')).toBe(
+          '/user/user123/dashboard',
+        );
       });
 
       it('should return empty for non-matching regex patterns', () => {
@@ -99,16 +111,24 @@ describe('WebUI Routing Shared Utils', () => {
 
       it('should handle real-world scenarios', () => {
         // Random ID patterns
-        expect(extractActualBasename('/[a-zA-Z0-9]+', '/p9fgsSryzeO5JtefS1bMfsa7G11S6pGKY')).toBe('/p9fgsSryzeO5JtefS1bMfsa7G11S6pGKY');
-        expect(extractActualBasename('/[a-zA-Z0-9]+', '/p9fgsSryzeO5JtefS1bMfsa7G11S6pGKY/chat')).toBe('/p9fgsSryzeO5JtefS1bMfsa7G11S6pGKY');
-        
+        expect(extractActualBasename('/[a-zA-Z0-9]+', '/p9fgsSryzeO5JtefS1bMfsa7G11S6pGKY')).toBe(
+          '/p9fgsSryzeO5JtefS1bMfsa7G11S6pGKY',
+        );
+        expect(
+          extractActualBasename('/[a-zA-Z0-9]+', '/p9fgsSryzeO5JtefS1bMfsa7G11S6pGKY/chat'),
+        ).toBe('/p9fgsSryzeO5JtefS1bMfsa7G11S6pGKY');
+
         // Multi-tenant patterns
         expect(extractActualBasename('/tenant-.+', '/tenant-company1')).toBe('/tenant-company1');
-        expect(extractActualBasename('/tenant-.+', '/tenant-company1/dashboard')).toBe('/tenant-company1');
-        
+        expect(extractActualBasename('/tenant-.+', '/tenant-company1/dashboard')).toBe(
+          '/tenant-company1',
+        );
+
         // Environment-specific patterns
         expect(extractActualBasename('/(dev|staging|prod)/.+', '/dev/app1')).toBe('/dev/app1');
-        expect(extractActualBasename('/(dev|staging|prod)/.+', '/staging/app2/dashboard')).toBe('/staging/app2');
+        expect(extractActualBasename('/(dev|staging|prod)/.+', '/staging/app2/dashboard')).toBe(
+          '/staging/app2',
+        );
       });
     });
   });

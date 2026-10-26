@@ -13,9 +13,7 @@
   <em>Main Settings Interface</em>
 </p>
 
-
 <br>
-
 
 ## Configuration Options
 
@@ -32,11 +30,7 @@ Controls localization settings for VLM.
 > [!NOTE]
 > Changing the settings will **only** affect the output of VLM, not the language of the desktop app itself. Regarding the i18n of the App itself, welcome to contribute PR.
 
-
 <br>
-
-
-
 
 ### VLM Base URL
 
@@ -52,10 +46,7 @@ For UI TARS deployment, please check out [Deployment](./deployment.md).
 > [!NOTE]
 > VLM Base URL should be OpenAI compatible API endpoints (see [OpenAI API protocol document](https://platform.openai.com/docs/guides/vision/uploading-base-64-encoded-images) for more details).
 
-
 <br>
-
-
 
 ### VLM Model Name
 
@@ -66,9 +57,7 @@ Specify the requested module name.
 | **Type**     | `string` |
 | **Required** | `true`   |
 
-
 <br>
-
 
 ### VLM Provider
 
@@ -83,9 +72,7 @@ Selects the backend VLM provider for make GUI action decisions.
 > [!NOTE]
 > This is an interface reserved for different VLM providers.
 
-
 <br>
-
 
 ### Report Storage Base URL
 
@@ -107,9 +94,9 @@ Once it's set, when user click **Export as HTML**, report file will firstly be u
 
 The Report Storage Server should implement the following HTTP API endpoint:
 
-| Property     | Details                                                                                                      |
-| ------------ | ------------------------------------------------------------------------------------------------------------ |
-| **Endpoint** | `POST /your-storage-enpoint`                                                                                 |
+| Property     | Details                                                                                                    |
+| ------------ | ---------------------------------------------------------------------------------------------------------- |
+| **Endpoint** | `POST /your-storage-enpoint`                                                                               |
 | **Headers**  | Content-Type: `multipart/form-data` <br> <!-- - Authorization: Bearer \<access_token\> (Not Supported) --> |
 
 #### Request Body
@@ -123,6 +110,7 @@ The request should be sent as `multipart/form-data` with the following field:
 #### Response
 
 **Success Response (200 OK)**
+
 ```json
 {
   "url": "https://example.com/reports/xxx.html"
@@ -134,9 +122,7 @@ The response should return a JSON object containing a publicly accessible URL wh
 > [!NOTE]
 > Currently, there is no authentication designed for Report Storage Server. If you have any requirements, please submit an [issue](https://github.com/bytedance/UI-TARS-desktop/issues).
 
-
 <br>
-
 
 ### UTIO Base URL
 
@@ -149,7 +135,6 @@ The response should return a JSON object containing a publicly accessible URL wh
 </p>
 
 This option defines the base URL for the **UTIO** server that handles application events and instructions.
-
 
 #### Server Interface Specification
 
@@ -165,6 +150,7 @@ The UTIO server accepts events through HTTP POST requests and supports three typ
 The server handles three types of events:
 
 ###### **Application Launch**
+
 ```typescript
 interface AppLaunchedEvent {
   type: 'appLaunched';
@@ -180,6 +166,7 @@ interface AppLaunchedEvent {
 ```
 
 ###### **Send Instruction**
+
 ```typescript
 interface SendInstructionEvent {
   type: 'sendInstruction';
@@ -189,6 +176,7 @@ interface SendInstructionEvent {
 ```
 
 ###### **Share Report**
+
 ```typescript
 interface ShareReportEvent {
   type: 'shareReport';
@@ -216,6 +204,7 @@ interface ShareReportEvent {
 ##### Response
 
 **Success Response (200 OK)**
+
 ```json
 {
   "success": true
@@ -224,7 +213,6 @@ interface ShareReportEvent {
 
 > [!NOTE]
 > All events are processed asynchronously. The server should respond promptly to acknowledge receipt of the event.
-
 
 ##### Server Example
 
@@ -241,7 +229,7 @@ app.use(express.json());
 
 app.post('/your-utio-endpoint', (req, res) => {
   const event = req.body;
-  
+
   if (!event || !event.type) {
     return res.status(400).json({ error: 'Missing event type' });
   }
@@ -276,12 +264,12 @@ CORS(app)
 @app.route('/events', methods=['POST'])
 def handle_event():
     data = request.get_json()
-    
+
     if not data or 'type' not in data:
         return jsonify({'error': 'Missing event type'}), 400
-    
+
     event_type = data['type']
-    
+
     if event_type == 'appLaunched':
         return handle_app_launch(data)
     elif event_type == 'sendInstruction':
@@ -294,4 +282,3 @@ def handle_event():
 if __name__ == '__main__':
     app.run(port=3000)
 ```
-

@@ -3,7 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AgentStorageImplementation, MongoDBAgentStorageImplementation, SqliteAgentStorageImplementation } from '@tarko/interface';
+import {
+  AgentStorageImplementation,
+  MongoDBAgentStorageImplementation,
+  SqliteAgentStorageImplementation,
+} from '@tarko/interface';
 import { IDAOFactory, StorageBackend } from './interfaces/IDAOFactory';
 import { MongoDAOFactory } from './mongodb/MongoDAOFactory';
 import { SQLiteDAOFactory } from './sqlite/SQLiteDAOFactory';
@@ -37,7 +41,7 @@ export function createDAOFactory(
         throw new Error(`Unsupported storage backend: ${configOrBackend}`);
     }
   }
-  
+
   // Handle new signature
   const storageConfig = configOrBackend as AgentStorageImplementation;
   switch (storageConfig.type) {

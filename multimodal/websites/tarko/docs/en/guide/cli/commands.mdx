@@ -74,12 +74,12 @@ tarko run agent-tars --headless --input "List directory contents"
 
 #### Headless Options
 
-| Option | Description | Default |
-|--------|-------------|----------|
-| `--input <text>` | Direct input text | - |
-| `--format <type>` | Output format: `text`, `json` | `text` |
-| `--include-logs` | Include debug logs in output | `false` |
-| `--use-cache <bool>` | Enable/disable caching | `true` |
+| Option               | Description                   | Default |
+| -------------------- | ----------------------------- | ------- |
+| `--input <text>`     | Direct input text             | -       |
+| `--format <type>`    | Output format: `text`, `json` | `text`  |
+| `--include-logs`     | Include debug logs in output  | `false` |
+| `--use-cache <bool>` | Enable/disable caching        | `true`  |
 
 ## `tarko serve`
 
@@ -191,8 +191,8 @@ tarko request --provider openai --model gpt-4 --body request.json --format seman
 ```json
 {
   "messages": [
-    {"role": "system", "content": "You are a helpful assistant."},
-    {"role": "user", "content": "Hello!"}
+    { "role": "system", "content": "You are a helpful assistant." },
+    { "role": "user", "content": "Hello!" }
   ],
   "temperature": 0.7,
   "max_tokens": 1000
@@ -308,14 +308,14 @@ export TARKO_WORKSPACE=./my-workspace
 
 ## Exit Codes
 
-| Code | Description |
-|------|-------------|
-| 0 | Success |
-| 1 | General error |
-| 2 | Configuration error |
-| 3 | Network error |
-| 4 | Authentication error |
-| 5 | Agent execution error |
+| Code | Description           |
+| ---- | --------------------- |
+| 0    | Success               |
+| 1    | General error         |
+| 2    | Configuration error   |
+| 3    | Network error         |
+| 4    | Authentication error  |
+| 5    | Agent execution error |
 
 ## Examples
 

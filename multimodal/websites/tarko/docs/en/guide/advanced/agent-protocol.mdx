@@ -24,15 +24,16 @@ All events follow a consistent structure:
 
 ```typescript
 interface AgentEvent {
-  id: string;           // Unique event identifier
-  type: string;         // Event type
-  timestamp: number;    // Unix timestamp
-  sessionId: string;    // Session identifier
-  data: any;           // Event-specific data
-  metadata?: {         // Optional metadata
-    source?: string;   // Event source component
-    version?: string;  // Protocol version
-    traceId?: string;  // Distributed tracing ID
+  id: string; // Unique event identifier
+  type: string; // Event type
+  timestamp: number; // Unix timestamp
+  sessionId: string; // Session identifier
+  data: any; // Event-specific data
+  metadata?: {
+    // Optional metadata
+    source?: string; // Event source component
+    version?: string; // Protocol version
+    traceId?: string; // Distributed tracing ID
   };
 }
 ```
@@ -222,8 +223,8 @@ agent.emit({
   data: {
     metric: 'response_time',
     value: 1250,
-    unit: 'ms'
-  }
+    unit: 'ms',
+  },
 });
 ```
 
@@ -231,16 +232,17 @@ agent.emit({
 
 ```typescript
 // Filter events by type
-const toolEvents = agent.getEventStream()
-  .filter(event => event.type.startsWith('tool_'));
+const toolEvents = agent.getEventStream().filter((event) => event.type.startsWith('tool_'));
 
 // Filter events by session
-const sessionEvents = agent.getEventStream()
-  .filter(event => event.sessionId === 'specific-session');
+const sessionEvents = agent
+  .getEventStream()
+  .filter((event) => event.sessionId === 'specific-session');
 
 // Filter events by time range
-const recentEvents = agent.getEventStream()
-  .filter(event => event.timestamp > Date.now() - 3600000); // Last hour
+const recentEvents = agent
+  .getEventStream()
+  .filter((event) => event.timestamp > Date.now() - 3600000); // Last hour
 ```
 
 ## Server Protocol
@@ -333,6 +335,7 @@ Accept: text/event-stream
 ```
 
 **SSE Response:**
+
 ```
 event: user_message
 data: {"id":"evt_1","type":"user_message","data":{"content":"Tell me a story"}}
@@ -358,17 +361,21 @@ For bidirectional real-time communication:
 const socket = new WebSocket('ws://localhost:8888/ws');
 
 // Connect to session
-socket.send(JSON.stringify({
-  type: 'join_session',
-  sessionId: 'sess_123'
-}));
+socket.send(
+  JSON.stringify({
+    type: 'join_session',
+    sessionId: 'sess_123',
+  }),
+);
 
 // Send query
-socket.send(JSON.stringify({
-  type: 'send_query',
-  sessionId: 'sess_123',
-  query: 'Hello!'
-}));
+socket.send(
+  JSON.stringify({
+    type: 'send_query',
+    sessionId: 'sess_123',
+    query: 'Hello!',
+  }),
+);
 
 // Receive events
 socket.onmessage = (event) => {
@@ -377,10 +384,12 @@ socket.onmessage = (event) => {
 };
 
 // Abort query
-socket.send(JSON.stringify({
-  type: 'abort_query',
-  sessionId: 'sess_123'
-}));
+socket.send(
+  JSON.stringify({
+    type: 'abort_query',
+    sessionId: 'sess_123',
+  }),
+);
 ```
 
 ## Protocol Extensions
@@ -392,11 +401,11 @@ Define custom events for your application:
 ```typescript
 // Define custom event types
 interface CustomEvents {
-  'user_feedback': {
+  user_feedback: {
     rating: number;
     comment?: string;
   };
-  'tool_performance': {
+  tool_performance: {
     toolName: string;
     executionTime: number;
     success: boolean;
@@ -413,8 +422,8 @@ agent.emit({
   data: {
     toolName: 'web_search',
     executionTime: 1250,
-    success: true
-  }
+    success: true,
+  },
 });
 ```
 
@@ -425,14 +434,14 @@ agent.emit({
 const agent = new Agent({
   protocol: {
     version: '1.0',
-    extensions: ['custom-events', 'performance-metrics']
-  }
+    extensions: ['custom-events', 'performance-metrics'],
+  },
 });
 
 // Version-aware event handling
 agent.on('*', (event) => {
   const version = event.metadata?.version || '1.0';
-  
+
   if (version === '1.0') {
     // Handle v1.0 events
   } else if (version === '2.0') {
@@ -451,34 +460,34 @@ import { useEffect, useState } from 'react';
 function AgentChat({ sessionId }: { sessionId: string }) {
   const [events, setEvents] = useState<AgentEvent[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   useEffect(() => {
     const eventSource = new EventSource(
       `/api/v1/sessions/events/stream?sessionId=${sessionId}`
     );
-    
+
     eventSource.onmessage = (event) => {
       const agentEvent = JSON.parse(event.data);
       setEvents(prev => [...prev, agentEvent]);
-      
+
       if (agentEvent.type === 'assistant_message') {
         setIsLoading(false);
       }
     };
-    
+
     return () => eventSource.close();
   }, [sessionId]);
-  
+
   const sendMessage = async (message: string) => {
     setIsLoading(true);
-    
+
     await fetch('/api/v1/sessions/query', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ sessionId, query: message })
     });
   };
-  
+
   return (
     <div>
       {events.map(event => (
@@ -497,7 +506,9 @@ function AgentChat({ sessionId }: { sessionId: string }) {
 import { Agent } from '@tarko/agent';
 import chalk from 'chalk';
 
-const agent = new Agent({ /* config */ });
+const agent = new Agent({
+  /* config */
+});
 
 // Display events in CLI
 agent.on('user_message', (event) => {
@@ -536,7 +547,9 @@ import { Agent } from '@tarko/agent';
 import { createPrometheusMetrics } from './metrics';
 
 const metrics = createPrometheusMetrics();
-const agent = new Agent({ /* config */ });
+const agent = new Agent({
+  /* config */
+});
 
 // Track metrics from events
 agent.on('assistant_message', (event) => {
@@ -552,7 +565,7 @@ agent.on('tool_result', (event) => {
   const duration = Date.now() - event.timestamp;
   metrics.toolExecutionDuration.observe(
     { tool: event.data.name, success: event.data.success },
-    duration
+    duration,
   );
 });
 
@@ -564,24 +577,28 @@ agent.on('error', (event) => {
 ## Best Practices
 
 ### 1. Event Design
+
 - Use consistent event naming conventions
 - Include all necessary data in event payload
 - Add metadata for debugging and tracing
 - Version your event schemas
 
 ### 2. Error Handling
+
 - Always include error context in error events
 - Use structured error codes
 - Provide actionable error messages
 - Implement proper error recovery
 
 ### 3. Performance
+
 - Batch events when possible
 - Use appropriate event filtering
 - Implement event compression for large payloads
 - Monitor event processing latency
 
 ### 4. Security
+
 - Sanitize event data before transmission
 - Implement proper authentication for event streams
 - Use encryption for sensitive event data
@@ -596,8 +613,8 @@ agent.on('error', (event) => {
 const agent = new Agent({
   debug: {
     events: true,
-    level: 'verbose'
-  }
+    level: 'verbose',
+  },
 });
 
 // Export event stream for analysis

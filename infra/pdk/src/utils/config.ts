@@ -19,32 +19,33 @@ import type { PDKConfig, LoadedConfig } from '../types';
 const DEFAULT_CONFIG: Partial<PDKConfig> = {
   // Core operational defaults
   cwd: process.cwd(),
-  dryRun: false,        // Opt-in safety feature
-  runInBand: false,      // Optimize for speed by default
-  ignoreScripts: false,   // Respect build scripts by default
-  tagPrefix: 'v',        // Most common git tag convention
-  commit: true,          // Most common git tag convention
-  
+  dryRun: false, // Opt-in safety feature
+  runInBand: false, // Optimize for speed by default
+  ignoreScripts: false, // Respect build scripts by default
+  tagPrefix: 'v', // Most common git tag convention
+  commit: true, // Most common git tag convention
+
   // AI defaults - opt-in for security and cost reasons
-  useAi: false,         // Prevent unexpected API calls/costs
-  provider: 'openai',    // Most common LLM provider
-  model: 'gpt-4o',      // Current best general-purpose model
-  
+  useAi: false, // Prevent unexpected API calls/costs
+  provider: 'openai', // Most common LLM provider
+  model: 'gpt-4o', // Current best general-purpose model
+
   // Chelog filtering defaults
-  filterScopes: [],      // Include all scopes by default
-  filterTypes: ['feat', 'fix'],  // Most important change types
+  filterScopes: [], // Include all scopes by default
+  filterTypes: ['feat', 'fix'], // Most important change types
 };
 
 /**
  * Configuration loader options
  */
-interface PDKConfigLoaderOptions extends Omit<LoadConfigOptions, 'configFiles'> {
+interface PDKConfigLoaderOptions
+  extends Omit<LoadConfigOptions, 'configFiles'> {
   cwd?: string;
 }
 
 /**
  * Loads PDK configuration from the specified directory
- * 
+ *
  * Priority: CLI > Environment > Config File > Defaults
  */
 export async function loadPDKConfig(
@@ -55,7 +56,12 @@ export async function loadPDKConfig(
   try {
     const result = await loadConfig<PDKConfig>({
       ...loaderOptions,
-      configFiles: ['pdk.config.ts', 'pdk.config.js', 'pdk.config.mjs', 'pdk.config.cjs'],
+      configFiles: [
+        'pdk.config.ts',
+        'pdk.config.js',
+        'pdk.config.mjs',
+        'pdk.config.cjs',
+      ],
       cwd,
     });
 
@@ -86,7 +92,7 @@ function resolveConfig(config: PDKConfig, cwd: string): LoadedConfig {
 
 /**
  * Merges CLI options with loaded configuration
- * 
+ *
  * CLI options override config file options
  */
 export function mergeOptions<T extends Record<string, any>>(

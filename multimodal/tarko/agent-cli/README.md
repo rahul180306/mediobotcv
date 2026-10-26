@@ -142,8 +142,6 @@ tarko --workspace ./my-workspace
 tarko --debug
 ```
 
-
-
 ### Priority Order
 
 1. **CLI arguments** (highest)
@@ -188,8 +186,8 @@ const { result, logs } = await ConsoleInterceptor.run(
     return await agent.run('input');
   },
   {
-    silent: true,    // Suppress output
-    capture: true,   // Capture logs
+    silent: true, // Suppress output
+    capture: true, // Capture logs
   },
 );
 ```
@@ -217,10 +215,6 @@ const config = {
 tarko --tool.include "file_*,web_*" --tool.exclude "dangerous_*"
 tarko --mcpServer.include "filesystem" --mcpServer.exclude "experimental_*"
 ```
-
-
-
-
 
 ## API Reference
 

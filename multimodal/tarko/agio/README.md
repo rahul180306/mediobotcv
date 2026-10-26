@@ -80,7 +80,7 @@ import { AgioEvent } from '@tarko/agio';
 // Create a TTFT event with automatic timestamp
 const ttftEvent = AgioEvent.createEvent('agent_ttft', 'session-123', {
   runId: 'run-456',
-  ttftMs: 150
+  ttftMs: 150,
 });
 
 // Create a tool call event
@@ -89,7 +89,7 @@ const toolCallEvent = AgioEvent.createEvent('tool_call', 'session-123', {
   toolName: 'web_search',
   toolCallId: 'call-789',
   isCustomTool: false,
-  mcpServer: 'search-server'
+  mcpServer: 'search-server',
 });
 
 // Create an agent run end event with comprehensive metrics
@@ -101,8 +101,8 @@ const runEndEvent = AgioEvent.createEvent('agent_run_end', 'session-123', {
   tokenUsage: {
     input: 150,
     output: 75,
-    total: 225
-  }
+    total: 225,
+  },
 });
 ```
 
@@ -120,15 +120,15 @@ const events = AgioEvent.createEvents('session-123', [
     payload: {
       runId: 'run-456',
       content: 'Please help me analyze this data',
-      streaming: false
-    }
+      streaming: false,
+    },
   },
   {
     type: 'agent_ttft',
     payload: {
       runId: 'run-456',
-      ttftMs: 150
-    }
+      ttftMs: 150,
+    },
   },
   {
     type: 'agent_tps',
@@ -137,13 +137,13 @@ const events = AgioEvent.createEvents('session-123', [
       tps: 25.5,
       tokenCount: 100,
       durationMs: 4000,
-      modelName: 'gpt-4'
-    }
-  }
+      modelName: 'gpt-4',
+    },
+  },
 ]);
 
 // Send all events to your monitoring system
-events.forEach(event => yourMonitoringSystem.track(event));
+events.forEach((event) => yourMonitoringSystem.track(event));
 ```
 
 #### Type Checking Events
@@ -198,15 +198,15 @@ Agio supports extension with custom event types for domain-specific monitoring n
 ```typescript
 // 1. Define your custom event interfaces
 interface CustomAgioEvents {
-  'custom_performance_metric': {
+  custom_performance_metric: {
     type: 'custom_performance_metric';
     metricName: string;
     value: number;
     unit: string;
     category: 'latency' | 'throughput' | 'quality';
   };
-  
-  'business_event': {
+
+  business_event: {
     type: 'business_event';
     eventName: string;
     properties: Record<string, any>;
@@ -222,15 +222,21 @@ declare module '@tarko/agio' {
 }
 
 // 3. Use your custom events with full type safety
-const customEvent: AgioEvent.ExtendedEvent = AgioEvent.createEvent('custom_performance_metric', 'session-123', {
-  metricName: 'response_quality',
-  value: 0.95,
-  unit: 'score',
-  category: 'quality'
-});
+const customEvent: AgioEvent.ExtendedEvent = AgioEvent.createEvent(
+  'custom_performance_metric',
+  'session-123',
+  {
+    metricName: 'response_quality',
+    value: 0.95,
+    unit: 'score',
+    category: 'quality',
+  },
+);
 
 // 4. Type-safe event filtering
-function isCustomEvent(event: AgioEvent.ExtendedEvent): event is AgioEvent.ExtendedEventPayload<'custom_performance_metric'> {
+function isCustomEvent(
+  event: AgioEvent.ExtendedEvent,
+): event is AgioEvent.ExtendedEventPayload<'custom_performance_metric'> {
   return AgioEvent.isEventType(event, 'custom_performance_metric');
 }
 
@@ -242,31 +248,37 @@ const customEvents = AgioEvent.createEvents('session-123', [
       metricName: 'response_quality',
       value: 0.95,
       unit: 'score',
-      category: 'quality'
-    }
+      category: 'quality',
+    },
   },
   {
     type: 'business_event',
     payload: {
       eventName: 'feature_used',
       properties: { feature: 'advanced_search' },
-      userId: 'user-456'
-    }
-  }
+      userId: 'user-456',
+    },
+  },
 ]);
 ```
 
 ### Best Practices for Extensions
 
 1. **Namespace your events**: Use descriptive prefixes to avoid conflicts
+
    ```typescript
    interface MyLibraryEvents {
-     'mylib_custom_metric': { /* ... */ };
-     'mylib_business_event': { /* ... */ };
+     mylib_custom_metric: {
+       /* ... */
+     };
+     mylib_business_event: {
+       /* ... */
+     };
    }
    ```
 
 2. **Follow the base event structure**: Always extend from the base event pattern
+
    ```typescript
    interface MyCustomEvent {
      type: 'my_custom_event';
@@ -274,7 +286,7 @@ const customEvents = AgioEvent.createEvents('session-123', [
      // timestamp: number;
      // sessionId: string;
      // runId?: string;
-     
+
      // Your custom fields
      customField: string;
    }
@@ -287,7 +299,7 @@ const customEvents = AgioEvent.createEvents('session-123', [
       * Custom metric for tracking user engagement
       * Sent when user interacts with specific features
       */
-     'engagement_metric': {
+     engagement_metric: {
        type: 'engagement_metric';
        featureName: string;
        engagementScore: number;
@@ -301,21 +313,25 @@ const customEvents = AgioEvent.createEvents('session-123', [
 Agio provides standardized events for:
 
 ### Agent Lifecycle Events
+
 - `agent_initialized` - Agent session creation with configuration details
 - `agent_run_start` - Task initiation with user input
 - `agent_run_end` - Task completion with execution metrics
 
 ### Performance Metrics
+
 - `agent_ttft` - Time To First Token (critical UX metric)
 - `agent_tps` - Tokens Per Second (throughput monitoring)
 
 ### Execution Tracking
+
 - `agent_loop_start` - Agent iteration beginning
 - `agent_loop_end` - Agent iteration completion with metrics
 - `tool_call` - Tool invocation tracking
 - `tool_result` - Tool execution results and performance
 
 ### Quality Metrics
+
 - `user_feedback` - User satisfaction and task completion feedback
 
 Each event includes consistent metadata like timestamps and session identifiers, along with event-specific data relevant for operational monitoring.

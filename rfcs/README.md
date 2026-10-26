@@ -30,7 +30,7 @@ Consider initiating an RFC for changes involving:
 
 - Platform leads review for:
   - Windows compatibility
-  - macOS security implications  
+  - macOS security implications
   - Linux packaging impacts
 - Required checklist completion:
   - [ ] Performance analysis

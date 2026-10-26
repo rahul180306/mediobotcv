@@ -16,13 +16,14 @@ const agent = new Agent({
   tools: [myTool],
   model: {
     provider: 'openai',
-    id: 'gpt-4'
+    id: 'gpt-4',
   },
-  maxIterations: 10
+  maxIterations: 10,
 });
 ```
 
 **参数：**
+
 - `options` (`AgentOptions`): Agent 的配置选项
 
 ## 方法
@@ -48,13 +49,13 @@ if (isAborted) {
 // 非流式调用
 const response = await agent.callLLM({
   messages: [{ role: 'user', content: '你好' }],
-  temperature: 0.7
+  temperature: 0.7,
 });
 
 // 流式调用
 const stream = await agent.callLLM({
   messages: [{ role: 'user', content: '你好' }],
-  stream: true
+  stream: true,
 });
 
 for await (const chunk of stream) {
@@ -63,10 +64,12 @@ for await (const chunk of stream) {
 ```
 
 **重载：**
+
 - `callLLM(params: Omit<ChatCompletionCreateParams, 'model'> & { stream?: false }, options?: RequestOptions): Promise<ChatCompletion>`
 - `callLLM(params: Omit<ChatCompletionCreateParams, 'model'> & { stream: true }, options?: RequestOptions): Promise<AsyncIterable<ChatCompletionChunk>>`
 
 **参数：**
+
 - `params` (`Omit<ChatCompletionCreateParams, 'model'>`): 聊天完成参数
 - `options` (`RequestOptions`): 可选的请求选项
 
@@ -92,14 +95,15 @@ console.log('Agent 已成功释放');
 const summary = await agent.generateSummary({
   messages: [
     { role: 'user', content: '什么是机器学习？' },
-    { role: 'assistant', content: '机器学习是...' }
-  ]
+    { role: 'assistant', content: '机器学习是...' },
+  ],
 });
 
 console.log(`摘要：${summary.summary}`);
 ```
 
 **参数：**
+
 - `request` (`SummaryRequest`): 包含消息和选项的摘要请求
 
 **返回：** `Promise<SummaryResponse>` - 生成的摘要
@@ -160,7 +164,7 @@ eventStream.on('assistant_message', (event) => {
 const llmClient = agent.getLLMClient();
 if (llmClient) {
   const response = await llmClient.chat.completions.create({
-    messages: [{ role: 'user', content: '你好' }]
+    messages: [{ role: 'user', content: '你好' }],
   });
 }
 ```
@@ -191,20 +195,21 @@ const weatherTool: Tool = {
   schema: {
     type: 'object',
     properties: {
-      location: { type: 'string', description: '城市名称' }
+      location: { type: 'string', description: '城市名称' },
     },
-    required: ['location']
+    required: ['location'],
   },
   function: async (args) => {
     const { location } = args as { location: string };
     return `${location}的天气：晴朗，25°C`;
-  }
+  },
 };
 
 agent.registerTool(weatherTool);
 ```
 
 **参数：**
+
 - `tool` (`Tool`): 要注册的工具定义
 
 ### `run(input)` / `run(options)`
@@ -218,13 +223,13 @@ const response = await agent.run('天气怎么样？');
 // 带选项（非流式）
 const response = await agent.run({
   input: '分析这张图片',
-  model: 'gpt-4-vision-preview'
+  model: 'gpt-4-vision-preview',
 });
 
 // 流式模式
 const stream = await agent.run({
   input: '帮我规划一次旅行',
-  stream: true
+  stream: true,
 });
 
 for await (const event of stream) {
@@ -233,11 +238,13 @@ for await (const event of stream) {
 ```
 
 **重载：**
+
 - `run(input: string): Promise<AssistantMessageEvent>`
 - `run(options: AgentRunNonStreamingOptions): Promise<AssistantMessageEvent>`
 - `run(options: AgentRunStreamingOptions): Promise<AsyncIterable<Event>>`
 
 **参数：**
+
 - `input` (`string`): 简单文本输入
 - `options` (`AgentRunOptions`): 此次执行的配置
 
@@ -250,13 +257,14 @@ import OpenAI from 'openai';
 
 const customClient = new OpenAI({
   apiKey: 'your-api-key',
-  baseURL: 'https://custom-llm-endpoint.com'
+  baseURL: 'https://custom-llm-endpoint.com',
 });
 
 agent.setCustomLLMClient(customClient);
 ```
 
 **参数：**
+
 - `client` (`OpenAI`): OpenAI 兼容的 LLM 客户端
 
 ### `status()`
@@ -270,8 +278,6 @@ console.log(`Agent 状态：${currentStatus}`);
 
 **返回：** `AgentStatus` - 当前执行状态
 
-
-
 ## 配置选项
 
 ### `AgentOptions`
@@ -281,39 +287,39 @@ Agent 初始化的配置选项：
 ```typescript
 interface AgentOptions {
   // 核心配置
-  instructions?: string;           // 系统提示/指令
-  name?: string;                   // Agent 名称用于标识
-  id?: string;                     // 唯一 Agent ID
-  
+  instructions?: string; // 系统提示/指令
+  name?: string; // Agent 名称用于标识
+  id?: string; // 唯一 Agent ID
+
   // 模型配置
-  model?: ModelConfiguration;      // LLM 模型设置
-  temperature?: number;            // 采样温度 (0-1)
-  top_p?: number;                 // 核采样参数
-  
+  model?: ModelConfiguration; // LLM 模型设置
+  temperature?: number; // 采样温度 (0-1)
+  top_p?: number; // 核采样参数
+
   // 执行限制
-  maxIterations?: number;         // 最大推理迭代次数
-  maxTokens?: number;             // 每次请求的最大令牌数
-  
+  maxIterations?: number; // 最大推理迭代次数
+  maxTokens?: number; // 每次请求的最大令牌数
+
   // 工具和能力
-  tools?: Tool[];                 // 可用工具
+  tools?: Tool[]; // 可用工具
   toolCallEngine?: ToolCallEngineType; // 工具执行引擎
-  
+
   // 上下文管理
   context?: AgentContextAwarenessOptions; // 多模态上下文设置
-  
+
   // 推理和规划
   thinking?: LLMReasoningOptions; // 推理配置
-  
+
   // 日志和监控
-  logLevel?: LogLevel;            // 日志详细程度
-  metric?: { enable: boolean };   // 启用指标收集
-  
+  logLevel?: LogLevel; // 日志详细程度
+  metric?: { enable: boolean }; // 启用指标收集
+
   // 事件处理
   eventStreamOptions?: EventStreamOptions; // 事件流配置
   enableStreamingToolCallEvents?: boolean; // 流式工具调用事件
-  
+
   // 工具过滤
-  tool?: ToolFilterOptions;       // 工具过滤配置
+  tool?: ToolFilterOptions; // 工具过滤配置
 }
 ```
 
@@ -324,13 +330,13 @@ Agent 执行选项：
 ```typescript
 interface AgentRunObjectOptions {
   input: string | ChatCompletionContentPart[]; // 用户输入
-  stream?: boolean;                            // 启用流式
-  sessionId?: string;                          // 会话标识符
-  model?: string;                              // 覆盖模型
-  provider?: string;                           // 覆盖提供商
-  toolCallEngine?: ToolCallEngineType;         // 覆盖工具引擎
-  environmentInput?: EnvironmentInput;         // 环境上下文
-  abortSignal?: AbortSignal;                  // 取消信号
+  stream?: boolean; // 启用流式
+  sessionId?: string; // 会话标识符
+  model?: string; // 覆盖模型
+  provider?: string; // 覆盖提供商
+  toolCallEngine?: ToolCallEngineType; // 覆盖工具引擎
+  environmentInput?: EnvironmentInput; // 环境上下文
+  abortSignal?: AbortSignal; // 取消信号
 }
 ```
 
@@ -378,6 +384,7 @@ try {
 ```
 
 常见错误场景：
+
 - **AbortError**: 通过 `abort()` 或 `AbortSignal` 取消请求
 - **ModelError**: LLM 提供商或模型配置问题
 - **ToolError**: 工具执行失败
@@ -404,9 +411,9 @@ const calculatorTool: Tool = {
   schema: {
     type: 'object',
     properties: {
-      expression: { type: 'string', description: '要计算的数学表达式' }
+      expression: { type: 'string', description: '要计算的数学表达式' },
     },
-    required: ['expression']
+    required: ['expression'],
   },
   function: async (args) => {
     const { expression } = args as { expression: string };
@@ -416,7 +423,7 @@ const calculatorTool: Tool = {
     } catch (error) {
       return `错误：无效表达式`;
     }
-  }
+  },
 };
 
 // 创建 Agent
@@ -425,11 +432,11 @@ const agent = new Agent({
   tools: [calculatorTool],
   model: {
     provider: 'openai',
-    id: 'gpt-4'
+    id: 'gpt-4',
   },
   maxIterations: 5,
   temperature: 0.1,
-  logLevel: 1 // 信息级别
+  logLevel: 1, // 信息级别
 });
 
 // 设置事件监控

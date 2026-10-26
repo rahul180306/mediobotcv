@@ -1,6 +1,7 @@
 # GUI Agent Standalone Project - Quick Start for LLM Agents
 
 ## PROJECT OVERVIEW
+
 - **Project Type**: TypeScript Node.js application using GUI Agent SDK
 - **Module System**: CommonJS (NOT ES Modules)
 - **Build Tool**: TypeScript Compiler (tsc)
@@ -10,29 +11,33 @@
 ## CRITICAL TECHNICAL CONSTRAINTS
 
 ### 1. MODULE SYSTEM REQUIREMENTS
+
 - **MUST USE CommonJS**: `package.json` does NOT contain `"type": "module"`
 - **TypeScript Config**: `"module": "CommonJS"` in `tsconfig.json`
 - **Import Syntax**: Use ES6 imports in TypeScript, compiles to CommonJS require()
 - **File Extensions**: NO `.js` extensions needed in TypeScript imports
-- **__dirname**: Available in CommonJS (NOT available in ES modules)
+- **\_\_dirname**: Available in CommonJS (NOT available in ES modules)
 
 ### 2. TYPE SYSTEM CONSTRAINTS
+
 - **Avoid Type Imports**: Do NOT import `ModelProviderName` or `AgentModel` types
 - **Use `as const` Assertion**: For string literals that need specific types
 - **Example**: `provider: 'volcengine' as const` (NOT `provider: 'volcengine'`)
 - **Reason**: Prevents string type widening, ensures literal type compatibility
 
 ### 3. ENVIRONMENT CONFIGURATION
+
 - **File**: `.env.local` (copy from `.env.local.example`)
 - **Loading**: Uses `dotenv` with `path.join(__dirname, '..', '.env.local')`
 
 #### Required Environment Variables
+
 ```bash
 # Model Service Configuration
 ARK_BASE_URL=https://your-model-service-url         # Model Service API endpoint
 ARK_API_KEY=your-actual-model-service-api-key       # Your Model Service API key
 
-# Doubao Models Configuration  
+# Doubao Models Configuration
 DOUBAO_1_5_VP=your-model-key-abcdef                 # Doubao 1.5 VP model endpoint ID
 DOUBAO_SEED_1_6=your-model-key-fedcba               # Doubao Seed 1.6 model endpoint ID
 
@@ -41,6 +46,7 @@ SANDBOX_URL=http://your-sandbox-url:port            # AIO operator sandbox URL
 ```
 
 #### Environment Variable Details
+
 - **ARK_BASE_URL**: Model service base URL
 - **ARK_API_KEY**: Your Volcengine account API key for authentication
 - **DOUBAO_SEED_1_6**: Model endpoint ID for Doubao Seed 1.6, format: `ep-{timestamp}-{hash}`
@@ -48,6 +54,7 @@ SANDBOX_URL=http://your-sandbox-url:port            # AIO operator sandbox URL
 - **SANDBOX_URL**: URL of the AIO operator sandbox environment for GUI operations
 
 #### Environment Setup Process
+
 1. Copy `.env.local.example` to `.env.local`
 2. Replace all `your-*` placeholders with actual values
 3. Ensure ARK_API_KEY has proper permissions for model access
@@ -55,6 +62,7 @@ SANDBOX_URL=http://your-sandbox-url:port            # AIO operator sandbox URL
 5. Model endpoint IDs must be valid and active in your Volcengine account
 
 ## PROJECT STRUCTURE
+
 ```
 gui-agent-standalone/
 ├── src/
@@ -68,13 +76,16 @@ gui-agent-standalone/
 ```
 
 ## DEPENDENCIES
+
 ### Runtime Dependencies
+
 - `dotenv`: Environment variable loading
 - `@gui-agent/agent-sdk`: Core GUI agent functionality
 - `@gui-agent/operator-aio`: AIO hybrid operator
 - `@gui-agent/action-parser`: Action parsing utilities
 
 ### Development Dependencies
+
 - `typescript`: TypeScript compiler
 - `tsx`: TypeScript execution for development
 - `@types/node`: Node.js type definitions
@@ -82,13 +93,16 @@ gui-agent-standalone/
 ## BUILD AND RUN PROCESS
 
 ### 1. MANDATORY BUILD STEP
+
 ```bash
 npm run build  # Compiles TypeScript to dist/
 ```
+
 - **NEVER skip this step** - project requires compilation
 - **Output**: `dist/index.js` and `dist/constants.js`
 
 ### 2. EXECUTION
+
 ```bash
 npm start      # Runs compiled JavaScript
 # OR for development
@@ -98,71 +112,80 @@ npm run dev    # Direct TypeScript execution
 ## CODE STRUCTURE PATTERNS
 
 ### 1. Model Configuration
+
 ```typescript
 const doubao = {
-    id: process.env.DOUBAO_SEED_1_6!,
-    provider: 'volcengine' as const,  // CRITICAL: as const assertion
-    baseURL: process.env.ARK_BASE_URL!,
-    apiKey: process.env.ARK_API_KEY!,
+  id: process.env.DOUBAO_SEED_1_6!,
+  provider: 'volcengine' as const, // CRITICAL: as const assertion
+  baseURL: process.env.ARK_BASE_URL!,
+  apiKey: process.env.ARK_API_KEY!,
 };
 ```
 
 ### 2. Operator Setup
+
 ```typescript
 const operator = new AIOHybridOperator({
-    baseURL: process.env.SANDBOX_URL!,
-    timeout: 10000,
+  baseURL: process.env.SANDBOX_URL!,
+  timeout: 10000,
 });
 ```
 
 ### 3. Agent Initialization
+
 ```typescript
 const guiAgent = new GUIAgent({
-    operator,
-    model: doubao,  // No type assertion needed with as const
-    systemPrompt: SYSTEM_PROMPT,
+  operator,
+  model: doubao, // No type assertion needed with as const
+  systemPrompt: SYSTEM_PROMPT,
 });
 ```
 
 ### 4. Execution Pattern
+
 ```typescript
 async function main() {
-    const response = await guiAgent.run({
-        input: [{ type: 'text', text: 'your-task-here' }],
-    });
-    console.log(response.content);
+  const response = await guiAgent.run({
+    input: [{ type: 'text', text: 'your-task-here' }],
+  });
+  console.log(response.content);
 }
 ```
 
 ## COMMON ISSUES AND SOLUTIONS
 
 ### Issue 1: ERR_MODULE_NOT_FOUND
+
 - **Cause**: Missing build step or ES module configuration
 - **Solution**: Run `npm run build` first, ensure CommonJS config
 
 ### Issue 2: Type Assignment Error
+
 - **Error**: Cannot assign string to ModelProviderName
 - **Solution**: Use `as const` assertion on provider field
 - **Wrong**: `provider: 'volcengine'`
 - **Correct**: `provider: 'volcengine' as const`
 
-### Issue 3: __dirname Not Defined
+### Issue 3: \_\_dirname Not Defined
+
 - **Cause**: ES module configuration
 - **Solution**: Remove `"type": "module"` from package.json
 
 ### Issue 4: Environment Variables Not Loaded
+
 - **Cause**: Missing .env.local file
 - **Solution**: Copy .env.local.example to .env.local and fill values
 
 ## TYPESCRIPT CONFIGURATION DETAILS
 
 ### tsconfig.json Requirements
+
 ```json
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "CommonJS",           // CRITICAL: Must be CommonJS
-    "moduleResolution": "node",     // CRITICAL: Must be node
+    "module": "CommonJS", // CRITICAL: Must be CommonJS
+    "moduleResolution": "node", // CRITICAL: Must be node
     "outDir": "./dist",
     "rootDir": "./src",
     "esModuleInterop": true,
@@ -172,6 +195,7 @@ async function main() {
 ```
 
 ### package.json Requirements
+
 ```json
 {
   "main": "dist/index.js",
@@ -186,11 +210,13 @@ async function main() {
 ```
 
 ## SYSTEM PROMPT CONFIGURATION
+
 - **Location**: `src/constants.ts`
 - **Export**: `SYSTEM_PROMPT` constant
 - **Content**: GUI agent instructions with action space definitions
 
 ### Complete SYSTEM_PROMPT Content
+
 ```typescript
 export const SYSTEM_PROMPT = `
 You are a GUI agent. You are given a task and your action history, with screenshots. You need to perform the next action to complete the task.
@@ -224,10 +250,11 @@ finished(content='xxx') # Use escape characters \\', \\", and \\n in content par
 ```
 
 ### Action Space Details
+
 - **navigate(url)**: Navigate to specified URL
 - **navigate_back()**: Go back to previous page
 - **click(point)**: Single left click at coordinates
-- **left_double(point)**: Double left click at coordinates  
+- **left_double(point)**: Double left click at coordinates
 - **right_single(point)**: Single right click at coordinates
 - **drag(start_point, end_point)**: Drag from start to end coordinates
 - **hotkey(key)**: Execute keyboard shortcuts (max 3 keys, space-separated, lowercase)
@@ -237,12 +264,14 @@ finished(content='xxx') # Use escape characters \\', \\", and \\n in content par
 - **finished(content)**: Mark task completion with result content
 
 ### Content Formatting Rules
+
 - **Escape Characters**: Use `\'`, `\"`, `\n` for special characters
 - **Line Breaks**: Use `\n` for new lines
 - **Submission**: End with `\n` to submit input
 - **Action Summary**: One sentence summary of next action in Thought section
 
 ## DEVELOPMENT WORKFLOW
+
 1. **Setup**: Copy `.env.local.example` to `.env.local`
 2. **Install**: `npm install`
 3. **Build**: `npm run build` (MANDATORY)
@@ -251,6 +280,7 @@ finished(content='xxx') # Use escape characters \\', \\", and \\n in content par
 6. **Clean**: `npm run clean` (removes dist/)
 
 ## AGENT EXECUTION FLOW
+
 1. **Environment Loading**: Load variables from `.env.local` using dotenv
 2. **Model Configuration**: Initialize with proper type assertions (`as const`)
 3. **Operator Setup**: Create AIO operator with sandbox URL and timeout
@@ -259,34 +289,35 @@ finished(content='xxx') # Use escape characters \\', \\", and \\n in content par
 6. **Response Processing**: Handle and display agent output
 
 ### Detailed Execution Steps
+
 ```typescript
 // 1. Environment Loading
 dotenv.config({ path: path.join(__dirname, '..', '.env.local') });
 
 // 2. Model Configuration with Type Safety
 const doubao = {
-    id: process.env.DOUBAO_SEED_1_6!,
-    provider: 'volcengine' as const,  // Critical: literal type
-    baseURL: process.env.ARK_BASE_URL!,
-    apiKey: process.env.ARK_API_KEY!,
+  id: process.env.DOUBAO_SEED_1_6!,
+  provider: 'volcengine' as const, // Critical: literal type
+  baseURL: process.env.ARK_BASE_URL!,
+  apiKey: process.env.ARK_API_KEY!,
 };
 
 // 3. Operator Setup
 const operator = new AIOHybridOperator({
-    baseURL: process.env.SANDBOX_URL!,
-    timeout: 10000,  // 10 second timeout
+  baseURL: process.env.SANDBOX_URL!,
+  timeout: 10000, // 10 second timeout
 });
 
 // 4. Agent Initialization
 const guiAgent = new GUIAgent({
-    operator,
-    model: doubao,
-    systemPrompt: SYSTEM_PROMPT,
+  operator,
+  model: doubao,
+  systemPrompt: SYSTEM_PROMPT,
 });
 
 // 5. Task Execution
 const response = await guiAgent.run({
-    input: [{ type: 'text', text: 'your task description' }],
+  input: [{ type: 'text', text: 'your task description' }],
 });
 
 // 6. Response Processing
@@ -294,18 +325,21 @@ console.log('Agent Response:', response.content);
 ```
 
 ### Input Format Requirements
+
 - **Structure**: Array of input objects
 - **Type**: Must be `'text'` for text inputs
 - **Content**: Task description in natural language
 - **Example**: `[{ type: 'text', text: '打开百度搜索页面并搜索TypeScript教程' }]`
 
 ### Response Format
+
 - **Type**: Object with content property
 - **Content**: Agent's response including thoughts and actions
 - **Format**: Follows SYSTEM_PROMPT output format (Thought + Action)
 - **Language**: Chinese thoughts, English actions
 
 ## CRITICAL SUCCESS FACTORS
+
 - **Always build before running production**: `npm run build` is mandatory
 - **Use `as const` for string literals requiring specific types**: Prevents type widening
 - **Maintain CommonJS module system**: Never add `"type": "module"` to package.json
@@ -320,7 +354,9 @@ console.log('Agent Response:', response.content);
 ## TROUBLESHOOTING GUIDE
 
 ### Build Issues
+
 - **Error**: `Cannot find module './constants'`
+
   - **Cause**: Missing build step or incorrect module resolution
   - **Solution**: Run `npm run build` and verify tsconfig.json settings
 
@@ -329,11 +365,14 @@ console.log('Agent Response:', response.content);
   - **Solution**: Add `as const` to provider: `provider: 'volcengine' as const`
 
 ### Runtime Issues
+
 - **Error**: `ARK_API_KEY is not defined`
+
   - **Cause**: Missing or incorrect .env.local file
   - **Solution**: Copy .env.local.example and fill actual values
 
 - **Error**: `Connection refused to SANDBOX_URL`
+
   - **Cause**: AIO sandbox not running or incorrect URL
   - **Solution**: Verify sandbox is accessible at specified URL
 
@@ -342,7 +381,9 @@ console.log('Agent Response:', response.content);
   - **Solution**: Check Volcengine console for correct endpoint ID
 
 ### Agent Execution Issues
+
 - **Error**: `Invalid action format`
+
   - **Cause**: Incorrect point coordinates or action syntax
   - **Solution**: Follow `<point>x y</point>` format and action space definitions
 
@@ -351,6 +392,7 @@ console.log('Agent Response:', response.content);
   - **Solution**: Increase timeout in operator configuration or retry
 
 ## PERFORMANCE OPTIMIZATION
+
 - **Build Time**: Use `npm run dev` for development (skips build)
 - **Model Response**: Adjust timeout based on task complexity
 - **Memory Usage**: Clean dist/ folder regularly with `npm run clean`

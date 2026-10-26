@@ -6,10 +6,20 @@ export default defineConfig({
   build: true,
   ignoreScripts: true,
   autoCreateReleaseBranch: true,
-  
+
   // Scope filtering for changelog
-  filterScopes: ['tars', 'agent', 'tarko', 'o-agent', 'tars-stack', 'browser', 'infra', 'mcp', 'all'],
-  
+  filterScopes: [
+    'tars',
+    'agent',
+    'tarko',
+    'o-agent',
+    'tars-stack',
+    'browser',
+    'infra',
+    'mcp',
+    'all',
+  ],
+
   // AI changelog configuration (opt-in)
   provider: 'azure-openai',
   model: 'aws_sdk_claude37_sonnet',

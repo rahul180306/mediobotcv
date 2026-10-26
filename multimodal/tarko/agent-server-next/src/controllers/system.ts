@@ -19,21 +19,27 @@ export function healthCheck(c: HonoContext) {
 export async function getVersion(c: HonoContext) {
   const server = c.get('server');
 
-  return c.json({
-    version: server.versionInfo?.version,
-    buildTime: server.versionInfo?.buildTime,
-    gitHash: server.versionInfo?.gitHash,
-  }, 200);
+  return c.json(
+    {
+      version: server.versionInfo?.version,
+      buildTime: server.versionInfo?.buildTime,
+      gitHash: server.versionInfo?.gitHash,
+    },
+    200,
+  );
 }
 
 /**
  * Get agent options (sanitized for client)
  */
 export async function getAgentOptions(c: HonoContext) {
-const server = c.get('server')
-return c.json({
-options: sanitizeAgentOptions(server.appConfig),
-}, 200);
+  const server = c.get('server');
+  return c.json(
+    {
+      options: sanitizeAgentOptions(server.appConfig),
+    },
+    200,
+  );
 }
 
 /**
@@ -48,12 +54,15 @@ export async function getRuntimeSettings(c: HonoContext) {
   try {
     // Get runtime settings configuration from server config
     const runtimeSettingsConfig = server.appConfig?.server?.runtimeSettings;
-    
+
     if (!runtimeSettingsConfig) {
-      return c.json({ 
-        schema: { type: 'object', properties: {} },
-        currentValues: {}
-      }, 200);
+      return c.json(
+        {
+          schema: { type: 'object', properties: {} },
+          currentValues: {},
+        },
+        200,
+      );
     }
 
     const schema = runtimeSettingsConfig.schema;
@@ -71,7 +80,7 @@ export async function getRuntimeSettings(c: HonoContext) {
 
     // Merge with default values from schema
     const mergedValues: Record<string, any> = { ...currentValues };
-    
+
     if (schema && schema.properties) {
       Object.entries(schema.properties).forEach(([key, propSchema]: [string, any]) => {
         if (mergedValues[key] === undefined && propSchema.default !== undefined) {
@@ -80,10 +89,13 @@ export async function getRuntimeSettings(c: HonoContext) {
       });
     }
 
-    return c.json({
-      schema: schema,
-      currentValues: sessionId ? mergedValues : {} // Only return current values if sessionId provided
-    }, 200);
+    return c.json(
+      {
+        schema: schema,
+        currentValues: sessionId ? mergedValues : {}, // Only return current values if sessionId provided
+      },
+      200,
+    );
   } catch (error) {
     console.error(`Error getting runtime settings:`, error);
     return c.json({ error: 'Failed to get runtime settings' }, 500);
@@ -143,10 +155,13 @@ export async function updateRuntimeSettings(c: HonoContext) {
       }
     }
 
-    return c.json({ 
-      session: updatedSessionInfo,
-      runtimeSettings 
-    }, 200);
+    return c.json(
+      {
+        session: updatedSessionInfo,
+        runtimeSettings,
+      },
+      200,
+    );
   } catch (error) {
     console.error(`Error updating runtime settings:`, error);
     return c.json({ error: 'Failed to update runtime settings' }, 500);
@@ -173,10 +188,9 @@ export async function updateSessionModel(c: HonoContext) {
   }
 
   // Validate model configuration
-   if (!isModelConfigValid(server.appConfig, model.provider, model.id)) {
+  if (!isModelConfigValid(server.appConfig, model.provider, model.id)) {
     return c.json({ error: 'Invalid model configuration' }, 400);
   }
-
 
   try {
     // Get current session metadata
@@ -198,10 +212,10 @@ export async function updateSessionModel(c: HonoContext) {
 
     if (activeSession) {
       console.log('Session model updated', {
-          sessionId,
-          provider: model.provider,
-          modelId: model.id,
-        });
+        sessionId,
+        provider: model.provider,
+        modelId: model.id,
+      });
 
       try {
         // Recreate agent with new model configuration

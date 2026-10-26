@@ -41,34 +41,34 @@ export interface Hook {
 export enum BuiltInPriorities {
   /** CORS middleware - must be first to handle preflight requests */
   CORS = 1000,
-  
+
   /** Server injection middleware - early setup */
   SERVER_INJECTION = 900,
-  
+
   /** Error handling middleware - catch all errors */
   ERROR_HANDLING = 800,
 
   /** Context Storage middleware - transfer info through the whole request */
   CONTEXT_STORAGE = 850,
-  
+
   /** Request ID middleware - for request tracking */
   REQUEST_ID = 700,
-  
+
   /** Access logging middleware - after request ID */
   ACCESS_LOG = 600,
-  
+
   /** Authentication middleware - after logging */
   AUTH = 500,
-  
+
   /** Session restore middleware - after auth */
   SESSION_RESTORE = 400,
-  
+
   /** Exclusive mode middleware - business logic */
   EXCLUSIVE_MODE = 300,
-  
+
   /** Custom middleware default priority */
   CUSTOM_DEFAULT = 200,
-  
+
   /** Route handlers - lowest priority */
   ROUTES = 100,
 }
@@ -111,22 +111,22 @@ export enum HookPhase {
 export interface IHookManager {
   /** Register a new hook */
   register(options: HookRegistrationOptions): void;
-  
+
   /** Unregister a hook by id */
   unregister(id: string): boolean;
-  
+
   /** Get all hooks sorted by priority */
   getHooks(): Hook[];
-  
+
   /** Get hook by id */
   getHook(id: string): Hook | undefined;
-  
+
   /** Check if hook exists */
   hasHook(id: string): boolean;
-  
+
   /** Clear all hooks */
   clear(): void;
-  
+
   /** Get hooks count */
   count(): number;
 }

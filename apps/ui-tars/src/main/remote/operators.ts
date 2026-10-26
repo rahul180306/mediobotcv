@@ -293,11 +293,25 @@ export class RemoteComputerOperator extends Operator {
       }
 
       case 'type': {
-        const content = action_inputs.content?.trim();
-        logger.info('[RemoteComputerOperator] type', content);
-        if (content) {
-          const stripContent = content.replace(/\\n$/, '').replace(/\n$/, '');
+        const rawContent = action_inputs.content;
+        logger.info('[RemoteComputerOperator] type', rawContent);
+        if (
+          rawContent === undefined ||
+          rawContent === null ||
+          typeof rawContent !== 'string' ||
+          rawContent.length === 0
+        ) {
+          logger.error('No content to type: missing or invalid content in action_inputs');
+          throw new Error('No content to type: missing or invalid content in action_inputs');
+        }
+
+        const hasEnter = rawContent.endsWith('\n') || rawContent.endsWith('\\n');
+        const stripContent = rawContent.replace(/\\n$/, '').replace(/\n$/, '');
+        if (stripContent.length > 0) {
           await this.remoteComputer.typeText(stripContent);
+        }
+        if (hasEnter) {
+          await this.remoteComputer.pressKey('Enter');
         }
         break;
       }

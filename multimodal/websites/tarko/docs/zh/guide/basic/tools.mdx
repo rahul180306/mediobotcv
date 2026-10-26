@@ -19,7 +19,7 @@ import { Tool, z } from '@tarko/agent';
 // 获取当前位置的工具
 const locationTool = new Tool({
   id: 'getCurrentLocation',
-  description: "获取用户当前位置",
+  description: '获取用户当前位置',
   parameters: z.object({}),
   function: async () => {
     return { location: 'Boston' };
@@ -71,7 +71,7 @@ const searchTool = new Tool({
         { title: '搜索结果 1', url: 'https://example.com/1' },
         { title: '搜索结果 2', url: 'https://example.com/2' },
       ],
-      totalResults: maxResults
+      totalResults: maxResults,
     };
   },
 });
@@ -90,15 +90,15 @@ const fileTool = new Tool({
     properties: {
       path: {
         type: 'string',
-        description: '文件路径'
+        description: '文件路径',
       },
       encoding: {
         type: 'string',
         enum: ['utf8', 'base64'],
-        description: '文件编码'
-      }
+        description: '文件编码',
+      },
     },
-    required: ['path']
+    required: ['path'],
   },
   function: async (params: { path: string; encoding?: string }) => {
     // 实现文件读取逻辑
@@ -120,12 +120,7 @@ const agent = new Agent({
     id: 'gpt-4',
     apiKey: process.env.OPENAI_API_KEY,
   },
-  tools: [
-    locationTool,
-    weatherTool,
-    searchTool,
-    fileTool
-  ]
+  tools: [locationTool, weatherTool, searchTool, fileTool],
 });
 
 // 也可以动态注册工具
@@ -133,7 +128,10 @@ agent.registerTool(newTool);
 
 // 获取所有已注册的工具
 const allTools = agent.getTools();
-console.log('已注册工具:', allTools.map(t => t.name));
+console.log(
+  '已注册工具:',
+  allTools.map((t) => t.name),
+);
 ```
 
 ## 工具执行示例
@@ -151,7 +149,10 @@ const agent = new Agent({
   tools: [locationTool, weatherTool],
 });
 
-const response = await agent.run("今天天气怎么样？");
+const response = await agent.run('今天天气怎么样？');
 console.log(response);
 ```
+
+```
+
 ```

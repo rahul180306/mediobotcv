@@ -122,25 +122,30 @@ The event stream system provides real-time visibility into agent execution, conv
 The event stream supports various categories of events:
 
 #### Conversation Events
+
 - `user_message` - User input to the agent
 - `assistant_message` - Agent's response
 - `assistant_thinking_message` - Agent's reasoning process
 
 #### Streaming Events
+
 - `assistant_streaming_message` - Real-time content updates
 - `assistant_streaming_thinking_message` - Real-time reasoning updates
 - `final_answer_streaming` - Streaming final answers
 
 #### Tool Execution Events
+
 - `tool_call` - Tool invocation
 - `tool_result` - Tool execution result
 
 #### Planning Events
+
 - `plan_start` - Beginning of planning session
 - `plan_update` - Plan state changes
 - `plan_finish` - Completion of plan
 
 #### System Events
+
 - `system` - Logs, warnings, errors
 - `agent_run_start` - Agent execution start
 - `agent_run_end` - Agent execution completion
@@ -167,7 +172,7 @@ const unsubscribeSpecific = eventStream.subscribeToTypes(
   ['assistant_message', 'tool_call'],
   (event) => {
     console.log('Specific event:', event);
-  }
+  },
 );
 
 // Subscribe to streaming events only
@@ -274,8 +279,8 @@ Configure event stream behavior:
 
 ```typescript
 const eventStreamOptions: AgentEventStream.ProcessorOptions = {
-  maxEvents: 1000,        // Keep last 1000 events in memory
-  autoTrim: true,         // Automatically remove old events
+  maxEvents: 1000, // Keep last 1000 events in memory
+  autoTrim: true, // Automatically remove old events
 };
 
 const agentOptions: AgentOptions = {
@@ -329,6 +334,7 @@ for await (const event of events) {
 Configure how tools are executed:
 
 ### Native Engine (Default)
+
 Uses LLM's built-in function calling capabilities:
 
 ```typescript
@@ -339,6 +345,7 @@ const options: AgentOptions = {
 ```
 
 ### Prompt Engineering Engine
+
 Uses prompt-based tool calling for models without native function calling:
 
 ```typescript
@@ -349,6 +356,7 @@ const options: AgentOptions = {
 ```
 
 ### Structured Outputs Engine
+
 Uses structured JSON outputs for tool calling:
 
 ```typescript
@@ -426,7 +434,7 @@ Handle tool execution errors:
 class RobustAgent implements IAgent {
   async onToolCallError(sessionId: string, toolCall: any, error: any) {
     console.error('Tool execution failed:', error);
-    
+
     // Return a recovery value or re-throw
     return {
       error: true,

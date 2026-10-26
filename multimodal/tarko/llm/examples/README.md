@@ -41,13 +41,13 @@ console.log(response.output_text);
 
 ## Gemini
 
-| Type              | URL                                                                                |
-| ----------------- | ---------------------------------------------------------------------------------- |
-| GET API KEYS      | https://aistudio.google.com/apikey                                                 |
-| API Documentation | https://ai.google.dev/gemini-api/docs                                              |
-| NPM               | https://www.npmjs.com/package/@google/genai                                        |
-| Models            | https://ai.google.dev/gemini-api/docs/models                                       |
-| Quotas            | https://console.cloud.google.com/apis/api/generativelanguage.googleapis.com/quotas |
+| Type | URL |
+| --- | --- |
+| GET API KEYS | https://aistudio.google.com/apikey |
+| API Documentation | https://ai.google.dev/gemini-api/docs |
+| NPM | https://www.npmjs.com/package/@google/genai |
+| Models | https://ai.google.dev/gemini-api/docs/models |
+| Quotas | https://console.cloud.google.com/apis/api/generativelanguage.googleapis.com/quotas |
 
 ```ts
 import { GoogleGenAI } from '@google/genai';
@@ -65,12 +65,10 @@ async function main() {
 await main();
 ```
 
-> [!WARNING]
-> What's the difference between these two packages?
+> [!WARNING] What's the difference between these two packages?
 >
 > - [@google/generative-ai](https://www.npmjs.com/package/@google/generative-ai)
-> - [@google/genai](https://www.npmjs.com/package/@google/genai)
->   See: https://github.com/googleapis/js-genai/issues/314
+> - [@google/genai](https://www.npmjs.com/package/@google/genai) See: https://github.com/googleapis/js-genai/issues/314
 
 ## OpenAI Compatibility
 

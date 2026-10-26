@@ -1,9 +1,6 @@
 # Configure Agent TARS
 
-::: warning
-Agent TARS 配置选项可能会随着版本更新而变化。升级 Agent TARS 版本时，请参考响应的发布日志了解潜在的配置变更。
-:::
-
+::: warning Agent TARS 配置选项可能会随着版本更新而变化。升级 Agent TARS 版本时，请参考响应的发布日志了解潜在的配置变更。:::
 
 Agent TARS 支持两种主要的配置方法：
 
@@ -11,7 +8,6 @@ Agent TARS 支持两种主要的配置方法：
 - **Configuration files**：推荐用于长期使用
 
 这些配置方法允许你自定义 Agent TARS 行为以满足不同的需求。
-
 
 ## CLI Flags
 
@@ -21,7 +17,6 @@ agent-tars [...flags]  # launch Agent TARS with some flags.
 ```
 
 更多详情请查看 [CLI](./cli.mdx)。
-
 
 ## 配置文件
 
@@ -53,7 +48,7 @@ export default defineConfig({
     id: 'claude-3-7-sonnet-latest',
     apiKey: process.env.ANTHROPIC_API_KEY,
   },
-  
+
   // Browser control mode
   browser: {
     control: 'hybrid', // 'hybrid', 'visual-grounding', 'dom'
@@ -62,7 +57,6 @@ export default defineConfig({
   // ... other configurations
 });
 ```
-
 
 ### JSON
 
@@ -87,7 +81,7 @@ model:
   provider: anthropic
   id: claude-3-7-sonnet-latest
   apiKey: your-api-key-here
-  
+
 browser:
   control: hybrid
 ```

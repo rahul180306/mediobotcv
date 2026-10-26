@@ -5,12 +5,12 @@
 
 import mongoose, { Connection, ConnectOptions } from 'mongoose';
 import { AgentEventStream, MongoDBAgentStorageImplementation, SessionInfo } from '@tarko/interface';
-import { 
-  IDAOFactory, 
-  IUserConfigDAO, 
-  ISessionDAO, 
-  IEventDAO, 
-  ISandboxAllocationDAO 
+import {
+  IDAOFactory,
+  IUserConfigDAO,
+  ISessionDAO,
+  IEventDAO,
+  ISandboxAllocationDAO,
 } from '../interfaces';
 import { UserConfigDAO } from './UserConfigDAO';
 import { SessionDAO } from './SessionDAO';
@@ -34,7 +34,7 @@ export class MongoDAOFactory implements IDAOFactory {
   private connection: Connection | null = null;
   private initialized = false;
   private config: MongoDBAgentStorageImplementation;
-  
+
   // DAO instance cache
   private userConfigDAO: IUserConfigDAO | null = null;
   private sessionDAO: ISessionDAO | null = null;
@@ -76,7 +76,9 @@ export class MongoDAOFactory implements IDAOFactory {
       this.connection.model('UserConfig', UserConfigModel.schema);
       this.connection.model('SandboxAllocation', SandboxAllocationModel.schema);
 
-      logger.info(`MongoDB DAO Factory connected successfully to database: ${connectionOptions.dbName}`);
+      logger.info(
+        `MongoDB DAO Factory connected successfully to database: ${connectionOptions.dbName}`,
+      );
 
       // Test the connection with a simple operation
       if (this.connection?.db) {
@@ -99,41 +101,41 @@ export class MongoDAOFactory implements IDAOFactory {
 
   getUserConfigDAO(): IUserConfigDAO {
     this.ensureInitialized();
-    
+
     if (!this.userConfigDAO) {
       this.userConfigDAO = new UserConfigDAO(this.connection!);
     }
-    
+
     return this.userConfigDAO;
   }
 
   getSessionDAO(): ISessionDAO {
     this.ensureInitialized();
-    
+
     if (!this.sessionDAO) {
       this.sessionDAO = new SessionDAO(this.connection!);
     }
-    
+
     return this.sessionDAO;
   }
 
   getEventDAO(): IEventDAO {
     this.ensureInitialized();
-    
+
     if (!this.eventDAO) {
       this.eventDAO = new EventDAO(this.connection!);
     }
-    
+
     return this.eventDAO;
   }
 
   getSandboxAllocationDAO(): ISandboxAllocationDAO {
     this.ensureInitialized();
-    
+
     if (!this.sandboxAllocationDAO) {
       this.sandboxAllocationDAO = new SandboxAllocationDAO(this.connection!);
     }
-    
+
     return this.sandboxAllocationDAO;
   }
 
@@ -170,7 +172,7 @@ export class MongoDAOFactory implements IDAOFactory {
       } finally {
         this.connection = null;
         this.initialized = false;
-        
+
         // Clear DAO instances
         this.userConfigDAO = null;
         this.sessionDAO = null;

@@ -16,13 +16,14 @@ const agent = new Agent({
   tools: [myTool],
   model: {
     provider: 'openai',
-    id: 'gpt-4'
+    id: 'gpt-4',
   },
-  maxIterations: 10
+  maxIterations: 10,
 });
 ```
 
 **Parameters:**
+
 - `options` (`AgentOptions`): Configuration options for the agent
 
 ## Methods
@@ -48,13 +49,13 @@ Convenient method to call the current selected LLM directly.
 // Non-streaming call
 const response = await agent.callLLM({
   messages: [{ role: 'user', content: 'Hello' }],
-  temperature: 0.7
+  temperature: 0.7,
 });
 
 // Streaming call
 const stream = await agent.callLLM({
   messages: [{ role: 'user', content: 'Hello' }],
-  stream: true
+  stream: true,
 });
 
 for await (const chunk of stream) {
@@ -63,10 +64,12 @@ for await (const chunk of stream) {
 ```
 
 **Overloads:**
+
 - `callLLM(params: Omit<ChatCompletionCreateParams, 'model'> & { stream?: false }, options?: RequestOptions): Promise<ChatCompletion>`
 - `callLLM(params: Omit<ChatCompletionCreateParams, 'model'> & { stream: true }, options?: RequestOptions): Promise<AsyncIterable<ChatCompletionChunk>>`
 
 **Parameters:**
+
 - `params` (`Omit<ChatCompletionCreateParams, 'model'>`): Chat completion parameters
 - `options` (`RequestOptions`): Optional request options
 
@@ -92,14 +95,15 @@ Generates a summary of conversation messages.
 const summary = await agent.generateSummary({
   messages: [
     { role: 'user', content: 'What is machine learning?' },
-    { role: 'assistant', content: 'Machine learning is...' }
-  ]
+    { role: 'assistant', content: 'Machine learning is...' },
+  ],
 });
 
 console.log(`Summary: ${summary.summary}`);
 ```
 
 **Parameters:**
+
 - `request` (`SummaryRequest`): Summary request with messages and options
 
 **Returns:** `Promise<SummaryResponse>` - Generated summary
@@ -160,7 +164,7 @@ Gets the configured LLM client for making direct requests.
 const llmClient = agent.getLLMClient();
 if (llmClient) {
   const response = await llmClient.chat.completions.create({
-    messages: [{ role: 'user', content: 'Hello' }]
+    messages: [{ role: 'user', content: 'Hello' }],
   });
 }
 ```
@@ -191,20 +195,21 @@ const weatherTool: Tool = {
   schema: {
     type: 'object',
     properties: {
-      location: { type: 'string', description: 'City name' }
+      location: { type: 'string', description: 'City name' },
     },
-    required: ['location']
+    required: ['location'],
   },
   function: async (args) => {
     const { location } = args as { location: string };
     return `Weather in ${location}: Sunny, 25°C`;
-  }
+  },
 };
 
 agent.registerTool(weatherTool);
 ```
 
 **Parameters:**
+
 - `tool` (`Tool`): Tool definition to register
 
 ### `run(input)` / `run(options)`
@@ -218,13 +223,13 @@ const response = await agent.run('What is the weather like?');
 // With options (non-streaming)
 const response = await agent.run({
   input: 'Analyze this image',
-  model: 'gpt-4-vision-preview'
+  model: 'gpt-4-vision-preview',
 });
 
 // Streaming mode
 const stream = await agent.run({
   input: 'Help me plan a trip',
-  stream: true
+  stream: true,
 });
 
 for await (const event of stream) {
@@ -233,11 +238,13 @@ for await (const event of stream) {
 ```
 
 **Overloads:**
+
 - `run(input: string): Promise<AssistantMessageEvent>`
 - `run(options: AgentRunNonStreamingOptions): Promise<AssistantMessageEvent>`
 - `run(options: AgentRunStreamingOptions): Promise<AsyncIterable<Event>>`
 
 **Parameters:**
+
 - `input` (`string`): Simple text input
 - `options` (`AgentRunOptions`): Configuration for this execution
 
@@ -250,13 +257,14 @@ import OpenAI from 'openai';
 
 const customClient = new OpenAI({
   apiKey: 'your-api-key',
-  baseURL: 'https://custom-llm-endpoint.com'
+  baseURL: 'https://custom-llm-endpoint.com',
 });
 
 agent.setCustomLLMClient(customClient);
 ```
 
 **Parameters:**
+
 - `client` (`OpenAI`): OpenAI-compatible LLM client
 
 ### `status()`
@@ -279,39 +287,39 @@ Configuration options for agent initialization:
 ```typescript
 interface AgentOptions {
   // Core configuration
-  instructions?: string;           // System prompt/instructions
-  name?: string;                   // Agent name for identification
-  id?: string;                     // Unique agent ID
-  
+  instructions?: string; // System prompt/instructions
+  name?: string; // Agent name for identification
+  id?: string; // Unique agent ID
+
   // Model configuration
-  model?: ModelConfiguration;      // LLM model settings
-  temperature?: number;            // Sampling temperature (0-1)
-  top_p?: number;                 // Nucleus sampling parameter
-  
+  model?: ModelConfiguration; // LLM model settings
+  temperature?: number; // Sampling temperature (0-1)
+  top_p?: number; // Nucleus sampling parameter
+
   // Execution limits
-  maxIterations?: number;         // Maximum reasoning iterations
-  maxTokens?: number;             // Maximum tokens per request
-  
+  maxIterations?: number; // Maximum reasoning iterations
+  maxTokens?: number; // Maximum tokens per request
+
   // Tools and capabilities
-  tools?: Tool[];                 // Available tools
+  tools?: Tool[]; // Available tools
   toolCallEngine?: ToolCallEngineType; // Tool execution engine
-  
+
   // Context management
   context?: AgentContextAwarenessOptions; // Multimodal context settings
-  
+
   // Reasoning and planning
   thinking?: LLMReasoningOptions; // Reasoning configuration
-  
+
   // Logging and monitoring
-  logLevel?: LogLevel;            // Logging verbosity
-  metric?: { enable: boolean };   // Enable metrics collection
-  
+  logLevel?: LogLevel; // Logging verbosity
+  metric?: { enable: boolean }; // Enable metrics collection
+
   // Event handling
   eventStreamOptions?: EventStreamOptions; // Event stream configuration
   enableStreamingToolCallEvents?: boolean; // Stream tool call events
-  
+
   // Tool filtering
-  tool?: ToolFilterOptions;       // Tool filtering configuration
+  tool?: ToolFilterOptions; // Tool filtering configuration
 }
 ```
 
@@ -322,13 +330,13 @@ Options for agent execution:
 ```typescript
 interface AgentRunObjectOptions {
   input: string | ChatCompletionContentPart[]; // User input
-  stream?: boolean;                            // Enable streaming
-  sessionId?: string;                          // Session identifier
-  model?: string;                              // Override model
-  provider?: string;                           // Override provider
-  toolCallEngine?: ToolCallEngineType;         // Override tool engine
-  environmentInput?: EnvironmentInput;         // Environment context
-  abortSignal?: AbortSignal;                  // Cancellation signal
+  stream?: boolean; // Enable streaming
+  sessionId?: string; // Session identifier
+  model?: string; // Override model
+  provider?: string; // Override provider
+  toolCallEngine?: ToolCallEngineType; // Override tool engine
+  environmentInput?: EnvironmentInput; // Environment context
+  abortSignal?: AbortSignal; // Cancellation signal
 }
 ```
 
@@ -374,6 +382,7 @@ try {
 ```
 
 Common error scenarios:
+
 - **AbortError**: Request was cancelled via `abort()` or `AbortSignal`
 - **ModelError**: LLM provider or model configuration issues
 - **ToolError**: Tool execution failures
@@ -400,9 +409,9 @@ const calculatorTool: Tool = {
   schema: {
     type: 'object',
     properties: {
-      expression: { type: 'string', description: 'Math expression to evaluate' }
+      expression: { type: 'string', description: 'Math expression to evaluate' },
     },
-    required: ['expression']
+    required: ['expression'],
   },
   function: async (args) => {
     const { expression } = args as { expression: string };
@@ -412,7 +421,7 @@ const calculatorTool: Tool = {
     } catch (error) {
       return `Error: Invalid expression`;
     }
-  }
+  },
 };
 
 // Create agent
@@ -421,11 +430,11 @@ const agent = new Agent({
   tools: [calculatorTool],
   model: {
     provider: 'openai',
-    id: 'gpt-4'
+    id: 'gpt-4',
   },
   maxIterations: 5,
   temperature: 0.1,
-  logLevel: 1 // Info level
+  logLevel: 1, // Info level
 });
 
 // Set up event monitoring

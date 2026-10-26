@@ -29,6 +29,10 @@ export class GUIAgentManager {
   }
 
   public setAgent(agent: GUIAgent<Operator>) {
+    if (this.currentAgent && this.currentAgent !== agent) {
+      this.currentAgent.disposeObservationHistory?.().catch(() => {});
+      this.currentAgent.destroy?.({ disposeHistory: true }).catch(() => {});
+    }
     this.currentAgent = agent;
   }
 
@@ -37,7 +41,11 @@ export class GUIAgentManager {
   }
 
   public clearAgent() {
-    this.currentAgent = null;
+    if (this.currentAgent) {
+      this.currentAgent.disposeObservationHistory?.().catch(() => {});
+      this.currentAgent.destroy?.({ disposeHistory: true }).catch(() => {});
+      this.currentAgent = null;
+    }
   }
 }
 
@@ -103,6 +111,7 @@ export const agentRoute = t.router({
       store.setState({ sessionHistoryMessages: input.messages });
     }),
   clearHistory: t.procedure.input<void>().handle(async () => {
+    GUIAgentManager.getInstance().clearAgent();
     store.setState({
       status: StatusEnum.END,
       messages: [],

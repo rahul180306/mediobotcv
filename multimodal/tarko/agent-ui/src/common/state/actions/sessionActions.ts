@@ -4,7 +4,11 @@ import { apiService } from '../../services/apiService';
 import { sessionsAtom, activeSessionIdAtom } from '../atoms/session';
 import { messagesAtom } from '../atoms/message';
 import { toolResultsAtom, toolCallResultMap } from '../atoms/tool';
-import { sessionPanelContentAtom, sessionProcessingStatesAtom, isProcessingAtom } from '../atoms/ui';
+import {
+  sessionPanelContentAtom,
+  sessionProcessingStatesAtom,
+  isProcessingAtom,
+} from '../atoms/ui';
 import { processEventAction } from './eventProcessors';
 import { Message, SessionInfo } from '@/common/types';
 import { connectionStatusAtom } from '../atoms/ui';
@@ -81,49 +85,57 @@ export const loadSessionsAction = atom(null, async (get, set) => {
   }
 });
 
-export const createSessionAction = atom(null, async (get, set, runtimeSettings?: Record<string, any>, agentOptions?: Record<string, any>) => {
-  try {
-    const { session: newSession, events: initializationEvents } = await apiService.createSession(runtimeSettings, agentOptions);
+export const createSessionAction = atom(
+  null,
+  async (get, set, runtimeSettings?: Record<string, any>, agentOptions?: Record<string, any>) => {
+    try {
+      const { session: newSession, events: initializationEvents } = await apiService.createSession(
+        runtimeSettings,
+        agentOptions,
+      );
 
-    set(sessionsAtom, (prev) => [newSession, ...prev]);
+      set(sessionsAtom, (prev) => [newSession, ...prev]);
 
-    set(messagesAtom, (prev) => ({
-      ...prev,
-      [newSession.id]: [],
-    }));
+      set(messagesAtom, (prev) => ({
+        ...prev,
+        [newSession.id]: [],
+      }));
 
-    // Session metadata is now stored in sessions array, no separate atom needed
-    console.log(`Created session ${newSession.id} with metadata:`, newSession.metadata);
+      // Session metadata is now stored in sessions array, no separate atom needed
+      console.log(`Created session ${newSession.id} with metadata:`, newSession.metadata);
 
-    set(toolResultsAtom, (prev) => ({
-      ...prev,
-      [newSession.id]: [],
-    }));
+      set(toolResultsAtom, (prev) => ({
+        ...prev,
+        [newSession.id]: [],
+      }));
 
-    // Clear panel content for new session
-    set(sessionPanelContentAtom, (prev) => ({
-      ...prev,
-      [newSession.id]: null,
-    }));
-    set(activeSessionIdAtom, newSession.id);
+      // Clear panel content for new session
+      set(sessionPanelContentAtom, (prev) => ({
+        ...prev,
+        [newSession.id]: null,
+      }));
+      set(activeSessionIdAtom, newSession.id);
 
-    // Process initialization events if any were returned
-    if (initializationEvents && initializationEvents.length > 0) {
-      console.log(`Processing ${initializationEvents.length} initialization events for session ${newSession.id}`);
-      
-      const processedEvents = preprocessStreamingEvents(initializationEvents);
-      
-      for (const event of processedEvents) {
-        await set(processEventAction, { sessionId: newSession.id, event });
+      // Process initialization events if any were returned
+      if (initializationEvents && initializationEvents.length > 0) {
+        console.log(
+          `Processing ${initializationEvents.length} initialization events for session ${newSession.id}`,
+        );
+
+        const processedEvents = preprocessStreamingEvents(initializationEvents);
+
+        for (const event of processedEvents) {
+          await set(processEventAction, { sessionId: newSession.id, event });
+        }
       }
-    }
 
-    return newSession.id;
-  } catch (error) {
-    console.error('Failed to create session:', error);
-    throw error;
-  }
-});
+      return newSession.id;
+    } catch (error) {
+      console.error('Failed to create session:', error);
+      throw error;
+    }
+  },
+);
 
 // Simplified session activation without caching complexity
 export const setActiveSessionAction = atom(null, async (get, set, sessionId: string) => {
@@ -149,8 +161,6 @@ export const setActiveSessionAction = atom(null, async (get, set, sessionId: str
         autoPlayCountdown: null,
       });
     }
-
-
 
     toolCallResultMap.clear();
 
@@ -210,7 +220,7 @@ export const setActiveSessionAction = atom(null, async (get, set, sessionId: str
     // Auto-select best file for workspace display only if no panel content was set by events
     const currentPanelContent = get(sessionPanelContentAtom);
     const sessionPanelContent = currentPanelContent[sessionId];
-    
+
     if (!sessionPanelContent) {
       // No panel content was set by events, try to auto-select a file
       const sessionFiles = get(sessionFilesAtom);

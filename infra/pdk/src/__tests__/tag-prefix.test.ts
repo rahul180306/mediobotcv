@@ -40,7 +40,11 @@ describe('getPreviousTag with tagPrefix filtering', () => {
       stdout: mockTags,
     } as any);
 
-    const result = await getPreviousTag('pdk@0.0.6-beta.1', '/test/cwd', 'pdk@');
+    const result = await getPreviousTag(
+      'pdk@0.0.6-beta.1',
+      '/test/cwd',
+      'pdk@',
+    );
 
     expect(result).toBe('pdk@0.0.5');
     expect(execa).toHaveBeenCalledWith('git', ['tag', '--sort=-creatordate'], {
@@ -49,17 +53,17 @@ describe('getPreviousTag with tagPrefix filtering', () => {
   });
 
   it('should return null when no tags match tagPrefix', async () => {
-    const mockTags = [
-      '@agent-tars@0.3.0',
-      'v0.3.0',
-      'v0.2.0',
-    ].join('\n');
+    const mockTags = ['@agent-tars@0.3.0', 'v0.3.0', 'v0.2.0'].join('\n');
 
     vi.mocked(execa).mockResolvedValue({
       stdout: mockTags,
     } as any);
 
-    const result = await getPreviousTag('pdk@0.0.6-beta.1', '/test/cwd', 'pdk@');
+    const result = await getPreviousTag(
+      'pdk@0.0.6-beta.1',
+      '/test/cwd',
+      'pdk@',
+    );
 
     expect(result).toBeNull();
   });
@@ -79,7 +83,11 @@ describe('getPreviousTag with tagPrefix filtering', () => {
       stdout: mockTags,
     } as any);
 
-    const result = await getPreviousTag('pdk@0.0.6-beta.1', '/test/cwd', 'pdk@');
+    const result = await getPreviousTag(
+      'pdk@0.0.6-beta.1',
+      '/test/cwd',
+      'pdk@',
+    );
 
     expect(result).toBe('pdk@0.0.5');
   });
@@ -97,33 +105,33 @@ describe('getPreviousTag with tagPrefix filtering', () => {
       stdout: mockTags,
     } as any);
 
-    const result = await getPreviousTag('pdk@0.0.6-beta.1', '/test/cwd', 'pdk@');
+    const result = await getPreviousTag(
+      'pdk@0.0.6-beta.1',
+      '/test/cwd',
+      'pdk@',
+    );
 
     expect(result).toBe('pdk@0.0.5');
   });
 
   it('should return most recent tag when current tag not found', async () => {
-    const mockTags = [
-      'pdk@0.0.5',
-      'pdk@0.0.4',
-      'pdk@0.0.3',
-    ].join('\n');
+    const mockTags = ['pdk@0.0.5', 'pdk@0.0.4', 'pdk@0.0.3'].join('\n');
 
     vi.mocked(execa).mockResolvedValue({
       stdout: mockTags,
     } as any);
 
-    const result = await getPreviousTag('pdk@0.0.6-beta.1', '/test/cwd', 'pdk@');
+    const result = await getPreviousTag(
+      'pdk@0.0.6-beta.1',
+      '/test/cwd',
+      'pdk@',
+    );
 
     expect(result).toBe('pdk@0.0.5');
   });
 
   it('should work without tagPrefix (backward compatibility)', async () => {
-    const mockTags = [
-      'v0.3.0',
-      'v0.2.0',
-      'v0.1.0',
-    ].join('\n');
+    const mockTags = ['v0.3.0', 'v0.2.0', 'v0.1.0'].join('\n');
 
     vi.mocked(execa).mockResolvedValue({
       stdout: mockTags,
@@ -139,7 +147,11 @@ describe('getPreviousTag with tagPrefix filtering', () => {
       stdout: '',
     } as any);
 
-    const result = await getPreviousTag('pdk@0.0.6-beta.1', '/test/cwd', 'pdk@');
+    const result = await getPreviousTag(
+      'pdk@0.0.6-beta.1',
+      '/test/cwd',
+      'pdk@',
+    );
 
     expect(result).toBeNull();
   });
@@ -147,7 +159,11 @@ describe('getPreviousTag with tagPrefix filtering', () => {
   it('should handle git command errors gracefully', async () => {
     vi.mocked(execa).mockRejectedValue(new Error('Git command failed'));
 
-    const result = await getPreviousTag('pdk@0.0.6-beta.1', '/test/cwd', 'pdk@');
+    const result = await getPreviousTag(
+      'pdk@0.0.6-beta.1',
+      '/test/cwd',
+      'pdk@',
+    );
 
     expect(result).toBeNull();
   });
@@ -174,11 +190,19 @@ describe('getPreviousTag with tagPrefix filtering', () => {
     } as any);
 
     // Test case 1: Current version is 0.0.5, releasing 0.0.6-beta.1
-    const result1 = await getPreviousTag('pdk@0.0.6-beta.1', '/test/cwd', 'pdk@');
+    const result1 = await getPreviousTag(
+      'pdk@0.0.6-beta.1',
+      '/test/cwd',
+      'pdk@',
+    );
     expect(result1).toBe('pdk@0.0.5');
 
     // Test case 2: Current version is 0.0.6-beta.1, releasing 0.0.6-beta.2
-    const result2 = await getPreviousTag('pdk@0.0.6-beta.2', '/test/cwd', 'pdk@');
+    const result2 = await getPreviousTag(
+      'pdk@0.0.6-beta.2',
+      '/test/cwd',
+      'pdk@',
+    );
     expect(result2).toBe('pdk@0.0.6-beta.1');
   });
 
@@ -196,7 +220,11 @@ describe('getPreviousTag with tagPrefix filtering', () => {
       stdout: mockTags,
     } as any);
 
-    const result = await getPreviousTag('@agent-tars@0.3.0-beta.1', '/test/cwd', '@agent-tars@');
+    const result = await getPreviousTag(
+      '@agent-tars@0.3.0-beta.1',
+      '/test/cwd',
+      '@agent-tars@',
+    );
 
     expect(result).toBe('@agent-tars@0.3.0-beta.0');
   });

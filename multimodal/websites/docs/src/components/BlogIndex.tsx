@@ -24,7 +24,7 @@ export function BlogIndex({ posts }: BlogIndexProps) {
           Latest updates, insights, and announcements from the Agent TARS team
         </p>
       </header>
-      
+
       <div className="blog-index-grid">
         {posts.map((post, index) => (
           <BlogCard
@@ -38,7 +38,7 @@ export function BlogIndex({ posts }: BlogIndexProps) {
           />
         ))}
       </div>
-      
+
       {posts.length === 0 && (
         <div className="blog-index-empty">
           <p>No blog posts available yet. Stay tuned for updates!</p>

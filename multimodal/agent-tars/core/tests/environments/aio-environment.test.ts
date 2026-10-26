@@ -28,9 +28,9 @@ describe('AgentTARSAIOEnvironment', () => {
   describe('initialization', () => {
     it('should initialize without local components', async () => {
       const registerToolFn = vi.fn();
-      
+
       await environment.initialize(registerToolFn);
-      
+
       // Should not register any local tools since AIO sandbox provides all tools via MCP
       expect(registerToolFn).not.toHaveBeenCalled();
     });
@@ -39,7 +39,7 @@ describe('AgentTARSAIOEnvironment', () => {
   describe('browser operations', () => {
     it('should skip local browser operations', async () => {
       await expect(
-        environment.onEachAgentLoopStart('test-session', {} as any, false)
+        environment.onEachAgentLoopStart('test-session', {} as any, false),
       ).resolves.toBeUndefined();
     });
 
@@ -60,7 +60,7 @@ describe('AgentTARSAIOEnvironment', () => {
       const result = await environment.onBeforeToolCall(
         'test-id',
         { toolCallId: 'test-call', name: 'browser_navigate' },
-        args
+        args,
       );
       expect(result).toBe(args);
     });
@@ -71,7 +71,7 @@ describe('AgentTARSAIOEnvironment', () => {
         'test-id',
         { toolCallId: 'test-call', name: 'browser_navigate' },
         result,
-        {}
+        {},
       );
       expect(processed).toBe(result);
     });

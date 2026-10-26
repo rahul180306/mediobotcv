@@ -12,11 +12,13 @@ This is the documentation site for Tarko - Tool-augmented Agent Runtime Kernel.
 ### Getting Started
 
 1. Install dependencies:
+
    ```bash
    pnpm install
    ```
 
 2. Start development server:
+
    ```bash
    pnpm dev
    ```
@@ -81,6 +83,7 @@ This site supports:
 The documentation is built and deployed automatically. For manual deployment:
 
 1. Build the site:
+
    ```bash
    pnpm build
    ```

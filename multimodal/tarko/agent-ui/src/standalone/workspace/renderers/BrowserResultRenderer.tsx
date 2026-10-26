@@ -15,7 +15,6 @@ interface BrowserResultRendererProps {
  * Renders browser navigation and page content results with improved UI
  */
 export const BrowserResultRenderer: React.FC<BrowserResultRendererProps> = ({ panelContent }) => {
-
   // Extract browser result data from panelContent
   const browserData = extractBrowserResultData(panelContent);
 
@@ -25,8 +24,6 @@ export const BrowserResultRenderer: React.FC<BrowserResultRendererProps> = ({ pa
 
   const { url, content, title, contentType, screenshot } = browserData;
   const displayTitle = title || url?.split('/').pop() || 'Browser Result';
-
-
 
   // Extract URL from text content if it's in the format "Navigated to URL"
   const extractUrlFromContent = () => {
@@ -53,8 +50,6 @@ export const BrowserResultRenderer: React.FC<BrowserResultRendererProps> = ({ pa
   return (
     <div className="space-y-4">
       <div className="mb-4">
-
-
         {/* Content with enhanced browser shell */}
         <BrowserShell title={displayTitle} url={extractedUrl}>
           <div className="bg-white dark:bg-gray-800 px-5 min-h-[200px] max-h-[70vh] overflow-auto border-t border-gray-100/30 dark:border-gray-700/20">

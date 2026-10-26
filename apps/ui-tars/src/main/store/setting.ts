@@ -42,6 +42,30 @@ export class SettingStore {
         defaults: DEFAULT_SETTING,
       });
 
+      // If existing on-disk store has empty VLM credentials, seed from env/defaults
+      const current = SettingStore.instance.store;
+      if (!current.vlmProvider || (current.vlmProvider as string) === '') {
+        SettingStore.instance.set(
+          'vlmProvider',
+          (env.vlmProvider as VLMProviderV2) || VLMProviderV2.nvidia,
+        );
+      }
+      if (!current.vlmBaseUrl || current.vlmBaseUrl === '') {
+        if (env.vlmBaseUrl) {
+          SettingStore.instance.set('vlmBaseUrl', env.vlmBaseUrl);
+        }
+      }
+      if (!current.vlmApiKey || current.vlmApiKey === '') {
+        if (env.vlmApiKey) {
+          SettingStore.instance.set('vlmApiKey', env.vlmApiKey);
+        }
+      }
+      if (!current.vlmModelName || current.vlmModelName === '') {
+        if (env.vlmModelName) {
+          SettingStore.instance.set('vlmModelName', env.vlmModelName);
+        }
+      }
+
       SettingStore.instance.onDidAnyChange((newValue, oldValue) => {
         logger.log(
           `SettingStore: ${JSON.stringify(oldValue)} changed to ${JSON.stringify(newValue)}`,
@@ -67,7 +91,21 @@ export class SettingStore {
   }
 
   public static get<K extends keyof LocalStore>(key: K): LocalStore[K] {
-    return SettingStore.getInstance().get(key);
+    const val = SettingStore.getInstance().get(key);
+    if (!val || (val as unknown as string) === '') {
+      if (key === 'vlmProvider')
+        return (
+          (env.vlmProvider as LocalStore[K]) ||
+          (VLMProviderV2.nvidia as LocalStore[K])
+        );
+      if (key === 'vlmBaseUrl')
+        return (env.vlmBaseUrl as LocalStore[K]) || ('' as LocalStore[K]);
+      if (key === 'vlmApiKey')
+        return (env.vlmApiKey as LocalStore[K]) || ('' as LocalStore[K]);
+      if (key === 'vlmModelName')
+        return (env.vlmModelName as LocalStore[K]) || ('' as LocalStore[K]);
+    }
+    return val;
   }
 
   public static remove<K extends keyof LocalStore>(key: K): void {
@@ -75,7 +113,17 @@ export class SettingStore {
   }
 
   public static getStore(): LocalStore {
-    return SettingStore.getInstance().store;
+    const raw = SettingStore.getInstance().store;
+    return {
+      ...raw,
+      vlmProvider:
+        raw.vlmProvider ||
+        (env.vlmProvider as VLMProviderV2) ||
+        VLMProviderV2.nvidia,
+      vlmBaseUrl: raw.vlmBaseUrl || env.vlmBaseUrl || '',
+      vlmApiKey: raw.vlmApiKey || env.vlmApiKey || '',
+      vlmModelName: raw.vlmModelName || env.vlmModelName || '',
+    };
   }
 
   public static clear(): void {

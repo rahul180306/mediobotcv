@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {  Next } from 'hono';
+import { Next } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import type { HonoContext } from '../types';
 import { getLogger } from '../utils/logger';

@@ -10,32 +10,26 @@
   <em>Main Settings Interface</em>
 </p>
 
-
 <br>
-
 
 ## Configuration Options
 
 ### VLM Settings
 
-
 #### VLM Provider
 
 Select the backend VLM provider to ensure more accurate execution of GUI actions. This option can improve the performance of the model.
 
-| Property    | Details                |
-| ----------- | ---------------------- |
-| **Type**    | `string`               |
-| **Options** | - `Hugging Face for UI-TARS-1.0`<br /> - `Hugging Face for UI-TARS-1.5`<br /> - `VolcEngine Ark for Doubao-1.5-UI-TARS`<br /> - `VolcEngine Ark for Doubao-1.5-thinking-vision-pro` |
-| **Required** | `true`         |
+| Property     | Details                                                                                                                                                                             |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Type**     | `string`                                                                                                                                                                            |
+| **Options**  | - `Hugging Face for UI-TARS-1.0`<br /> - `Hugging Face for UI-TARS-1.5`<br /> - `VolcEngine Ark for Doubao-1.5-UI-TARS`<br /> - `VolcEngine Ark for Doubao-1.5-thinking-vision-pro` |
+| **Required** | `true`                                                                                                                                                                              |
 
 > [!NOTE]
 > This is an interface reserved for different VLM providers.
 
-
 <br>
-
-
 
 #### VLM Base URL
 
@@ -51,7 +45,6 @@ For UI TARS deployment, please check out [Deployment](./deployment.md).
 > [!NOTE]
 > VLM Base URL should be OpenAI compatible API endpoints (see [OpenAI API protocol document](https://platform.openai.com/docs/guides/vision/uploading-base-64-encoded-images) for more details).
 
-
 <br>
 
 #### VLM API KEY
@@ -63,9 +56,7 @@ Specify the vlm api key.
 | **Type**     | `string` |
 | **Required** | `true`   |
 
-
 <br>
-
 
 #### VLM Model Name
 
@@ -75,7 +66,6 @@ Specify the requested module name.
 | ------------ | -------- |
 | **Type**     | `string` |
 | **Required** | `true`   |
-
 
 <br>
 
@@ -89,11 +79,9 @@ After completing the configuration, you can click the `Check Model Availability`
   <em>Main Settings Interface</em>
 </p>
 
-
 #### Use Responses API
 
 If the model supports the Responses API, you can enable this option. Once enabled, it will reduce overall token consumption and improve response speed.
-
 
 #### 🌟 Example
 
@@ -123,7 +111,6 @@ VLM Model Name: doubao-1.5-ui-tars-250328
 
 ### Chat Settings
 
-
 #### Language
 
 Controls localization settings for VLM.
@@ -137,21 +124,18 @@ Controls localization settings for VLM.
 > [!NOTE]
 > Changing the settings will **only** affect the output of VLM, not the language of the desktop app itself. Regarding the i18n of the App itself, welcome to contribute PR.
 
-
 <br>
-
 
 #### Max Loop
 
 Maximum steps per conversation round.
 
-| Property     | Details  |
-| ------------ | -------- |
-| **Type**     | `number` |
-| **Required** | `true`   |
+| Property     | Details     |
+| ------------ | ----------- |
+| **Type**     | `number`    |
+| **Required** | `true`      |
 | **Options**  | `[25, 200]` |
-| **Default**  | `100`    |
-
+| **Default**  | `100`       |
 
 <br>
 
@@ -161,28 +145,24 @@ Waiting time for each loop.
 
 For interactive operations that require time to complete, this parameter adds a delay before capturing screenshots, ensuring the final state is properly recorded.
 
-
-| Property     | Details  |
-| ------------ | -------- |
-| **Type**     | `number` |
-| **Required** | `true`   |
+| Property     | Details     |
+| ------------ | ----------- |
+| **Type**     | `number`    |
+| **Required** | `true`      |
 | **Options**  | `[0, 3000]` |
-| **Default**  | `1000`   |
-
+| **Default**  | `1000`      |
 
 <br>
-
 
 ### Operator Settings
 
 #### Local Browser Operator Search Engine
 
-| Property    | Details                        |
-| ----------- | ------------------------------ |
-| **Type**    | `string`                       |
-| **Options** | `Google`, `Bing`, `Baidu`      |
-| **Default** | `Google`                       |
-
+| Property    | Details                   |
+| ----------- | ------------------------- |
+| **Type**    | `string`                  |
+| **Options** | `Google`, `Bing`, `Baidu` |
+| **Default** | `Google`                  |
 
 <br>
 
@@ -211,9 +191,9 @@ Once it's set, when user click **Export as HTML**, a popup window will appear as
 
 The Report Storage Server should implement the following HTTP API endpoint:
 
-| Property     | Details                                                                                                      |
-| ------------ | ------------------------------------------------------------------------------------------------------------ |
-| **Endpoint** | `POST /your-storage-enpoint`                                                                                 |
+| Property     | Details                                                                                                    |
+| ------------ | ---------------------------------------------------------------------------------------------------------- |
+| **Endpoint** | `POST /your-storage-enpoint`                                                                               |
 | **Headers**  | Content-Type: `multipart/form-data` <br> <!-- - Authorization: Bearer \<access_token\> (Not Supported) --> |
 
 ##### Request Body
@@ -227,6 +207,7 @@ The request should be sent as `multipart/form-data` with the following field:
 ##### Response
 
 **Success Response (200 OK)**
+
 ```json
 {
   "url": "https://example.com/reports/xxx.html"
@@ -238,9 +219,7 @@ The response should return a JSON object containing a publicly accessible URL wh
 > [!NOTE]
 > Currently, there is no authentication designed for Report Storage Server. If you have any requirements, please submit an [issue](https://github.com/bytedance/UI-TARS-desktop/issues).
 
-
 <br>
-
 
 #### UTIO Base URL
 
@@ -253,7 +232,6 @@ The response should return a JSON object containing a publicly accessible URL wh
 </p>
 
 This option defines the base URL for the **UTIO** server that handles application events and instructions.
-
 
 ##### Server Interface Specification
 
@@ -269,6 +247,7 @@ The UTIO server accepts events through HTTP POST requests and supports three typ
 The server handles three types of events:
 
 ###### **Application Launch**
+
 ```typescript
 interface AppLaunchedEvent {
   type: 'appLaunched';
@@ -284,6 +263,7 @@ interface AppLaunchedEvent {
 ```
 
 ###### **Send Instruction**
+
 ```typescript
 interface SendInstructionEvent {
   type: 'sendInstruction';
@@ -293,6 +273,7 @@ interface SendInstructionEvent {
 ```
 
 ###### **Share Report**
+
 ```typescript
 interface ShareReportEvent {
   type: 'shareReport';
@@ -320,6 +301,7 @@ interface ShareReportEvent {
 ##### Response
 
 **Success Response (200 OK)**
+
 ```json
 {
   "success": true
@@ -328,7 +310,6 @@ interface ShareReportEvent {
 
 > [!NOTE]
 > All events are processed asynchronously. The server should respond promptly to acknowledge receipt of the event.
-
 
 ##### Server Example
 
@@ -345,7 +326,7 @@ app.use(express.json());
 
 app.post('/your-utio-endpoint', (req, res) => {
   const event = req.body;
-  
+
   if (!event || !event.type) {
     return res.status(400).json({ error: 'Missing event type' });
   }
@@ -380,12 +361,12 @@ CORS(app)
 @app.route('/events', methods=['POST'])
 def handle_event():
     data = request.get_json()
-    
+
     if not data or 'type' not in data:
         return jsonify({'error': 'Missing event type'}), 400
-    
+
     event_type = data['type']
-    
+
     if event_type == 'appLaunched':
         return handle_app_launch(data)
     elif event_type == 'sendInstruction':

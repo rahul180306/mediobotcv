@@ -11,10 +11,7 @@
  * Check if a model is a Claude model
  */
 export function isClaudeModel(model: string): boolean {
-  const claudePatterns = [
-    /^claude-/i,
-    /^anthropic\//i,
-  ];
+  const claudePatterns = [/^claude-/i, /^anthropic\//i];
   return claudePatterns.some((pattern) => pattern.test(model));
 }
 

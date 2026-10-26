@@ -23,24 +23,28 @@ vi.mock('@tarko/context-engineer/node', () => ({
 import { executeQuery, executeStreamingQuery } from '../../src/api/controllers/queries';
 
 vi.mock('../../src/utils/error-handler', () => ({
-  createErrorResponse: vi.fn((error: any) => ({ error: { message: error.message, code: 'ERROR' } })),
+  createErrorResponse: vi.fn((error: any) => ({
+    error: { message: error.message, code: 'ERROR' },
+  })),
 }));
 
 // Test helpers
-const createMockRequest = (query: any) => ({
-  body: { sessionId: 'test-session', query },
-  session: mockSession,
-  app: { locals: { server: mockServer } },
-}) as Partial<Request>;
+const createMockRequest = (query: any) =>
+  ({
+    body: { sessionId: 'test-session', query },
+    session: mockSession,
+    app: { locals: { server: mockServer } },
+  }) as Partial<Request>;
 
-const createMockResponse = () => ({
-  status: vi.fn().mockReturnThis(),
-  json: vi.fn().mockReturnThis(),
-  setHeader: vi.fn().mockReturnThis(),
-  write: vi.fn().mockReturnThis(),
-  end: vi.fn().mockReturnThis(),
-  closed: false,
-}) as Partial<Response>;
+const createMockResponse = () =>
+  ({
+    status: vi.fn().mockReturnThis(),
+    json: vi.fn().mockReturnThis(),
+    setHeader: vi.fn().mockReturnThis(),
+    write: vi.fn().mockReturnThis(),
+    end: vi.fn().mockReturnThis(),
+    closed: false,
+  }) as Partial<Response>;
 
 const mockContextResult = (expandedContext: string | null) => {
   mockContextProcessor.processContextualReferences.mockResolvedValue(expandedContext);
@@ -56,7 +60,7 @@ const mockSuccessResponse = (content = 'Response') => {
 describe('Contextual References Bug Fix', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockImageProcessor.compressImagesInQuery.mockImplementation(q => Promise.resolve(q));
+    mockImageProcessor.compressImagesInQuery.mockImplementation((q) => Promise.resolve(q));
   });
 
   describe('environmentInput conditional logic', () => {
@@ -85,14 +89,14 @@ describe('Contextual References Bug Fix', () => {
       it(name, async () => {
         const req = createMockRequest(query);
         const res = createMockResponse();
-        
+
         mockContextResult(expandedContext);
         mockSuccessResponse();
 
         await executeQuery(req as Request, res as Response);
 
         const callArgs = mockSession.runQuery.mock.calls[0][0];
-        
+
         if (expectEnvironmentInput) {
           expect(callArgs).toHaveProperty('environmentInput');
           expect(callArgs.environmentInput.content).toBe(expandedContext);
@@ -107,7 +111,7 @@ describe('Contextual References Bug Fix', () => {
     it('should follow same environmentInput logic in streaming mode', async () => {
       const req = createMockRequest('Simple query');
       const res = createMockResponse();
-      
+
       mockContextResult(null);
       mockSession.runQueryStreaming.mockResolvedValue({
         [Symbol.asyncIterator]: async function* () {
@@ -124,10 +128,11 @@ describe('Contextual References Bug Fix', () => {
 
   describe('bug reproduction', () => {
     it('should fix the original issue: no environment_input for simple queries', async () => {
-      const bugQuery = '1. Open this game: https://cpstest.click/en/aim-trainer\n2. Select total sec to 50';
+      const bugQuery =
+        '1. Open this game: https://cpstest.click/en/aim-trainer\n2. Select total sec to 50';
       const req = createMockRequest(bugQuery);
       const res = createMockResponse();
-      
+
       // No contextual references found
       mockContextResult(null);
       mockSuccessResponse();

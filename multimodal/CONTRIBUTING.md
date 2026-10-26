@@ -24,7 +24,7 @@ The `multimodal` directory contains several sub-packages. Here are the most impo
 ```
 .
 ├── agent                  # Level 1. Event-stream based multimodal agent kernel
-├── mcp-agent              # Level 2. MCP Agent    
+├── mcp-agent              # Level 2. MCP Agent
 ├── agent-tars             # Level 3. Agent TARS
 ├── agent-tars-server      # Level 4. Agent TARS Server
 ├── agent-tars-cli         # Level 5. Agent TARS CLI
@@ -46,6 +46,7 @@ pnpm run github-release --release-version 0.3.0-beta.9
 ```
 
 This will:
+
 - Create a GitHub release for the specified version
 - Generate beautiful release notes with conventional commit format
 - Use the correct tag format (`v0.3.0-beta.9`)
@@ -119,7 +120,7 @@ Response example:
 
 ```json
 {
-    "sessionId": "session_1748938641871"
+  "sessionId": "session_1748938641871"
 }
 ```
 
@@ -162,7 +163,7 @@ Response example:
       "content": "Search",
       "isComplete": false,
       "messageId": "msg_1748935686054_3kdw42u1"
-    },
+    }
     // Additional events omitted for brevity
   ]
 }

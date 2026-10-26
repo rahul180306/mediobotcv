@@ -34,11 +34,11 @@ flowchart TD
     I -->|否| D
     I -->|是| G
     G --> J[事件流]
-    
+
     J --> K[UI更新]
     J --> L[日志记录]
     J --> M[性能监控]
-    
+
     style A fill:#e1f5fe
     style G fill:#c8e6c9
     style F fill:#fff3e0
@@ -70,7 +70,7 @@ import { Agent, Tool, z, LogLevel } from '@tarko/agent';
 
 const locationTool = new Tool({
   id: 'getCurrentLocation',
-  description: "获取用户当前位置",
+  description: '获取用户当前位置',
   parameters: z.object({}),
   function: async () => {
     return { location: 'Boston' };
@@ -110,7 +110,7 @@ const agent = new Agent({
 
 async function main() {
   const response = await agent.run({
-    input: "今天天气怎么样？",
+    input: '今天天气怎么样？',
   });
   console.log(response);
 }
@@ -154,11 +154,13 @@ const agent = new Agent({
 基于源码中实际的 `AgentOptions` 接口，所有选项都是可选的：
 
 ##### 基础配置
+
 - `id`: Agent 实例的唯一标识符（默认: `"@tarko/agent"`）
 - `name`: Agent 名称，用于追踪和日志（默认: `"Anonymous"`）
 - `instructions`: Agent 的系统提示，完全替换默认提示（默认: 内置智能助手提示）
 
 ##### 模型配置
+
 - `model`: 模型配置对象，包含 `provider`、`id`、`apiKey` 等
 - `temperature`: LLM 温度，控制输出随机性（默认: `0.7`）
 - `top_p`: 核采样参数，控制词汇选择多样性（默认: 模型默认值）
@@ -166,6 +168,7 @@ const agent = new Agent({
 - `thinking`: 推理内容控制选项
 
 ##### 工具配置
+
 - `tools`: Agent 可用的工具数组
 - `tool`: 工具过滤选项，支持 `include`/`exclude` 模式
 - `toolCallEngine`: Tool Call Engine 类型（默认: `'native'`）
@@ -174,15 +177,18 @@ const agent = new Agent({
   - `'structured_outputs'`: JSON Schema 结构化输出
 
 ##### 执行控制
+
 - `maxIterations`: 最大迭代次数（默认: `1000`）
 - `context`: 上下文感知选项，如 `maxImagesCount`
 
 ##### 调试和监控
+
 - `logLevel`: 日志级别（`LogLevel.DEBUG`、`LogLevel.INFO` 等）
 - `metric`: 性能指标收集配置
 - `enableStreamingToolCallEvents`: 是否启用流式工具调用事件（默认: `false`）
 
 ##### 高级选项
+
 - `workspace`: 文件系统操作的工作目录
 - `sandboxUrl`: 沙箱环境 URL
 - `eventStreamOptions`: 事件流处理器配置
@@ -197,7 +203,7 @@ import { Tool, z } from '@tarko/agent';
 
 const locationTool = new Tool({
   id: 'getCurrentLocation',
-  description: "获取用户当前位置",
+  description: '获取用户当前位置',
   parameters: z.object({}),
   function: async () => {
     return { location: 'Boston' };
@@ -221,7 +227,7 @@ const locationTool = new Tool({
 ```ts
 async function main() {
   const stream = await agent.run({
-    input: "今天天气怎么样？",
+    input: '今天天气怎么样？',
     stream: true,
   });
 
@@ -309,17 +315,13 @@ interface StreamingMessage {
 ```ts
 // 非流式调用
 const response = await agent.callLLM({
-  messages: [
-    { role: 'user', content: '你好' }
-  ],
+  messages: [{ role: 'user', content: '你好' }],
   temperature: 0.5,
 });
 
 // 流式调用
 const stream = await agent.callLLM({
-  messages: [
-    { role: 'user', content: '写一首诗' }
-  ],
+  messages: [{ role: 'user', content: '写一首诗' }],
   stream: true,
 });
 
@@ -382,13 +384,13 @@ class CustomAgent extends Agent {
     // 可以修改参数
     return { ...args, timestamp: Date.now() };
   }
-  
+
   async onAfterToolCall(sessionId, toolCall, result) {
     console.log(`工具调用完成: ${toolCall.name}`);
     // 可以修改结果
     return result;
   }
-  
+
   async onLLMRequest(sessionId, payload) {
     console.log(`发送 LLM 请求: ${payload.messages.length} 条消息`);
   }
@@ -454,15 +456,15 @@ const optimizedAgent = new Agent({
   context: {
     maxImagesCount: 3, // 避免上下文过大
   },
-  
+
   // 合理设置迭代次数
   maxIterations: 20, // 避免无限循环
-  
+
   // 启用性能监控
   metric: {
     enable: true,
   },
-  
+
   // 适当的温度设置
   temperature: 0.3, // 生产环境推荐较低温度
 });

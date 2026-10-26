@@ -15,5 +15,5 @@ export {
   createCsrfProtectionHook,
   createHostValidationHook,
   generateCsrfToken,
-} from './builtInHooks'
+} from './builtInHooks';
 export * from './types';

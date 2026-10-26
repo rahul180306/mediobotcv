@@ -102,12 +102,12 @@ sequenceDiagram
     deactivate user
 ```
 
-
 ### Basic Usage
 
 Basic usage is largely derived from package `@ui-tars/sdk`, here's a basic example of using the SDK:
 
 > Note: Using `nut-js`(cross-platform computer control tool) as the operator, you can also use or customize other operators. NutJS operator that supports common desktop automation actions:
+>
 > - Mouse actions: click, double click, right click, drag, hover
 > - Keyboard input: typing, hotkeys
 > - Scrolling
@@ -125,7 +125,7 @@ const guiAgent = new GUIAgent({
   },
   operator: new NutJSOperator(),
   onData: ({ data }) => {
-    console.log(data)
+    console.log(data);
   },
   onError: ({ data, error }) => {
     console.error(error, data);
@@ -216,9 +216,7 @@ When implementing a custom operator, you need to implement two core methods: `sc
     "build": "rsbuild",
     "test": "vitest"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
@@ -328,10 +326,12 @@ export class CustomOperator extends Operator {
 ```
 
 Required methods:
+
 - `screenshot()`: Captures the current screen state
 - `execute()`: Performs the requested action based on model predictions
 
 Optional static properties:
+
 - `MANUAL`: Define the action spaces and description for UI-TARS Model understanding
   - `ACTION_SPACES`: Define the action spaces and description for UI-TARS Model understanding
 
@@ -362,12 +362,16 @@ class CustomUITarsModel extends UITarsModel {
     // Implement custom model logic
     return {
       prediction: 'action description',
-      parsedPredictions: [{
-        action_type: 'click',
-        action_inputs: { /* ... */ },
-        reflection: null,
-        thought: 'reasoning'
-      }]
+      parsedPredictions: [
+        {
+          action_type: 'click',
+          action_inputs: {
+            /* ... */
+          },
+          reflection: null,
+          thought: 'reasoning',
+        },
+      ],
     };
   }
 }
@@ -394,9 +398,9 @@ const planningList = await reasoningModel.invoke({
     {
       role: 'user',
       content: 'buy a ticket from beijing to shanghai',
-    }
-  ]
-})
+    },
+  ],
+});
 /**
  * [
  *  'open chrome',
@@ -412,5 +416,3 @@ for (const planning of planningList) {
   await guiAgent.run(planning);
 }
 ```
-
-

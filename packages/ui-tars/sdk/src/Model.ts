@@ -31,6 +31,12 @@ import type {
   ResponseInputItem,
 } from 'openai/resources/responses/responses';
 
+import {
+  ImagePreprocessCache,
+  type ImagePreprocessCacheOptions,
+  type ImagePreprocessCacheStats,
+} from './cache/imagePreprocessCache';
+
 type OpenAIChatCompletionCreateParams = Omit<ClientOptions, 'maxRetries'> &
   Pick<
     ChatCompletionCreateParamsBase,
@@ -40,6 +46,8 @@ type OpenAIChatCompletionCreateParams = Omit<ClientOptions, 'maxRetries'> &
 export interface UITarsModelConfig extends OpenAIChatCompletionCreateParams {
   /** Whether to use OpenAI Response API instead of Chat Completions API */
   useResponsesApi?: boolean;
+  /** Configuration for byte-aware image preprocessing cache */
+  imagePreprocessCacheOptions?: ImagePreprocessCacheOptions;
 }
 
 export interface ThinkingVisionProModelConfig
@@ -53,6 +61,9 @@ export class UITarsModel extends Model {
   constructor(protected readonly modelConfig: UITarsModelConfig) {
     super();
     this.modelConfig = modelConfig;
+    this.resizeCache = new ImagePreprocessCache(
+      modelConfig.imagePreprocessCacheOptions,
+    );
   }
 
   get useResponsesApi(): boolean {
@@ -62,6 +73,7 @@ export class UITarsModel extends Model {
     messageIndex: number;
     responseIds: string[];
   } | null = null;
+  private resizeCache: ImagePreprocessCache;
 
   /** [widthFactor, heightFactor] */
   get factors(): [number, number] {
@@ -72,11 +84,20 @@ export class UITarsModel extends Model {
     return this.modelConfig.model ?? 'unknown';
   }
 
+  public getImageCacheStats(): ImagePreprocessCacheStats {
+    return this.resizeCache.getStats();
+  }
+
+  public clearImageCache(): void {
+    this.resizeCache.clear();
+  }
+
   /**
    * reset the model state
    */
   reset() {
     this.headImageContext = null;
+    this.resizeCache.clear();
   }
 
   /**
@@ -120,26 +141,57 @@ export class UITarsModel extends Model {
       apiKey,
     });
 
+    const isNvidia = baseURL?.includes('nvidia.com');
+    const isNemotron = model?.toLowerCase().includes('nemotron');
+    const isDiffusionGemma = model?.toLowerCase().includes('diffusiongemma');
+    const isThinkingModel = isNemotron || isDiffusionGemma || isNvidia;
+
+    let effectiveMaxTokens = max_tokens;
+    if (isNemotron) {
+      effectiveMaxTokens = Math.min(max_tokens ?? 16384, 16384);
+      if (effectiveMaxTokens < 4096) effectiveMaxTokens = 16384;
+    } else if (isDiffusionGemma) {
+      effectiveMaxTokens = Math.min(max_tokens ?? 4096, 4096);
+      if (effectiveMaxTokens < 2048) effectiveMaxTokens = 4096;
+    }
+
+    const effectiveTemperature = isThinkingModel
+      ? this.modelConfig.temperature !== undefined
+        ? this.modelConfig.temperature
+        : 1
+      : temperature;
+    const effectiveTopP = isThinkingModel
+      ? this.modelConfig.top_p !== undefined
+        ? this.modelConfig.top_p
+        : 0.95
+      : top_p;
+
     const createCompletionPrams: ChatCompletionCreateParamsNonStreaming = {
       model,
       messages,
       stream: false,
-      seed: null,
+      seed: isNemotron ? 42 : null,
       stop: null,
       frequency_penalty: null,
       presence_penalty: null,
       // custom options
-      max_tokens,
-      temperature,
-      top_p,
-    };
+      max_tokens: effectiveMaxTokens,
+      temperature: effectiveTemperature,
+      top_p: effectiveTopP,
+      ...(isThinkingModel
+        ? { chat_template_kwargs: { enable_thinking: true } }
+        : {}),
+    } as ChatCompletionCreateParamsNonStreaming;
 
-    const createCompletionPramsThinkingVp: ThinkingVisionProModelConfig = {
-      ...createCompletionPrams,
-      thinking: {
-        type: 'disabled',
-      },
-    };
+    const createCompletionPramsThinkingVp: ThinkingVisionProModelConfig =
+      isThinkingModel
+        ? createCompletionPrams
+        : {
+            ...createCompletionPrams,
+            thinking: {
+              type: 'disabled',
+            },
+          };
 
     const startTime = Date.now();
 
@@ -261,13 +313,28 @@ export class UITarsModel extends Model {
       createCompletionPramsThinkingVp,
       {
         ...options,
-        timeout: 1000 * 30,
+        timeout: 1000 * 300,
         headers,
       },
     );
 
+    const messageObj = result.choices?.[0]?.message as
+      | { content?: string | null; reasoning_content?: string }
+      | undefined;
+    let prediction = messageObj?.content ?? '';
+    if (messageObj?.reasoning_content) {
+      if (!prediction) {
+        prediction = messageObj.reasoning_content;
+      } else if (
+        !prediction.includes('Thought:') &&
+        !prediction.includes('Thought :')
+      ) {
+        prediction = `Thought: ${messageObj.reasoning_content}\n${prediction}`;
+      }
+    }
+
     return {
-      prediction: result.choices?.[0]?.message?.content ?? '',
+      prediction,
       costTime: Date.now() - startTime,
       costTokens: result.usage?.total_tokens ?? 0,
     };
@@ -297,7 +364,16 @@ export class UITarsModel extends Model {
           ? MAX_PIXELS_DOUBAO
           : MAX_PIXELS_V1_0;
     const compressedImages = await Promise.all(
-      images.map((image) => preprocessResizeImage(image, maxPixels)),
+      images.map(async (image) => {
+        const cacheKey = `${maxPixels}:${image.length}:${image.slice(0, 32)}:${image.slice(-32)}`;
+        const cached = this.resizeCache.get(cacheKey);
+        if (cached) {
+          return cached;
+        }
+        const resized = await preprocessResizeImage(image, maxPixels);
+        this.resizeCache.set(cacheKey, resized);
+        return resized;
+      }),
     );
 
     const messages = convertToOpenAIMessages({

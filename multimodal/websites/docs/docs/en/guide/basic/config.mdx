@@ -1,17 +1,13 @@
 # Configure Agent TARS
 
-::: warning
-Agent TARS configuration options may change with version updates. When upgrading Agent TARS versions, please refer to the release note to understand potential configuration changes.
-:::
+::: warning Agent TARS configuration options may change with version updates. When upgrading Agent TARS versions, please refer to the release note to understand potential configuration changes. :::
 
-
-Agent TARS supports two primary configuration methods: 
+Agent TARS supports two primary configuration methods:
 
 - **CLI flags**：for quick experimentation
 - **Configuration files**：recommended for long-term usage
 
 These configuration methods allow you to customize Agent TARS behavior to meet different requirements.
-
 
 ## CLI Flags
 
@@ -21,7 +17,6 @@ agent-tars [...flags]  # launch Agent TARS with some flags.
 ```
 
 For more details please move [CLI](./cli.mdx)。
-
 
 ## Config File
 
@@ -53,7 +48,7 @@ export default defineConfig({
     id: 'claude-3-7-sonnet-latest',
     apiKey: process.env.ANTHROPIC_API_KEY,
   },
-  
+
   // Browser control mode
   browser: {
     control: 'hybrid', // 'hybrid', 'visual-grounding', 'dom'
@@ -62,7 +57,6 @@ export default defineConfig({
   // ... other configurations
 });
 ```
-
 
 ### JSON
 
@@ -87,7 +81,7 @@ model:
   provider: anthropic
   id: claude-3-7-sonnet-latest
   apiKey: your-api-key-here
-  
+
 browser:
   control: hybrid
 ```

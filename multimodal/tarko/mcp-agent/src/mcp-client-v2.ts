@@ -75,7 +75,9 @@ export class MCPClientV2 implements IMCPClient {
       return result.content;
     } catch (error) {
       this.logger.error(`Error calling MCP tool ${toolName}:`, error);
-      throw new Error(`Failed to execute tool ${toolName}: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(
+        `Failed to execute tool ${toolName}: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 

@@ -48,41 +48,41 @@ export default {
       },
     },
     runtimeSettings: {
-        schema: {
-          type: 'object',
-          properties: {
-            agentMode: {
-              type: 'string',
-              title: 'Agent Mode',
-              enum: ['omni', 'gui', 'game'],
-              enumLabels: ['Omni', 'GUI', 'Game'],
-              default: 'omni',
-              placement: 'chat-bottom',
-            },
-            browserMode: {
-              type: 'string',
-              title: 'Browser Control',
-              enum: ['hybrid'],
-              enumLabels: ['Hybrid'],
-              default: 'hybrid',
-              placement: 'chat-bottom',
-              visible: {
-                dependsOn: 'agentMode',
-                when: 'gui',
-              },
+      schema: {
+        type: 'object',
+        properties: {
+          agentMode: {
+            type: 'string',
+            title: 'Agent Mode',
+            enum: ['omni', 'gui', 'game'],
+            enumLabels: ['Omni', 'GUI', 'Game'],
+            default: 'omni',
+            placement: 'chat-bottom',
+          },
+          browserMode: {
+            type: 'string',
+            title: 'Browser Control',
+            enum: ['hybrid'],
+            enumLabels: ['Hybrid'],
+            default: 'hybrid',
+            placement: 'chat-bottom',
+            visible: {
+              dependsOn: 'agentMode',
+              when: 'gui',
             },
           },
         },
-        transform: (runtimeSettings: Record<string, unknown>) => {
-          return {
-            agentMode: {
-              id: runtimeSettings.agentMode,
-              browserMode: runtimeSettings.browserMode,
-              link: runtimeSettings.link ?? undefined,
-            },
-          };
-        },
       },
+      transform: (runtimeSettings: Record<string, unknown>) => {
+        return {
+          agentMode: {
+            id: runtimeSettings.agentMode,
+            browserMode: runtimeSettings.browserMode,
+            link: runtimeSettings.link ?? undefined,
+          },
+        };
+      },
+    },
   },
   logLevel: LogLevel.DEBUG,
   webui: {

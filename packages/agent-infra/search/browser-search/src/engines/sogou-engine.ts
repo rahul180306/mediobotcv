@@ -35,7 +35,7 @@ export class SogouSearchEngine implements SearchEngineAdapter {
 
   /**
    * !NOTE: This function runs in the context of the browser page, not Node.js
-   * 
+   *
    * Extract search results from Sogou search page.
    * @param window - window
    * @returns Search results extracted from the page
@@ -54,7 +54,7 @@ export class SogouSearchEngine implements SearchEngineAdapter {
     };
 
     const BaseUrl = 'https://www.sogou.com';
-    
+
     const SELECTOR = {
       results: '.results .vrwrap',
       resultTitle: '.vr-title',
@@ -68,7 +68,9 @@ export class SogouSearchEngine implements SearchEngineAdapter {
       const elements = document.querySelectorAll(SELECTOR.results);
       elements.forEach((element) => {
         const titleEl = element.querySelector(SELECTOR.resultTitle);
-        let url = element.querySelector(SELECTOR.resultLink)?.getAttribute('href');
+        let url = element
+          .querySelector(SELECTOR.resultLink)
+          ?.getAttribute('href');
 
         // Extract snippets
         const snippets = SELECTOR.resultSnippet.map((selector) => {
@@ -114,11 +116,11 @@ export class SogouSearchEngine implements SearchEngineAdapter {
   }
 
   /**
-  * Waits for Sogou search results to load completely.
-  *
-  * @param page - The Puppeteer page object
-  * @returns Promise that resolves when search results are loaded
-  */
+   * Waits for Sogou search results to load completely.
+   *
+   * @param page - The Puppeteer page object
+   * @returns Promise that resolves when search results are loaded
+   */
   async waitForSearchResults(page: Page): Promise<void> {
     await page.waitForSelector('#pagebar_container');
   }

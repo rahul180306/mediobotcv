@@ -19,3 +19,4 @@ export * from './browser-finder';
 export * from './local-browser';
 export * from './remote-browser';
 export * from './base-browser';
+export * from './browser-context-session';

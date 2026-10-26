@@ -137,7 +137,6 @@ export class AgentServer<T extends AgentAppConfig = AgentAppConfig> {
     this.hookManager.register(RequestIdHook);
   }
 
-
   /**
    * Apply all registered hooks to the Hono app in priority order
    * This method is called during server start after all hooks are registered
@@ -145,23 +144,22 @@ export class AgentServer<T extends AgentAppConfig = AgentAppConfig> {
   private applyHooks(): void {
     // Get all hooks sorted by priority (highest first)
     const hooks = this.hookManager.getHooks();
-    
+
     if (hooks.length === 0) {
       console.warn('No hooks registered. Server will run without middleware.');
       return;
     }
-    
+
     // Validate hook configuration
     const validation = this.hookManager.validateExecutionOrder();
     if (!validation.isValid) {
       console.warn('Hook validation warnings detected:');
-      validation.warnings.forEach(warning => console.warn(`  - ${warning}`));
+      validation.warnings.forEach((warning) => console.warn(`  - ${warning}`));
     }
 
-    
     for (const hook of hooks) {
-        console.log(chalk.green(`[Hook] ${hook.name} (id: ${hook.id}, priority: ${hook.priority})`));
-        this.app.use('*', hook.handler);
+      console.log(chalk.green(`[Hook] ${hook.name} (id: ${hook.id}, priority: ${hook.priority})`));
+      this.app.use('*', hook.handler);
     }
   }
 
@@ -234,7 +232,6 @@ export class AgentServer<T extends AgentAppConfig = AgentAppConfig> {
   getCurrentAgentName(): string | undefined {
     return this.currentAgentResolution?.agentName;
   }
-
 
   /**
    * Check if server can accept new requests in exclusive mode
@@ -356,7 +353,9 @@ export class AgentServer<T extends AgentAppConfig = AgentAppConfig> {
     });
 
     this.isRunning = true;
-    console.log(`Server started on ${formatServerUrl(this.host, this.port)} (bound to ${this.host})`);
+    console.log(
+      `Server started on ${formatServerUrl(this.host, this.port)} (bound to ${this.host})`,
+    );
   }
 
   /**
@@ -453,14 +452,16 @@ export class AgentServer<T extends AgentAppConfig = AgentAppConfig> {
     if (this.isRunning) {
       throw new Error(
         `Cannot register hook '${options.id}' after server has started. ` +
-        'Please register all hooks before calling start().'
+          'Please register all hooks before calling start().',
       );
     }
-    
+
     this.hookManager.register(options);
-    
+
     if (this.isDebug) {
-      console.log(`[DEBUG] Registered hook: ${options.name} (id: ${options.id}, priority: ${options.priority || 200})`);
+      console.log(
+        `[DEBUG] Registered hook: ${options.name} (id: ${options.id}, priority: ${options.priority || 200})`,
+      );
     }
   }
 
@@ -473,16 +474,16 @@ export class AgentServer<T extends AgentAppConfig = AgentAppConfig> {
     if (this.isRunning) {
       throw new Error(
         `Cannot unregister hook '${id}' after server has started. ` +
-        'Please manage hooks before calling start().'
+          'Please manage hooks before calling start().',
       );
     }
-    
+
     const result = this.hookManager.unregister(id);
-    
+
     if (result && this.isDebug) {
       console.log(`[DEBUG] Unregistered hook: ${id}`);
     }
-    
+
     return result;
   }
 

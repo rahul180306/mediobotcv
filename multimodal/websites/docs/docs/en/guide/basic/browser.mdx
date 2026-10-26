@@ -1,4 +1,3 @@
-
 import { Figure } from '@components/Figure';
 import { VideoPanel } from '@components/VideoPanel';
 
@@ -67,20 +66,11 @@ import { Grid, GridItem } from '@components/Grid';
   <GridItem>
 
 <br />
-``` 
-
-[1]<img></img>
-[2]<button>Captcha solver</button>
-[3]<a>Entry job</a>
-[4]<a>API</a>
-[5]<a>Proxy</a>
-[6]<a>Software</a>
-[7]<a>Blog</a>
-[8]<a>Sign up</a>
-[9]<a>Log in</a>
-// ... 
-
 ```
+
+[1]<img></img> [2]<button>Captcha solver</button> [3]<a>Entry job</a> [4]<a>API</a> [5]<a>Proxy</a> [6]<a>Software</a> [7]<a>Blog</a> [8]<a>Sign up</a> [9]<a>Log in</a> // ...
+
+````
 
   </GridItem>
 </Grid>
@@ -129,8 +119,7 @@ click(point='<point>339 607</point>')  # 3. Click Check button to complete
 
 Details of this parsing process and cross-model compatibility are more complex than they appear and are out of scope for this document.
 
-::: tip Comparison with UI-TARS-desktop
-If you’ve used UI-TARS-Desktop, you can understand this as a combination of the UI-TARS-desktop browser operator, navigation tools, and information extraction tools.  
+::: tip Comparison with UI-TARS-desktop If you’ve used UI-TARS-Desktop, you can understand this as a combination of the UI-TARS-desktop browser operator, navigation tools, and information extraction tools.  
 :::
 
 ### Hybrid
@@ -163,7 +152,7 @@ Thus, theoretically, Hybrid mode offers better fault tolerance and adaptability.
 ### Comparison
 
 | Comparison Dimension | DOM | Visual Grounding |
-| --------------------- | --- | ---------------- |
+| --- | --- | --- |
 | Principle | Parses the DOM structure via JavaScript to identify interactive elements | Analyzes screenshots with visual models to understand the visual layout and elements |
 | Visual Understanding Ability | Limited, unable to interpret aesthetics and visual design | Can understand visual layout and user experience |
 | Dynamic Content Handling | Restricted, limited ability to process Canvas and complex CSS-rendered content | Flexible, capable of handling various visual presentations |
@@ -174,11 +163,10 @@ Thus, theoretically, Hybrid mode offers better fault tolerance and adaptability.
 
 The model compatibility overview is as follows:
 
-| Model Provider | Model              | Text | Vision | Tool Call & MCP | Visual Grounding |
-| --------------- | ------------------ | ---- | ------ | --------------- | ---------------- |
-| `volcengine`    | Seed1.5-VL        | ✔️   | ✔️     | ✔️              | ✔️               |
-| `anthropic`     | claude-3.7-sonnet | ✔️   | ✔️     | ✔️              | 🚧               |
-| `openai`        | gpt-4o            | ✔️   | ✔️     | ✔️              | 🚧               |
+| Model Provider | Model             | Text | Vision | Tool Call & MCP | Visual Grounding |
+| -------------- | ----------------- | ---- | ------ | --------------- | ---------------- |
+| `volcengine`   | Seed1.5-VL        | ✔️   | ✔️     | ✔️              | ✔️               |
+| `anthropic`    | claude-3.7-sonnet | ✔️   | ✔️     | ✔️              | 🚧               |
+| `openai`       | gpt-4o            | ✔️   | ✔️     | ✔️              | 🚧               |
 
 This table showcases the capabilities supported by prominent models for different browser operation modes.
-

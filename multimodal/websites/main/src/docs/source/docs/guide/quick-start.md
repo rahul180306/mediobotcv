@@ -82,10 +82,10 @@ You can click **Test Model Provider** button to check if current model setting i
 
 Some common mistakes:
 
-| Error                   | Snapshot                                                                                                                                     |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| Invalid API Key         | <img width="700" src="https://sf16-sg.tiktokcdn.com/obj/eden-sg/psvhouloj/agent-tars-docs/agent-tars-setting-test-model-provider-no-ak.png"> |
-| Not support tools       | <img width="700" src="https://sf16-sg.tiktokcdn.com/obj/eden-sg/psvhouloj/agent-tars-docs/agent-tars-setting-test-model-provider.png">       |
+| Error                  | Snapshot                                                                                                                                     |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Invalid API Key        | <img width="700" src="https://sf16-sg.tiktokcdn.com/obj/eden-sg/psvhouloj/agent-tars-docs/agent-tars-setting-test-model-provider-no-ak.png"> |
+| Not support tools      | <img width="700" src="https://sf16-sg.tiktokcdn.com/obj/eden-sg/psvhouloj/agent-tars-docs/agent-tars-setting-test-model-provider.png">       |
 | Not respond tool_calls | <img width="700" src="https://sf16-sg.tiktokcdn.com/obj/eden-sg/psvhouloj/agent-tars-docs/agent-tars-setting-test-model-provider.png">       |
 
 > [!TIP]

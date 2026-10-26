@@ -25,8 +25,6 @@ export interface MCPAgentOptions extends AgentOptions {
    */
   mcpServer?: MCPServerFilterOptions;
 
-
-
   /**
    * Default timeout for MCP client connections in seconds.
    *

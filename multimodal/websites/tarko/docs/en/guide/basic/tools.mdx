@@ -15,10 +15,10 @@ Based on the actual Tool class from `multimodal/tarko/agent-interface/src/tool.t
 import { Tool, z } from '@tarko/agent';
 
 const tool = new Tool({
-  id: string,                     // Unique tool identifier
-  description: string,            // What the tool does
-  parameters: ZodSchema,          // Zod schema for parameters
-  function: (input) => any        // Implementation function
+  id: string, // Unique tool identifier
+  description: string, // What the tool does
+  parameters: ZodSchema, // Zod schema for parameters
+  function: (input) => any, // Implementation function
 });
 ```
 
@@ -131,7 +131,7 @@ const httpTool = new Tool({
         },
         body: body ? JSON.stringify(JSON.parse(body)) : undefined,
       });
-      
+
       const responseBody = await response.text();
       return {
         status: response.status,
@@ -166,7 +166,7 @@ const agent = new Agent({
 });
 
 // Run agent with tools
-const response = await agent.run('What is 15 * 23 and what\'s the weather like?');
+const response = await agent.run("What is 15 * 23 and what's the weather like?");
 console.log(response);
 ```
 
@@ -177,11 +177,11 @@ Tarko supports different tool call engines:
 ```typescript
 const agent = new Agent({
   tools: [weatherTool],
-  toolCallEngine: 'native',              // Use model's native function calling
+  toolCallEngine: 'native', // Use model's native function calling
   // or
-  toolCallEngine: 'prompt_engineering',  // Use prompt-based approach
-  // or  
-  toolCallEngine: 'structured_outputs',  // Use structured output parsing
+  toolCallEngine: 'prompt_engineering', // Use prompt-based approach
+  // or
+  toolCallEngine: 'structured_outputs', // Use structured output parsing
 });
 ```
 

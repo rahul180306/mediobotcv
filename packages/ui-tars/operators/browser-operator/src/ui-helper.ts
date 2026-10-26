@@ -70,13 +70,6 @@ export class UIHelper {
           color: rgba(255, 255, 255, 0.9);
         }
 
-        .gui-agent-coords {
-          margin-top: 8px;
-          font-size: 12px;
-          color: #00ff9d;
-          opacity: 0.8;
-        }
-
         .gui-agent-thought {
           margin-top: 10px;
           padding-top: 10px;
@@ -361,21 +354,6 @@ export class UIHelper {
         indicator.style.left = `${x}px`;
         indicator.style.top = `${y}px`;
         document.body.appendChild(indicator);
-
-        // Update coords in container
-        const container = document.getElementById(containerId);
-        if (container) {
-          const coordsDiv = document.createElement('div');
-          coordsDiv.className = 'gui-agent-coords';
-          coordsDiv.textContent = `Click at: (${Math.round(x)}, ${Math.round(y)})`;
-
-          const existingCoords = container.querySelector('.gui-agent-coords');
-          if (existingCoords) {
-            existingCoords.remove();
-          }
-
-          container.appendChild(coordsDiv);
-        }
 
         // Remove indicator after animation
         setTimeout(() => {
@@ -773,21 +751,6 @@ export class UIHelper {
         dragPath.appendChild(arrow);
 
         dragIndicator.appendChild(dragPath);
-
-        // Update coords in container
-        const container = document.getElementById(containerId);
-        if (container) {
-          const coordsDiv = document.createElement('div');
-          coordsDiv.className = 'gui-agent-coords';
-          coordsDiv.textContent = `Drag from: (${Math.round(startX)}, ${Math.round(startY)}) to (${Math.round(endX)}, ${Math.round(endY)})`;
-
-          const existingCoords = container.querySelector('.gui-agent-coords');
-          if (existingCoords) {
-            existingCoords.remove();
-          }
-
-          container.appendChild(coordsDiv);
-        }
 
         // Remove indicator after animation
         setTimeout(() => {

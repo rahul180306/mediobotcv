@@ -14,8 +14,9 @@
   border-radius: 50%;
   filter: blur(70px);
   transform-origin: bottom;
-  animation: aurora-rise 20s ease-in-out infinite alternate,
-             aurora-flow 25s ease-in-out infinite alternate;
+  animation:
+    aurora-rise 20s ease-in-out infinite alternate,
+    aurora-flow 25s ease-in-out infinite alternate;
 }
 
 @keyframes aurora-rise {
@@ -163,12 +164,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    45deg,
-    transparent 65%,
-    var(--accent) 70%,
-    transparent 75%
-  );
+  background: linear-gradient(45deg, transparent 65%, var(--accent) 70%, transparent 75%);
   background-size: 200% 200%;
   animation: hologram-scan 3s linear infinite;
   opacity: 0.3;

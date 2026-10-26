@@ -55,13 +55,13 @@ const result = await operator.doExecute({
     {
       type: 'click',
       x: 500,
-      y: 300
+      y: 300,
     },
     {
       type: 'type',
-      text: 'Hello, World!'
-    }
-  ]
+      text: 'Hello, World!',
+    },
+  ],
 });
 ```
 

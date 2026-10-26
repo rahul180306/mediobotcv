@@ -46,7 +46,12 @@ export default defineConfig({
         peerDependencies: true,
       },
       output: {
-        externals: ['@agent-tars/core', '@tarko/agent-server', '@tarko/shared-utils', '@tarko/agent-ui-builder'],
+        externals: [
+          '@agent-tars/core',
+          '@tarko/agent-server',
+          '@tarko/shared-utils',
+          '@tarko/agent-ui-builder',
+        ],
       },
     },
   ],

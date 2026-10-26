@@ -5,6 +5,7 @@
 import * as puppeteer from 'puppeteer-core';
 import { BrowserFinder } from './browser-finder';
 import { BaseBrowser } from './base-browser';
+import { BrowserContextSession } from './browser-context-session';
 
 import type { BrowserType, LaunchOptions } from './types';
 
@@ -101,6 +102,31 @@ export class LocalBrowser extends BaseBrowser {
       this.logger.error('Failed to launch browser:', error);
       throw error;
     }
+  }
+
+  /**
+   * Creates an isolated BrowserContext session sharing this LocalBrowser process.
+   * The session has its own cookies, local storage, cache, and active page management.
+   */
+  async createSession(options?: {
+    defaultViewport?: { width: number; height: number };
+    launchOptions?: LaunchOptions;
+  }): Promise<BrowserContextSession> {
+    if (!(await this.isBrowserAlive())) {
+      await this.launch(options?.launchOptions);
+    }
+    const browser = this.getBrowser();
+    const context = await browser.createBrowserContext();
+    const viewport = options?.defaultViewport ?? {
+      width: 1280,
+      height: 800,
+    };
+    return new BrowserContextSession({
+      browser,
+      context,
+      logger: this.logger,
+      defaultViewport: viewport,
+    });
   }
 
   private getBrowserInfo(options: LaunchOptions = {}) {

@@ -53,17 +53,17 @@ const result = await operator.execute({
       type: 'click',
       inputs: {
         point: {
-          normalized: { x: 0.5, y: 0.5 } // Click at the center of the screen
-        }
-      }
+          normalized: { x: 0.5, y: 0.5 }, // Click at the center of the screen
+        },
+      },
     },
     {
       type: 'type',
       inputs: {
-        content: 'Hello, World!'
-      }
-    }
-  ]
+        content: 'Hello, World!',
+      },
+    },
+  ],
 });
 ```
 

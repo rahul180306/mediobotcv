@@ -11,22 +11,22 @@ Agent Hooks 提供了一种强大的方式来扩展和自定义 Agent 在整个�
 
 ## 概览
 
-| Hook | 描述 |
-|------|------|
-| [`initialize()`](#initialize) | Agent 初始化时调用 |
-| [`onDispose()`](#ondispose) | Agent 销毁时调用 |
-| [`onPrepareRequest()`](#onpreparerequest) | 准备 LLM 请求前调用 |
-| [`onLLMRequest()`](#onllmrequest) | 发送请求到 LLM 前调用 |
-| [`onLLMResponse()`](#onllmresponse) | 从 LLM 接收响应后调用 |
-| [`onLLMStreamingResponse()`](#onllmstreamingresponse) | LLM 流式响应时调用 |
-| [`onProcessToolCalls()`](#onprocesstoolcalls) | 拦截工具调用处理 |
-| [`onBeforeToolCall()`](#onbeforetoolcall) | 执行工具前调用 |
-| [`onAfterToolCall()`](#onaftertoolcall) | 执行工具后调用 |
-| [`onToolCallError()`](#ontooolcallerror) | 工具执行失败时调用 |
-| [`onEachAgentLoopStart()`](#oneachagentloopstart) | 每次 Agent 循环开始时调用 |
-| [`onEachAgentLoopEnd()`](#oneachagentloopend) | 每次 Agent 循环结束时调用 |
-| [`onBeforeLoopTermination()`](#onbeforelooptermination) | Agent 循环终止前调用 |
-| [`onAgentLoopEnd()`](#onagentloopend) | 整个 Agent 循环完成时调用 |
+| Hook                                                    | 描述                      |
+| ------------------------------------------------------- | ------------------------- |
+| [`initialize()`](#initialize)                           | Agent 初始化时调用        |
+| [`onDispose()`](#ondispose)                             | Agent 销毁时调用          |
+| [`onPrepareRequest()`](#onpreparerequest)               | 准备 LLM 请求前调用       |
+| [`onLLMRequest()`](#onllmrequest)                       | 发送请求到 LLM 前调用     |
+| [`onLLMResponse()`](#onllmresponse)                     | 从 LLM 接收响应后调用     |
+| [`onLLMStreamingResponse()`](#onllmstreamingresponse)   | LLM 流式响应时调用        |
+| [`onProcessToolCalls()`](#onprocesstoolcalls)           | 拦截工具调用处理          |
+| [`onBeforeToolCall()`](#onbeforetoolcall)               | 执行工具前调用            |
+| [`onAfterToolCall()`](#onaftertoolcall)                 | 执行工具后调用            |
+| [`onToolCallError()`](#ontooolcallerror)                | 工具执行失败时调用        |
+| [`onEachAgentLoopStart()`](#oneachagentloopstart)       | 每次 Agent 循环开始时调用 |
+| [`onEachAgentLoopEnd()`](#oneachagentloopend)           | 每次 Agent 循环结束时调用 |
+| [`onBeforeLoopTermination()`](#onbeforelooptermination) | Agent 循环终止前调用      |
+| [`onAgentLoopEnd()`](#onagentloopend)                   | 整个 Agent 循环完成时调用 |
 
 ## 基本示例
 
@@ -68,22 +68,22 @@ class CustomAgent extends BaseAgent {
 class CustomAgent extends BaseAgent {
   onPrepareRequest(context: PrepareRequestContext): PrepareRequestResult {
     let { systemPrompt, tools } = context;
-    
+
     // 根据上下文修改系统提示
     if (context.iteration > 3) {
-      systemPrompt += '\n\n注意：您正在第 ' + context.iteration + 
-        ' 次迭代中。请专注于提供简洁的最终答案。';
+      systemPrompt +=
+        '\n\n注意：您正在第 ' + context.iteration + ' 次迭代中。请专注于提供简洁的最终答案。';
     }
-    
+
     // 根据当前状态过滤工具
-    const filteredTools = tools.filter(tool => {
+    const filteredTools = tools.filter((tool) => {
       // 在后期迭代中禁用昂贵的工具
       if (context.iteration > 5 && tool.name.includes('search')) {
         return false;
       }
       return true;
     });
-    
+
     return {
       systemPrompt,
       tools: filteredTools,
@@ -102,7 +102,7 @@ class CustomAgent extends BaseAgent {
     console.log(`向 LLM 发送请求，会话 ${id}`);
     console.log(`模型: ${payload.model}`);
     console.log(`消息数量: ${payload.messages.length}`);
-    
+
     // 记录令牌使用情况以进行监控
     this.logTokenUsage(payload);
   }
@@ -118,20 +118,20 @@ class CustomAgent extends BaseAgent {
   async onBeforeToolCall(
     id: string,
     toolCall: { toolCallId: string; name: string },
-    args: any
+    args: any,
   ): Promise<any> {
     console.log(`执行工具: ${toolCall.name}`);
-    
+
     // 添加验证
     if (toolCall.name === 'fileOperation' && !this.hasFilePermission()) {
       throw new Error('文件操作权限不足');
     }
-    
+
     // 修改参数
     if (toolCall.name === 'searchWeb') {
       args.maxResults = Math.min(args.maxResults || 10, 5);
     }
-    
+
     return args;
   }
 }
@@ -146,18 +146,18 @@ class CustomAgent extends BaseAgent {
   async onAfterToolCall(
     id: string,
     toolCall: { toolCallId: string; name: string },
-    result: any
+    result: any,
   ): Promise<any> {
     console.log(`工具 ${toolCall.name} 执行完成`);
-    
+
     // 后处理结果
     if (toolCall.name === 'imageAnalysis') {
       result.confidence = this.calculateConfidence(result);
     }
-    
+
     // 记录工具使用情况
     this.logToolUsage(toolCall.name, result);
-    
+
     return result;
   }
 }
@@ -172,20 +172,20 @@ class CustomAgent extends BaseAgent {
   async onToolCallError(
     id: string,
     toolCall: { toolCallId: string; name: string },
-    error: any
+    error: any,
   ): Promise<any> {
     console.error(`工具 ${toolCall.name} 执行失败:`, error);
-    
+
     // 提供备用响应
     if (toolCall.name === 'weatherAPI') {
       return '天气信息当前不可用，请稍后再试。';
     }
-    
+
     // 转换错误消息
     if (error.code === 'RATE_LIMIT') {
       return '服务暂时繁忙，请稍等片刻后重试。';
     }
-    
+
     return `错误: ${error.message || error}`;
   }
 }

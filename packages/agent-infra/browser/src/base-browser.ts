@@ -47,6 +47,12 @@ export abstract class BaseBrowser implements BrowserInterface {
   protected activePage: Page | null = null;
 
   /**
+   * Whether page listeners have been attached
+   * @protected
+   */
+  protected pageListenersAttached = false;
+
+  /**
    * Creates an instance of BaseBrowser
    * @param {BaseBrowserOptions} [options] - Configuration options
    */
@@ -97,6 +103,12 @@ export abstract class BaseBrowser implements BrowserInterface {
   protected async setupPageListener() {
     this.logger.info('setupPageListener()');
     if (!this.browser) return;
+    if (this.pageListenersAttached) return;
+
+    if (typeof (this.browser as any).setMaxListeners === 'function') {
+      (this.browser as any).setMaxListeners(50);
+    }
+    this.pageListenersAttached = true;
 
     this.browser.on('targetcreated', async (target) => {
       this.logger.info('PageListener: targetcreated, type:', target.type());
@@ -166,6 +178,7 @@ export abstract class BaseBrowser implements BrowserInterface {
   async close(): Promise<void> {
     this.logger.info('Closing browser');
     try {
+      this.pageListenersAttached = false;
       await this.browser?.close();
       this.browser = null;
       this.logger.success('Browser closed successfully');

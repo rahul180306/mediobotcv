@@ -10,6 +10,7 @@ Agent Snapshot 是一个强大的功能，允许你在运行时捕获 Agent 的�
 ## 什么是 Agent Snapshot？
 
 Agent Snapshot 捕获：
+
 - 完整的对话历史
 - 当前上下文状态
 - 工具调用历史和结果
@@ -32,9 +33,9 @@ const agent = new Agent({
     interval: 'on_tool_call', // 或 'on_message', 'manual'
     storage: {
       type: 'file',
-      path: './snapshots'
-    }
-  }
+      path: './snapshots',
+    },
+  },
 });
 ```
 
@@ -46,7 +47,7 @@ const agent = new Agent({
 // 创建快照
 const snapshot = await agent.createSnapshot({
   name: 'debug-session-1',
-  description: '问题工具调用之前'
+  description: '问题工具调用之前',
 });
 
 console.log('快照已创建:', snapshot.id);
@@ -62,24 +63,24 @@ interface AgentSnapshot {
   timestamp: string;
   name?: string;
   description?: string;
-  
+
   // Agent 状态
   context: {
     messages: Message[];
     length: number;
     metadata: Record<string, any>;
   };
-  
+
   // 配置
   config: AgentConfig;
-  
+
   // 环境
   environment: {
     variables: Record<string, string>;
     workingDirectory: string;
     platform: string;
   };
-  
+
   // 工具状态
   tools: {
     available: ToolDefinition[];
@@ -130,10 +131,10 @@ test('应该正确处理文件操作', async () => {
   // 加载预录制的快照
   const snapshot = await loadSnapshot('./test-snapshots/file-ops.json');
   const agent = Agent.fromSnapshot(snapshot);
-  
+
   // 回放场景
   const response = await agent.chat('创建一个名为 test.txt 的新文件');
-  
+
   // 断言预期行为
   expect(response).toContain('文件创建成功');
 });
@@ -144,12 +145,12 @@ test('应该正确处理文件操作', async () => {
 ```typescript
 // 捕获基线行为
 const baselineSnapshot = await agent.createSnapshot({
-  name: 'baseline-v1.0'
+  name: 'baseline-v1.0',
 });
 
 // 稍后，针对基线测试
 const currentSnapshot = await agent.createSnapshot({
-  name: 'current-test'
+  name: 'current-test',
 });
 
 // 比较快照
@@ -165,7 +166,7 @@ if (diff.hasChanges) {
 
 ```typescript
 const snapshots = await agent.listSnapshots();
-snapshots.forEach(snapshot => {
+snapshots.forEach((snapshot) => {
   console.log(`${snapshot.name} (${snapshot.timestamp})`);
 });
 ```
@@ -179,7 +180,7 @@ await agent.deleteSnapshot('debug-session-1');
 // 清理旧快照
 await agent.cleanupSnapshots({
   olderThan: '7d',
-  keepLatest: 10
+  keepLatest: 10,
 });
 ```
 
@@ -198,7 +199,7 @@ await agent.cleanupSnapshots({
 // 使用描述性名称
 const snapshot = await agent.createSnapshot({
   name: 'before-file-upload-v2.1',
-  description: '实施新文件上传逻辑之前的状态'
+  description: '实施新文件上传逻辑之前的状态',
 });
 ```
 
@@ -211,11 +212,11 @@ const agent = new Agent({
     storage: {
       type: 'redis', // 用于生产
       url: 'redis://localhost:6379',
-      ttl: 86400 // 24 小时
+      ttl: 86400, // 24 小时
     },
     compression: true, // 减少存储大小
-    maxSnapshots: 100  // 限制存储使用
-  }
+    maxSnapshots: 100, // 限制存储使用
+  },
 });
 ```
 
@@ -228,9 +229,9 @@ agent.on('error', async (error) => {
   // 错误时自动创建快照
   const snapshot = await agent.createSnapshot({
     name: `error-${Date.now()}`,
-    description: `错误: ${error.message}`
+    description: `错误: ${error.message}`,
   });
-  
+
   console.log('错误快照已保存:', snapshot.id);
 });
 ```
@@ -274,8 +275,8 @@ export default defineConfig({
   // ...
   snapshot: {
     enable: true,
-    storageDirectory: resolve(__dirname, 'snapshots')
-  }
+    storageDirectory: resolve(__dirname, 'snapshots'),
+  },
 });
 ```
 

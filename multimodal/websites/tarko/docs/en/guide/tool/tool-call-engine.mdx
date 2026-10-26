@@ -24,8 +24,8 @@ import { AgentTARS } from '@agent-tars/core';
 const agent = new AgentTARS({
   model: {
     provider: 'openai',
-    name: 'gpt-4'
-  }
+    name: 'gpt-4',
+  },
   // Uses NativeToolCallEngine by default for compatible models
 });
 ```
@@ -38,8 +38,8 @@ Falls back to prompt-based tool calling for models without native support:
 const agent = new AgentTARS({
   model: {
     provider: 'custom',
-    name: 'custom-model'
-  }
+    name: 'custom-model',
+  },
   // Automatically uses PromptEngineeringToolCallEngine
 });
 ```
@@ -53,8 +53,8 @@ import { AgentTARS } from '@agent-tars/core';
 
 const agent = new AgentTARS({
   browser: {
-    control: 'hybrid' // 'hybrid', 'dom', 'visual-grounding'
-  }
+    control: 'hybrid', // 'hybrid', 'dom', 'visual-grounding'
+  },
 });
 ```
 
@@ -81,5 +81,4 @@ Tools are executed through the MCP framework:
 - Learn about [Tool Development](/guide/tool/basic) to create custom tools
 - Explore [Tool Management](/guide/tool/management) for organizing and filtering tools
 
-{/* Placeholder: Add execution flow diagrams */}
-{/* Placeholder: Add performance monitoring dashboard screenshots */}
+{/* Placeholder: Add execution flow diagrams */} {/* Placeholder: Add performance monitoring dashboard screenshots */}

@@ -24,10 +24,11 @@ import { Dialog, DialogPanel, DialogTitle } from '@tarko/ui';
     <DialogTitle>Confirm Action</DialogTitle>
     <p>Are you sure you want to proceed?</p>
   </DialogPanel>
-</Dialog>
+</Dialog>;
 ```
 
 **Props:**
+
 - `open: boolean` - Controls dialog visibility
 - `onClose: () => void` - Close callback
 - `maxWidth?: string | false` - Maximum width constraint
@@ -49,10 +50,11 @@ import { ConfirmDialog } from '@tarko/ui';
   onConfirm={handleDelete}
   onCancel={() => setShowConfirm(false)}
   variant="danger"
-/>
+/>;
 ```
 
 **Props:**
+
 - `open: boolean` - Controls dialog visibility
 - `title: string` - Dialog title
 - `message: string` - Confirmation message
@@ -69,10 +71,11 @@ Animated loading spinner component.
 ```tsx
 import { LoadingSpinner } from '@tarko/ui';
 
-<LoadingSpinner size={8} className="border-blue-500 border-t-transparent" />
+<LoadingSpinner size={8} className="border-blue-500 border-t-transparent" />;
 ```
 
 **Props:**
+
 - `size?: number` - Spinner size (default: 8)
 - `className?: string` - Additional CSS classes for styling
 
@@ -85,7 +88,7 @@ import { Tooltip } from '@tarko/ui';
 
 <Tooltip content="This is a helpful tip">
   <button>Hover me</button>
-</Tooltip>
+</Tooltip>;
 ```
 
 ### AI Components
@@ -97,11 +100,7 @@ Displays AI action blocks with status indicators and animations.
 ```tsx
 import { ActionBlock } from '@tarko/ui';
 
-<ActionBlock
-  title="Processing Request"
-  status="running"
-  description="Analyzing user input..."
-/>
+<ActionBlock title="Processing Request" status="running" description="Analyzing user input..." />;
 ```
 
 #### `BrowserShell`
@@ -115,7 +114,7 @@ import { BrowserShell } from '@tarko/ui';
   url="https://example.com"
   title="Example Site"
   onNavigate={(url) => console.log('Navigate to:', url)}
-/>
+/>;
 ```
 
 #### `ThinkingAnimation`
@@ -125,7 +124,7 @@ Animated thinking indicator for AI processing states.
 ```tsx
 import { ThinkingAnimation } from '@tarko/ui';
 
-<ThinkingAnimation message="Thinking..." />
+<ThinkingAnimation message="Thinking..." />;
 ```
 
 ### Code Editors
@@ -144,10 +143,11 @@ import { CodeEditor } from '@tarko/ui';
   showLineNumbers={true}
   maxHeight="400px"
   onCopy={() => console.log('Copied!')}
-/>
+/>;
 ```
 
 **Props:**
+
 - `code: string` - Source code to display
 - `fileName?: string` - File name for language detection
 - `filePath?: string` - Full file path for display
@@ -170,10 +170,11 @@ import { MonacoCodeEditor } from '@tarko/ui';
   fileName="script.ts"
   readOnly={false}
   onChange={(value) => console.log(value)}
-/>
+/>;
 ```
 
 **Props:**
+
 - `code: string` - Source code to display/edit
 - `fileName?: string` - File name for language detection
 - `filePath?: string` - Full file path for display
@@ -200,20 +201,15 @@ const diffContent = `
 +const x = 2;
 `;
 
-<DiffViewer
-  diffContent={diffContent}
-  fileName="file.js"
-  maxHeight="500px"
-/>
+<DiffViewer diffContent={diffContent} fileName="file.js" maxHeight="500px" />;
 ```
 
 **Props:**
+
 - `diffContent: string` - Git-style diff content
 - `fileName?: string` - File name for display
 - `maxHeight?: string` - Maximum height (default: '400px')
 - `className?: string` - Additional CSS classes
-
-
 
 ## Utilities
 
@@ -304,14 +300,11 @@ console.log('Hello!');
 \`\`\`
 `;
 
-<MarkdownRenderer
-  content={markdownContent}
-  className="prose"
-  forceDarkTheme={false}
-/>
+<MarkdownRenderer content={markdownContent} className="prose" forceDarkTheme={false} />;
 ```
 
 **Props:**
+
 - `content: string` - Markdown content to render
 - `publishDate?: string` - Publication date for display
 - `author?: string` - Author information
@@ -320,6 +313,7 @@ console.log('Hello!');
 - `codeBlockStyle?: React.CSSProperties` - Custom code block styles
 
 **Features:**
+
 - GitHub Flavored Markdown (GFM) support
 - Syntax highlighting for code blocks
 - Math equations with KaTeX
@@ -339,13 +333,13 @@ Interactive JSON tree viewer with expand/collapse, copy functionality, and synta
 import { JSONViewer, JSONViewerRef } from '@tarko/ui';
 
 const data = {
-  name: "John Doe",
+  name: 'John Doe',
   age: 30,
-  skills: ["JavaScript", "React", "Node.js"],
+  skills: ['JavaScript', 'React', 'Node.js'],
   address: {
-    city: "New York",
-    country: "USA"
-  }
+    city: 'New York',
+    country: 'USA',
+  },
 };
 
 const viewerRef = useRef<JSONViewerRef>(null);
@@ -355,7 +349,7 @@ const viewerRef = useRef<JSONViewerRef>(null);
   emptyMessage="No data available"
   className="max-h-96 overflow-auto"
   ref={viewerRef}
-/>
+/>;
 
 // Copy all data as JSON
 const copyAll = () => {
@@ -367,12 +361,14 @@ const copyAll = () => {
 ```
 
 **Props:**
+
 - `data: any` - JSON data to display
 - `className?: string` - Additional CSS classes
 - `emptyMessage?: string` - Message for empty data (default: 'No data available')
 - `ref?: JSONViewerRef` - Reference for programmatic access
 
 **Features:**
+
 - Hierarchical tree structure with expand/collapse
 - Type-aware syntax highlighting (strings, numbers, booleans, null)
 - Copy individual values or entire JSON
@@ -392,7 +388,7 @@ import { useDarkMode } from '@tarko/ui';
 
 function MyComponent() {
   const isDarkMode = useDarkMode();
-  
+
   return (
     <div className={isDarkMode ? 'dark-theme' : 'light-theme'}>
       Current theme: {isDarkMode ? 'Dark' : 'Light'}
@@ -410,12 +406,8 @@ import { useCopyToClipboard } from '@tarko/ui';
 
 function CopyButton({ text }: { text: string }) {
   const { copied, copyToClipboard } = useCopyToClipboard();
-  
-  return (
-    <button onClick={() => copyToClipboard(text)}>
-      {copied ? 'Copied!' : 'Copy'}
-    </button>
-  );
+
+  return <button onClick={() => copyToClipboard(text)}>{copied ? 'Copied!' : 'Copy'}</button>;
 }
 ```
 
@@ -448,11 +440,7 @@ import { ThemeProvider } from '@mui/material/styles';
 function App() {
   const isDarkMode = useDarkMode();
   const theme = createMuiTheme(isDarkMode);
-  
-  return (
-    <ThemeProvider theme={theme}>
-      {/* Your app content */}
-    </ThemeProvider>
-  );
+
+  return <ThemeProvider theme={theme}>{/* Your app content */}</ThemeProvider>;
 }
 ```

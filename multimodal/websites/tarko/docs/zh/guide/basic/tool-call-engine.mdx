@@ -39,6 +39,7 @@ const agent = new Agent({
 ```
 
 **工作原理**：
+
 - 使用模型的内置函数调用能力
 - 在 API 请求中将工具作为函数定义发送
 - 解析结构化的函数调用响应
@@ -52,7 +53,7 @@ const agent = new Agent({
 const agent = new Agent({
   toolCallEngine: 'prompt_engineering',
   model: {
-    provider: 'volcengine', 
+    provider: 'volcengine',
     id: 'doubao-seed-1-6-vision-250815',
     apiKey: process.env.ARK_API_KEY,
   },
@@ -61,6 +62,7 @@ const agent = new Agent({
 ```
 
 **工作原理**：
+
 - 在系统提示中嵌入工具描述
 - 指示模型以特定格式输出工具调用
 - 使用正则表达式/模式从文本响应中解析工具调用
@@ -75,7 +77,7 @@ const agent = new Agent({
   toolCallEngine: 'structured_outputs',
   model: {
     provider: 'anthropic',
-    id: 'claude-3-5-sonnet-20241022', 
+    id: 'claude-3-5-sonnet-20241022',
     apiKey: process.env.ANTHROPIC_API_KEY,
   },
   tools: [weatherTool],
@@ -83,6 +85,7 @@ const agent = new Agent({
 ```
 
 **工作原理**：
+
 - 使用结构化输出模式来强制工具调用格式
 - 比提示工程在解析方面更可靠
 - 减少解析错误并提高一致性
@@ -126,11 +129,11 @@ const agent = new Agent({
 
 ## 引擎比较
 
-| 引擎 | 可靠性 | 性能 | 兼容性 | 使用场景 |
-|------|--------|------|--------|----------|
-| `native` | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | 支持模型的生产环境 |
-| `structured_outputs` | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | 支持模式的模型 |
-| `prompt_engineering` | ⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 通用兼容性 |
+| 引擎                 | 可靠性     | 性能       | 兼容性     | 使用场景           |
+| -------------------- | ---------- | ---------- | ---------- | ------------------ |
+| `native`             | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐     | 支持模型的生产环境 |
+| `structured_outputs` | ⭐⭐⭐⭐   | ⭐⭐⭐⭐   | ⭐⭐⭐⭐   | 支持模式的模型     |
+| `prompt_engineering` | ⭐⭐⭐     | ⭐⭐⭐     | ⭐⭐⭐⭐⭐ | 通用兼容性         |
 
 ## 源代码中的真实示例
 
@@ -188,7 +191,7 @@ const agent = new Agent({
 
 ```typescript
 const response = await agent.run({
-  input: "天气如何？",
+  input: '天气如何？',
   stream: true,
 });
 
@@ -207,16 +210,19 @@ for await (const event of response) {
 ### 常见问题
 
 **工具调用未被检测到**：
+
 - 检查模型是否支持所选的引擎类型
 - 尝试切换到 `prompt_engineering` 以获得更广泛的兼容性
 - 验证工具描述是否清晰和具体
 
 **提示工程的解析错误**：
+
 - 模型可能没有遵循预期格式
 - 如果模型支持模式，尝试 `structured_outputs`
 - 简化工具参数模式
 
 **性能问题**：
+
 - `native` 引擎对支持的模型最快
 - `prompt_engineering` 增加解析开销
 - 考虑为昂贵的工具操作使用缓存

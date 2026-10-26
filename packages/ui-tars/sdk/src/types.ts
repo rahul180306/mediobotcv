@@ -106,6 +106,15 @@ export interface GUIAgentConfig<TOperator> {
   /** Time interval between two loop iterations (in milliseconds), @default 0 */
   loopIntervalInMs?: number;
   uiTarsVersion?: UITarsModelVersion;
+  /** Session identifier for scoping temporary observation files and logs */
+  sessionId?: string;
+  /**
+   * Maximum number of recent screenshots to retain in uncompressed memory.
+   * Older screenshots are persisted to session-scoped scratch storage and pruned
+   * from memory, preserving full action/thought history.
+   * @default 5
+   */
+  maxRecentImagesWindow?: number;
 }
 
 export interface AgentContext<T = Operator> extends GUIAgentConfig<T> {

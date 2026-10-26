@@ -14,10 +14,10 @@ export function registerMinimalHook(server: AgentServer) {
     name: 'test-hook',
     priority: 850,
     handler: async (c, next) => {
-      console.log('minimal hook: run before next...')
+      console.log('minimal hook: run before next...');
       await next();
-      console.log('minimal hook: run after next...')
-    }
+      console.log('minimal hook: run after next...');
+    },
   });
 }
 
@@ -33,20 +33,20 @@ export function registerAuditLogHook(server: AgentServer) {
       const userAgent = c.req.header('user-agent') || 'unknown';
       const method = c.req.method;
       const path = c.req.path;
-      
-      const isSecurityRelevant = 
-        path.includes('/auth') || 
-        path.includes('/login') || 
+
+      const isSecurityRelevant =
+        path.includes('/auth') ||
+        path.includes('/login') ||
         path.includes('/admin') ||
         method !== 'GET';
 
       try {
         await next();
-        
+
         if (isSecurityRelevant) {
           const duration = Date.now() - startTime;
           const status = c.res.status;
-          
+
           logger.info(`[AUDIT] ${clientIP} ${method} ${path} ${status} ${duration}ms`, {
             ip: clientIP,
             userAgent,
@@ -59,7 +59,7 @@ export function registerAuditLogHook(server: AgentServer) {
         }
       } catch (error) {
         const duration = Date.now() - startTime;
-        
+
         if (isSecurityRelevant) {
           logger.warn(`[AUDIT] ${clientIP} ${method} ${path} ERROR ${duration}ms`, {
             ip: clientIP,
@@ -71,7 +71,7 @@ export function registerAuditLogHook(server: AgentServer) {
             timestamp: new Date().toISOString(),
           });
         }
-        
+
         throw error;
       }
     },
@@ -79,4 +79,3 @@ export function registerAuditLogHook(server: AgentServer) {
 
   logger.info('Audit logging hook registered');
 }
-

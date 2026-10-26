@@ -40,11 +40,11 @@ export async function getRuntimeSettings(req: Request, res: Response) {
   try {
     // Get runtime settings configuration from server config
     const runtimeSettingsConfig = server.appConfig?.server?.runtimeSettings;
-    
+
     if (!runtimeSettingsConfig) {
-      return res.status(200).json({ 
+      return res.status(200).json({
         schema: { type: 'object', properties: {} },
-        currentValues: {}
+        currentValues: {},
       });
     }
 
@@ -63,7 +63,7 @@ export async function getRuntimeSettings(req: Request, res: Response) {
 
     // Merge with default values from schema
     const mergedValues: Record<string, any> = { ...currentValues };
-    
+
     if (schema && schema.properties) {
       Object.entries(schema.properties).forEach(([key, propSchema]: [string, any]) => {
         if (mergedValues[key] === undefined && propSchema.default !== undefined) {
@@ -74,7 +74,7 @@ export async function getRuntimeSettings(req: Request, res: Response) {
 
     res.status(200).json({
       schema: schema,
-      currentValues: sessionId ? mergedValues : {} // Only return current values if sessionId provided
+      currentValues: sessionId ? mergedValues : {}, // Only return current values if sessionId provided
     });
   } catch (error) {
     console.error(`Error getting runtime settings:`, error);
@@ -111,7 +111,9 @@ export async function updateRuntimeSettings(req: Request, res: Response) {
     );
 
     if (!server.storageProvider) {
-      return res.status(404).json({ error: 'Storage not configured, cannot update runtime settings' });
+      return res
+        .status(404)
+        .json({ error: 'Storage not configured, cannot update runtime settings' });
     }
 
     const sessionInfo = await server.storageProvider.getSessionInfo(sessionId);
@@ -145,9 +147,9 @@ export async function updateRuntimeSettings(req: Request, res: Response) {
       }
     }
 
-    res.status(200).json({ 
+    res.status(200).json({
       session: updatedSessionInfo,
-      runtimeSettings 
+      runtimeSettings,
     });
   } catch (error) {
     console.error(`Error updating runtime settings:`, error);

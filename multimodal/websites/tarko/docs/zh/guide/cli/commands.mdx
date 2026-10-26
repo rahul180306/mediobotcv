@@ -74,12 +74,12 @@ tarko run agent-tars --headless --input "列出目录内容"
 
 #### 无头模式选项
 
-| 选项 | 描述 | 默认值 |
-|------|------|--------|
-| `--input <text>` | 直接输入文本 | - |
-| `--format <type>` | 输出格式：`text`、`json` | `text` |
-| `--include-logs` | 在输出中包含调试日志 | `false` |
-| `--use-cache <bool>` | 启用/禁用缓存 | `true` |
+| 选项                 | 描述                     | 默认值  |
+| -------------------- | ------------------------ | ------- |
+| `--input <text>`     | 直接输入文本             | -       |
+| `--format <type>`    | 输出格式：`text`、`json` | `text`  |
+| `--include-logs`     | 在输出中包含调试日志     | `false` |
+| `--use-cache <bool>` | 启用/禁用缓存            | `true`  |
 
 ## `tarko serve`
 
@@ -191,8 +191,8 @@ tarko request --provider openai --model gpt-4 --body request.json --format seman
 ```json
 {
   "messages": [
-    {"role": "system", "content": "你是一个有用的助手。"},
-    {"role": "user", "content": "你好！"}
+    { "role": "system", "content": "你是一个有用的助手。" },
+    { "role": "user", "content": "你好！" }
   ],
   "temperature": 0.7,
   "max_tokens": 1000
@@ -308,14 +308,14 @@ export TARKO_WORKSPACE=./my-workspace
 
 ## 退出代码
 
-| 代码 | 描述 |
-|------|------|
-| 0 | 成功 |
-| 1 | 一般错误 |
-| 2 | 配置错误 |
-| 3 | 网络错误 |
-| 4 | 认证错误 |
-| 5 | Agent 执行错误 |
+| 代码 | 描述           |
+| ---- | -------------- |
+| 0    | 成功           |
+| 1    | 一般错误       |
+| 2    | 配置错误       |
+| 3    | 网络错误       |
+| 4    | 认证错误       |
+| 5    | Agent 执行错误 |
 
 ## 示例
 

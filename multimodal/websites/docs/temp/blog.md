@@ -6,8 +6,6 @@
 
 得益于 Agent TARS Beta 的[新架构](#archtecutre-improvement)，构建一个 Electron App 将会轻松很多，你只需要将 Agent TARS Server 与 Web UI 嵌入到 Electron 中即可，我们欢迎社区人士参与建设，尤其是擅长 Vibe Coding 的朋友们，feel free to try it。 \*/}
 
-
-
 ## 常见问题
 
 ## 下一步计划

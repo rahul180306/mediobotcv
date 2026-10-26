@@ -135,7 +135,6 @@ interface BingSearchResponse {
 
 See [examples](./examples/).
 
-
 ## License
 
 Copyright (c) 2025 ByteDance, Inc. and its affiliates.

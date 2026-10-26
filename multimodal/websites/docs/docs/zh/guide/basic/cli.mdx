@@ -12,7 +12,6 @@ import { Figure } from '@components/Figure';
 
 <Figure src="/agent-tars-cli.png" maxWidth="75%" title="Agent TARS CLI" />
 
-
 ## 所有命令
 
 要查看所有可用的 CLI 命令，请在项目目录中运行以下命令：
@@ -39,27 +38,27 @@ Commands:
 
 Agent TARS CLI 提供了一些 Common Flags，可以与大多数命令一起使用：
 
-| 标志                          | 描述                                                                                |
-| ----------------------------- | ------------------------------------------------------------------------------------------ |
-| `-c, --config <path>`         | 配置文件或 URL 的路径，支持多个值                          |
-| `--port <port>`               | 服务器运行的端口（默认：8888）                                                     |
-| `--host <host>`               | 服务器监听的网络地址（默认：`127.0.0.1`），参见[远程访问](#远程访问)                |
-| `--auth-token <token>`        | API 访问令牌，也可通过 `TARKO_AUTH_TOKEN` 设置                                       |
-| `--open`                      | 在服务器启动时在默认浏览器中打开 Web UI                                      |
-| `--logLevel <level>`          | 指定日志级别（debug、info、warn、error）                                           |
-| `--debug`                     | 启用调试模式（显示工具调用和系统事件）                                      |
-| `--quiet`                     | 将启动日志减少到最低限度                                                  |
-| `--model.provider <provider>` | LLM 提供商名称                                                                          |
-| `--model.id <model>`          | 模型标识符                                                                           |
-| `--model.apiKey <apiKey>`     | 模型 API 密钥                                                                             |
-| `--model.baseURL <baseURL>`   | 模型基础 URL                                                                             |
-| `--stream`                    | 为 LLM 响应启用流模式                                                    |
-| `--thinking`                  | 为兼容的模型启用推理模式                                                |
-| `--toolCallEngine <engine>`   | 工具调用引擎类型（`native`、`prompt_engineering`、`structured_outputs`）                     |
-| `--workspace <path>` | 工作区目录的路径                                                        |
-| `--browser.control <mode>`    | 浏览器控制模式（mixed、browser-use-only、gui-agent-only）                             |
-| `--planner.enabled`           | 为复杂任务启用规划功能                                            |
-| `-h, --help`                  | 显示命令帮助                                                                   |
+| 标志 | 描述 |
+| --- | --- |
+| `-c, --config <path>` | 配置文件或 URL 的路径，支持多个值 |
+| `--port <port>` | 服务器运行的端口（默认：8888） |
+| `--host <host>` | 服务器监听的网络地址（默认：`127.0.0.1`），参见[远程访问](#远程访问) |
+| `--auth-token <token>` | API 访问令牌，也可通过 `TARKO_AUTH_TOKEN` 设置 |
+| `--open` | 在服务器启动时在默认浏览器中打开 Web UI |
+| `--logLevel <level>` | 指定日志级别（debug、info、warn、error） |
+| `--debug` | 启用调试模式（显示工具调用和系统事件） |
+| `--quiet` | 将启动日志减少到最低限度 |
+| `--model.provider <provider>` | LLM 提供商名称 |
+| `--model.id <model>` | 模型标识符 |
+| `--model.apiKey <apiKey>` | 模型 API 密钥 |
+| `--model.baseURL <baseURL>` | 模型基础 URL |
+| `--stream` | 为 LLM 响应启用流模式 |
+| `--thinking` | 为兼容的模型启用推理模式 |
+| `--toolCallEngine <engine>` | 工具调用引擎类型（`native`、`prompt_engineering`、`structured_outputs`） |
+| `--workspace <path>` | 工作区目录的路径 |
+| `--browser.control <mode>` | 浏览器控制模式（mixed、browser-use-only、gui-agent-only） |
+| `--planner.enabled` | 为复杂任务启用规划功能 |
+| `-h, --help` | 显示命令帮助 |
 
 ## agent-tars \[start\]
 
@@ -194,6 +193,7 @@ npx agent-tars workspace --init
 ```
 
 在初始化过程中，你将被提示选择：
+
 - 配置格式（TypeScript、JSON 或 YAML）
 - 默认模型提供商
 - 是否初始化 git 仓库

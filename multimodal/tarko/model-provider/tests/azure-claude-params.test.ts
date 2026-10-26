@@ -16,7 +16,11 @@ describe('addAzureClaudeParamsIfNeeded', () => {
 
   it('should merge with existing params for azure-openai provider with gcp-claude4-sonnet model', () => {
     const existingParams = { customParam: 'value' };
-    const result = addAzureClaudeParamsIfNeeded('gcp-claude4-sonnet', 'azure-openai', existingParams);
+    const result = addAzureClaudeParamsIfNeeded(
+      'gcp-claude4-sonnet',
+      'azure-openai',
+      existingParams,
+    );
     expect(result).toEqual({
       customParam: 'value',
       anthropic_beta: ['fine-grained-tool-streaming-2025-05-14'],

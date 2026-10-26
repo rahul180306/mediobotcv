@@ -172,14 +172,17 @@ export class SessionDAO implements ISessionDAO {
 
       const rows = stmt.all() as unknown as SessionRow[];
 
-      return rows.map((row) => ({
-        id: row.id,
-        createdAt: row.createdAt,
-        updatedAt: row.updatedAt,
-        workspace: row.workspace || '',
-        metadata: row.metadata ? JSON.parse(row.metadata) : undefined,
-        ...(row.userId && { userId: row.userId }),
-      } as SessionInfo));
+      return rows.map(
+        (row) =>
+          ({
+            id: row.id,
+            createdAt: row.createdAt,
+            updatedAt: row.updatedAt,
+            workspace: row.workspace || '',
+            metadata: row.metadata ? JSON.parse(row.metadata) : undefined,
+            ...(row.userId && { userId: row.userId }),
+          }) as SessionInfo,
+      );
     } catch (error) {
       console.error('Failed to get all sessions:', error);
       throw new Error(
@@ -199,14 +202,17 @@ export class SessionDAO implements ISessionDAO {
 
       const rows = stmt.all(userId) as unknown as SessionRow[];
 
-      return rows.map((row) => ({
-        id: row.id,
-        createdAt: row.createdAt,
-        updatedAt: row.updatedAt,
-        workspace: row.workspace || '',
-        metadata: row.metadata ? JSON.parse(row.metadata) : undefined,
-        userId: row.userId,
-      } as SessionInfo));
+      return rows.map(
+        (row) =>
+          ({
+            id: row.id,
+            createdAt: row.createdAt,
+            updatedAt: row.updatedAt,
+            workspace: row.workspace || '',
+            metadata: row.metadata ? JSON.parse(row.metadata) : undefined,
+            userId: row.userId,
+          }) as SessionInfo,
+      );
     } catch (error) {
       console.error(`Failed to get user sessions for ${userId}:`, error);
       throw new Error(

@@ -8,19 +8,19 @@ To learn about the way promises work and how you can use them, we advise you to 
 
 ## [Description](#description)
 
-A `Promise` is a proxy for a value not necessarily known when the promise is created. It allows you to associate handlers with an asynchronous action's eventual success value or failure reason. This lets asynchronous methods return values like synchronous methods: instead of immediately returning the final value, the asynchronous method returns a *promise* to supply the value at some point in the future.
+A `Promise` is a proxy for a value not necessarily known when the promise is created. It allows you to associate handlers with an asynchronous action's eventual success value or failure reason. This lets asynchronous methods return values like synchronous methods: instead of immediately returning the final value, the asynchronous method returns a _promise_ to supply the value at some point in the future.
 
 A `Promise` is in one of these states:
 
-*   *pending*: initial state, neither fulfilled nor rejected.
-*   *fulfilled*: meaning that the operation was completed successfully.
-*   *rejected*: meaning that the operation failed.
+- _pending_: initial state, neither fulfilled nor rejected.
+- _fulfilled_: meaning that the operation was completed successfully.
+- _rejected_: meaning that the operation failed.
 
-The *eventual state* of a pending promise can either be *fulfilled* with a value or *rejected* with a reason (error). When either of these options occur, the associated handlers queued up by a promise's `then` method are called. If the promise has already been fulfilled or rejected when a corresponding handler is attached, the handler will be called, so there is no race condition between an asynchronous operation completing and its handlers being attached.
+The _eventual state_ of a pending promise can either be _fulfilled_ with a value or _rejected_ with a reason (error). When either of these options occur, the associated handlers queued up by a promise's `then` method are called. If the promise has already been fulfilled or rejected when a corresponding handler is attached, the handler will be called, so there is no race condition between an asynchronous operation completing and its handlers being attached.
 
-A promise is said to be *settled* if it is either fulfilled or rejected, but not pending.
+A promise is said to be _settled_ if it is either fulfilled or rejected, but not pending.
 
-You will also hear the term *resolved* used with promises — this means that the promise is settled or "locked-in" to match the eventual state of another promise, and further resolving or rejecting it has no effect. The [States and fates](https://github.com/domenic/promises-unwrapping/blob/master/docs/states-and-fates.md) document from the original Promise proposal contains more details about promise terminology. Colloquially, "resolved" promises are often equivalent to "fulfilled" promises, but as illustrated in "States and fates", resolved promises can be pending or rejected as well. For example:
+You will also hear the term _resolved_ used with promises — this means that the promise is settled or "locked-in" to match the eventual state of another promise, and further resolving or rejecting it has no effect. The [States and fates](https://github.com/domenic/promises-unwrapping/blob/master/docs/states-and-fates.md) document from the original Promise proposal contains more details about promise terminology. Colloquially, "resolved" promises are often equivalent to "fulfilled" promises, but as illustrated in "States and fates", resolved promises can be pending or rejected as well. For example:
 
 ```
 new Promise((resolveOuter) => {
@@ -32,7 +32,7 @@ new Promise((resolveOuter) => {
 });
 ```
 
-This promise is already *resolved* at the time when it's created (because the `resolveOuter` is called synchronously), but it is resolved with another promise, and therefore won't be *fulfilled* until 1 second later, when the inner promise fulfills. In practice, the "resolution" is often done behind the scenes and not observable, and only its fulfillment or rejection are.
+This promise is already _resolved_ at the time when it's created (because the `resolveOuter` is called synchronously), but it is resolved with another promise, and therefore won't be _fulfilled_ until 1 second later, when the inner promise fulfills. In practice, the "resolution" is often done behind the scenes and not observable, and only its fulfillment or rejection are.
 
 **Note:** Several other languages have mechanisms for lazy evaluation and deferring a computation, which they also call "promises", e.g., Scheme. Promises in JavaScript represent processes that are already happening, which can be chained with callback functions. If you are looking to lazily evaluate an expression, consider using a function with no arguments e.g., `f = () => expression` to create the lazily-evaluated expression, and `f()` to evaluate the expression immediately.
 
@@ -55,19 +55,19 @@ myPromise
   .then(handleFulfilledC, handleRejectedC);
 ```
 
-We will use the following terminology: *initial promise* is the promise on which `then` is called; *new promise* is the promise returned by `then`. The two callbacks passed to `then` are called *fulfillment handler* and *rejection handler*, respectively.
+We will use the following terminology: _initial promise_ is the promise on which `then` is called; _new promise_ is the promise returned by `then`. The two callbacks passed to `then` are called _fulfillment handler_ and _rejection handler_, respectively.
 
 The settled state of the initial promise determines which handler to execute.
 
-*   If the initial promise is fulfilled, the fulfillment handler is called with the fulfillment value.
-*   If the initial promise is rejected, the rejection handler is called with the rejection reason.
+- If the initial promise is fulfilled, the fulfillment handler is called with the fulfillment value.
+- If the initial promise is rejected, the rejection handler is called with the rejection reason.
 
 The completion of the handler determines the settled state of the new promise.
 
-*   If the handler returns a [thenable](#thenables) value, the new promise settles in the same state as the returned value.
-*   If the handler returns a non-thenable value, the new promise is fulfilled with the returned value.
-*   If the handler throws an error, the new promise is rejected with the thrown error.
-*   If the initial promise has no corresponding handler attached, the new promise will settle to the same state as the initial promise — that is, without a rejection handler, a rejected promise stays rejected with the same reason.
+- If the handler returns a [thenable](#thenables) value, the new promise settles in the same state as the returned value.
+- If the handler returns a non-thenable value, the new promise is fulfilled with the returned value.
+- If the handler throws an error, the new promise is rejected with the thrown error.
+- If the initial promise has no corresponding handler attached, the new promise will settle to the same state as the initial promise — that is, without a rejection handler, a rejected promise stays rejected with the same reason.
 
 For example, in the code above, if `myPromise` rejects, `handleRejectedA` will be called, and if `handleRejectedA` completes normally (without throwing or returning a rejected promise), the promise returned by the first `then` will be fulfilled instead of staying rejected. Therefore, if an error must be handled immediately, but we want to maintain the error state down the chain, we must throw an error of some type in the rejection handler. On the other hand, in the absence of an immediate need, we can leave out error handling until the final `catch()` handler.
 
@@ -124,7 +124,7 @@ console.log("immediate logging");
 
 ### [Thenables](#thenables)
 
-The JavaScript ecosystem had made multiple Promise implementations long before it became part of the language. Despite being represented differently internally, at the minimum, all Promise-like objects implement the *Thenable* interface. A thenable implements the [`.then()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then) method, which is called with two callbacks: one for when the promise is fulfilled, one for when it's rejected. Promises are thenables as well.
+The JavaScript ecosystem had made multiple Promise implementations long before it became part of the language. Despite being represented differently internally, at the minimum, all Promise-like objects implement the _Thenable_ interface. A thenable implements the [`.then()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then) method, which is called with two callbacks: one for when the promise is fulfilled, one for when it's rejected. Promises are thenables as well.
 
 To interoperate with the existing Promise implementations, the language allows using thenables in place of promises. For example, [`Promise.resolve`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve) will not only resolve promises, but also trace thenables.
 
@@ -329,7 +329,7 @@ new Promise(tetheredGetNumber)
 
 ### [Advanced Example](#advanced_example)
 
-This small example shows the mechanism of a `Promise`. The `testPromise()` method is called each time the [`<button>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button) is clicked. It creates a promise that will be fulfilled, using [`setTimeout()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/setTimeout "setTimeout()"), to the promise count (number starting from 1) every 1-3 seconds, at random. The `Promise()` constructor is used to create the promise.
+This small example shows the mechanism of a `Promise`. The `testPromise()` method is called each time the [`<button>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button) is clicked. It creates a promise that will be fulfilled, using [`setTimeout()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/setTimeout 'setTimeout()'), to the promise count (number starting from 1) every 1-3 seconds, at random. The `Promise()` constructor is used to create the promise.
 
 The fulfillment of the promise is logged, via a fulfill callback set using [`p1.then()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then). A few logs show how the synchronous part of the method is decoupled from the asynchronous completion of the promise.
 
@@ -523,7 +523,8 @@ In the above example, the inner text of the `<iframe>` will be updated only if t
 ## [Specifications](#specifications)
 
 | Specification |
-| --- |
+| ------------- |
+
 | [ECMAScript® 2026 Language Specification  
 \# sec-promise-objects](https://tc39.es/ecma262/multipage/control-abstraction-objects.html#sec-promise-objects) |
 

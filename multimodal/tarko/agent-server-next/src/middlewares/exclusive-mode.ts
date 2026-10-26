@@ -19,10 +19,13 @@ export async function exclusiveModeMiddleware(
 
   // Check if server can accept new requests in exclusive mode
   if (!server.canAcceptNewRequest()) {
-    return c.json({
-      error: 'Server is in exclusive mode and another session is currently running',
-      runningSessionId: server.getRunningSessionId(),
-    }, 409);
+    return c.json(
+      {
+        error: 'Server is in exclusive mode and another session is currently running',
+        runningSessionId: server.getRunningSessionId(),
+      },
+      409,
+    );
   }
 
   await next();

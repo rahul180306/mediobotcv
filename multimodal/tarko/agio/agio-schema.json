@@ -77,11 +77,7 @@
               "type": "number"
             }
           },
-          "required": [
-            "modelProvidersCount",
-            "toolsCount",
-            "mcpServersCount"
-          ],
+          "required": ["modelProvidersCount", "toolsCount", "mcpServersCount"],
           "type": "object"
         },
         "runId": {
@@ -102,12 +98,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "config",
-        "sessionId",
-        "timestamp",
-        "type"
-      ],
+      "required": ["config", "sessionId", "timestamp", "type"],
       "type": "object"
     },
     "AgioEvent.AgentRunEndEvent": {
@@ -159,11 +150,7 @@
               "type": "number"
             }
           },
-          "required": [
-            "input",
-            "output",
-            "total"
-          ],
+          "required": ["input", "output", "total"],
           "type": "object"
         },
         "type": {
@@ -172,14 +159,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "executionTimeMs",
-        "loopCount",
-        "sessionId",
-        "successful",
-        "timestamp",
-        "type"
-      ],
+      "required": ["executionTimeMs", "loopCount", "sessionId", "successful", "timestamp", "type"],
       "type": "object"
     },
     "AgioEvent.AgentRunStartEvent": {
@@ -226,14 +206,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "input",
-        "isMultimodalInput",
-        "sessionId",
-        "streaming",
-        "timestamp",
-        "type"
-      ],
+      "required": ["input", "isMultimodalInput", "sessionId", "streaming", "timestamp", "type"],
       "type": "object"
     },
     "AgioEvent.Event": {
@@ -309,11 +282,7 @@
               "type": "number"
             }
           },
-          "required": [
-            "input",
-            "output",
-            "total"
-          ],
+          "required": ["input", "output", "total"],
           "type": "object"
         },
         "type": {
@@ -322,13 +291,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "durationMs",
-        "iteration",
-        "sessionId",
-        "timestamp",
-        "type"
-      ],
+      "required": ["durationMs", "iteration", "sessionId", "timestamp", "type"],
       "type": "object"
     },
     "AgioEvent.LoopStartEvent": {
@@ -357,12 +320,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "iteration",
-        "sessionId",
-        "timestamp",
-        "type"
-      ],
+      "required": ["iteration", "sessionId", "timestamp", "type"],
       "type": "object"
     },
     "AgioEvent.TPSEvent": {
@@ -399,13 +357,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "sessionId",
-        "timestamp",
-        "tokenCount",
-        "tps",
-        "type"
-      ],
+      "required": ["sessionId", "timestamp", "tokenCount", "tps", "type"],
       "type": "object"
     },
     "AgioEvent.TTFTEvent": {
@@ -438,12 +390,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "sessionId",
-        "timestamp",
-        "ttftMs",
-        "type"
-      ],
+      "required": ["sessionId", "timestamp", "ttftMs", "type"],
       "type": "object"
     },
     "AgioEvent.ToolCallEvent": {
@@ -488,13 +435,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "sessionId",
-        "timestamp",
-        "toolCallId",
-        "toolName",
-        "type"
-      ],
+      "required": ["sessionId", "timestamp", "toolCallId", "toolName", "type"],
       "type": "object"
     },
     "AgioEvent.ToolResultEvent": {
@@ -588,12 +529,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "sessionId",
-        "taskSolved",
-        "timestamp",
-        "type"
-      ],
+      "required": ["sessionId", "taskSolved", "timestamp", "type"],
       "type": "object"
     },
     "ChatCompletionContentPart": {
@@ -626,10 +562,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "file",
-        "type"
-      ],
+      "required": ["file", "type"],
       "type": "object"
     },
     "ChatCompletionContentPart.File.File": {
@@ -663,10 +596,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "image_url",
-        "type"
-      ],
+      "required": ["image_url", "type"],
       "type": "object"
     },
     "ChatCompletionContentPartImage.ImageURL": {
@@ -674,11 +604,7 @@
       "properties": {
         "detail": {
           "description": "Specifies the detail level of the image. Learn more in the [Vision guide](https://platform.openai.com/docs/guides/vision#low-or-high-fidelity-image-understanding).",
-          "enum": [
-            "auto",
-            "low",
-            "high"
-          ],
+          "enum": ["auto", "low", "high"],
           "type": "string"
         },
         "url": {
@@ -686,9 +612,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "url"
-      ],
+      "required": ["url"],
       "type": "object"
     },
     "ChatCompletionContentPartInputAudio": {
@@ -704,10 +628,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "input_audio",
-        "type"
-      ],
+      "required": ["input_audio", "type"],
       "type": "object"
     },
     "ChatCompletionContentPartInputAudio.InputAudio": {
@@ -719,17 +640,11 @@
         },
         "format": {
           "description": "The format of the encoded audio data. Currently supports \"wav\" and \"mp3\".",
-          "enum": [
-            "wav",
-            "mp3"
-          ],
+          "enum": ["wav", "mp3"],
           "type": "string"
         }
       },
-      "required": [
-        "data",
-        "format"
-      ],
+      "required": ["data", "format"],
       "type": "object"
     },
     "ChatCompletionContentPartText": {
@@ -746,10 +661,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "text",
-        "type"
-      ],
+      "required": ["text", "type"],
       "type": "object"
     },
     "TConstructor<ToolCallEngine>": {
@@ -764,9 +676,7 @@
               "type": "array"
             }
           },
-          "required": [
-            "args"
-          ],
+          "required": ["args"],
           "type": "object"
         }
       },

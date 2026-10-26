@@ -40,21 +40,36 @@ export const settingRoute = t.router({
       modelName: string;
     }>()
     .handle(async ({ input }) => {
-      try {
-        const openai = new OpenAI({
-          apiKey: input.apiKey,
-          baseURL: input.baseUrl,
-        });
-        const completion = await openai.chat.completions.create({
-          model: input.modelName,
-          messages: [{ role: 'user', content: 'return 1+1=?' }],
-          stream: false,
-        });
-        console.log('result', completion);
+      const openai = new OpenAI({
+        apiKey: input.apiKey,
+        baseURL: input.baseUrl,
+      });
+      const isThinking =
+        input.modelName?.toLowerCase().includes('nemotron') ||
+        input.modelName?.toLowerCase().includes('diffusiongemma') ||
+        input.baseUrl?.includes('nvidia.com');
 
-        return Boolean(completion?.id || completion.choices[0].message.content);
-      } catch (e) {
-        throw e;
-      }
+      const requestParams = {
+        model: input.modelName,
+        messages: [{ role: 'user' as const, content: 'return 1+1=?' }],
+        stream: false as const,
+        max_tokens: 1024,
+        ...(isThinking
+          ? { chat_template_kwargs: { enable_thinking: true } }
+          : {}),
+      };
+
+      const completion = await openai.chat.completions.create(
+        requestParams as unknown as OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming,
+      );
+      console.log('result', completion);
+
+      const message = completion.choices?.[0]?.message as
+        | { content?: string | null; reasoning_content?: string | null }
+        | undefined;
+
+      return Boolean(
+        completion?.id || message?.content || message?.reasoning_content,
+      );
     }),
 });

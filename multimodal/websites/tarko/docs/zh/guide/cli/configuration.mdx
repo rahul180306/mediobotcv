@@ -12,7 +12,7 @@ Tarko CLI 支持多种配置格式，优先级从高到低：CLI 参数 > 配置
 自动发现配置文件顺序：
 
 1. `tarko.config.ts` (TypeScript)
-2. `tarko.config.yaml` (YAML) 
+2. `tarko.config.yaml` (YAML)
 3. `tarko.config.json` (JSON)
 
 ### TypeScript 配置
@@ -29,25 +29,25 @@ const config: AgentAppConfig = {
     apiKey: process.env.OPENAI_API_KEY,
     temperature: 0.7,
   },
-  
+
   // 服务器配置
   server: {
     port: 8888,
     exclusive: false, // 独占模式
   },
-  
+
   // Tool 过滤
   tool: {
     include: ['file_*', 'web_*'],
     exclude: ['dangerous_*'],
   },
-  
+
   // MCP Server 过滤
   mcpServer: {
     include: ['filesystem', 'browser'],
     exclude: ['experimental_*'],
   },
-  
+
   // 分享配置
   share: {
     provider: 'https://share.example.com',

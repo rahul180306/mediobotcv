@@ -8,3 +8,4 @@ export {
   RemoteBrowserOperator,
 } from './browser-operator';
 export * from './types';
+export * from './verification';

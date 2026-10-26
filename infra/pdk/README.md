@@ -51,23 +51,23 @@ export default defineConfig({
   dryRun: false,
   runInBand: false,
   ignoreScripts: false,
-  
+
   // AI changelog
   useAi: true,
   model: 'gpt-4o',
   provider: 'openai',
   apiKey: process.env.OPENAI_API_KEY,
-  
+
   // Changelog filters
   filterTypes: ['feat', 'fix', 'perf'],
   filterScopes: ['core', 'ui', 'api'],
-  
+
   // Release defaults
   changelog: true,
   pushTag: true,
   createGithubRelease: true,
   autoCreateReleaseBranch: false,
-  
+
   // Dev mode
   exclude: ['@scope/package-to-exclude'],
   packages: ['@scope/package-to-start'],
@@ -78,38 +78,40 @@ export default defineConfig({
 
 #### Core Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `cwd` | `string` | `process.cwd()` | Working directory |
-| `dryRun` | `boolean` | `false` | Preview mode without changes |
-| `runInBand` | `boolean` | `false` | Publish packages sequentially |
-| `ignoreScripts` | `boolean` | `false` | Skip npm scripts |
-| `tagPrefix` | `string` | `'v'` | Git tag prefix |
+| Option          | Type      | Default         | Description                   |
+| --------------- | --------- | --------------- | ----------------------------- |
+| `cwd`           | `string`  | `process.cwd()` | Working directory             |
+| `dryRun`        | `boolean` | `false`         | Preview mode without changes  |
+| `runInBand`     | `boolean` | `false`         | Publish packages sequentially |
+| `ignoreScripts` | `boolean` | `false`         | Skip npm scripts              |
+| `tagPrefix`     | `string`  | `'v'`           | Git tag prefix                |
 
 #### AI Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `useAi` | `boolean` | `false` | Enable AI changelog generation |
-| `model` | `string` | `'gpt-4o'` | LLM model |
-| `provider` | `string` | `'openai'` | LLM provider |
-| `apiKey` | `string` | - | API key (use env var) |
-| `baseURL` | `string` | - | Custom API endpoint |
+| Option     | Type      | Default    | Description                    |
+| ---------- | --------- | ---------- | ------------------------------ |
+| `useAi`    | `boolean` | `false`    | Enable AI changelog generation |
+| `model`    | `string`  | `'gpt-4o'` | LLM model                      |
+| `provider` | `string`  | `'openai'` | LLM provider                   |
+| `apiKey`   | `string`  | -          | API key (use env var)          |
+| `baseURL`  | `string`  | -          | Custom API endpoint            |
 
 #### Filter Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `filterTypes` | `string[]` | `['feat', 'fix']` | Commit types to include |
-| `filterScopes` | `string[]` | `[]` | Scopes to include (empty = all) |
+| Option         | Type       | Default           | Description                     |
+| -------------- | ---------- | ----------------- | ------------------------------- |
+| `filterTypes`  | `string[]` | `['feat', 'fix']` | Commit types to include         |
+| `filterScopes` | `string[]` | `[]`              | Scopes to include (empty = all) |
 
 #### Command-Specific Options
 
 **Development (`dev`)**:
+
 - `exclude`: Packages to exclude from startup
 - `packages`: Packages to start by default
 
 **Release (`release`)**:
+
 - `changelog`: Generate changelog (default: `true`)
 - `build`: Build before publishing (`false` or script name)
 - `pushTag`: Push git tags (default: `false`)
@@ -118,6 +120,7 @@ export default defineConfig({
 - `autoCreateReleaseBranch`: Auto-create release branch (default: `false`)
 
 **Changelog (`changelog`)**:
+
 - `version`: Target version
 - `beautify`: Format markdown (default: `false`)
 - `commit`: Git commit changelog (default: `false`)
@@ -126,10 +129,12 @@ export default defineConfig({
 - `authorNameType`: Author format (`'name'` or `'email'`, default: `'name'`)
 
 **Patch (`patch`)**:
+
 - `version`: Version to patch
 - `tag`: Distribution tag
 
 **GitHub Release (`github-release`)**:
+
 - `version`: Release version
 
 ## Configuration vs CLI
@@ -149,7 +154,7 @@ export default defineConfig({
 ### Priority Order
 
 1. CLI arguments
-2. Environment variables  
+2. Environment variables
 3. Configuration file
 4. Default values
 

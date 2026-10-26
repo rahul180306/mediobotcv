@@ -32,10 +32,10 @@ const runtimeSettings: AgentRuntimeSettings = {
         type: 'number',
         title: 'Temperature',
         default: 0.7,
-        description: '控制响应的随机性'
-      }
-    }
-  }
+        description: '控制响应的随机性',
+      },
+    },
+  },
 };
 ```
 
@@ -97,7 +97,7 @@ const schema = {
     enableTools: {
       type: 'boolean',
       title: '启用 Tool',
-      default: true
+      default: true,
     },
     toolTimeout: {
       type: 'number',
@@ -105,10 +105,10 @@ const schema = {
       default: 30,
       visible: {
         dependsOn: 'enableTools',
-        when: true
-      }
-    }
-  }
+        when: true,
+      },
+    },
+  },
 };
 ```
 
@@ -118,8 +118,10 @@ const schema = {
 
 ```typescript
 const runtimeSettings: AgentRuntimeSettings = {
-  schema: { /* ... */ },
-  placement: 'dropdown-item' // 或 'chat-bottom'
+  schema: {
+    /* ... */
+  },
+  placement: 'dropdown-item', // 或 'chat-bottom'
 };
 ```
 
@@ -150,25 +152,25 @@ const runtimeSettings: AgentRuntimeSettings = {
       model: {
         type: 'string',
         enum: ['gpt-4', 'claude-3'],
-        default: 'gpt-4'
+        default: 'gpt-4',
       },
       temperature: {
         type: 'number',
-        default: 0.7
-      }
-    }
+        default: 0.7,
+      },
+    },
   },
   transform: (settings) => ({
-    model: { 
+    model: {
       id: settings.model,
-      provider: settings.model.startsWith('gpt') ? 'openai' : 'anthropic'
+      provider: settings.model.startsWith('gpt') ? 'openai' : 'anthropic',
     },
     temperature: settings.temperature,
     options: {
       stream: true,
-      maxTokens: 1000
-    }
-  })
+      maxTokens: 1000,
+    },
+  }),
 };
 ```
 
@@ -191,25 +193,25 @@ const runtimeSettings: AgentRuntimeSettings = {
         enumLabels: ['GPT-4', 'GPT-3.5 Turbo', 'Claude 3 Sonnet'],
         default: 'gpt-4',
         icon: 'model',
-        description: '为此 Agent 选择 AI Model'
+        description: '为此 Agent 选择 AI Model',
       },
-      
+
       // Temperature 控制
       temperature: {
         type: 'number',
         title: 'Temperature',
         default: 0.7,
-        description: '控制创造性（0.0 = 专注，1.0 = 创造性）'
+        description: '控制创造性（0.0 = 专注，1.0 = 创造性）',
       },
-      
+
       // Tool 配置
       enableTools: {
         type: 'boolean',
         title: '启用 Tool',
         default: true,
-        description: '允许 Agent 使用外部 Tool'
+        description: '允许 Agent 使用外部 Tool',
       },
-      
+
       toolMode: {
         type: 'string',
         title: 'Tool 模式',
@@ -218,39 +220,41 @@ const runtimeSettings: AgentRuntimeSettings = {
         default: 'auto',
         visible: {
           dependsOn: 'enableTools',
-          when: true
+          when: true,
         },
-        description: 'Tool 的执行方式'
+        description: 'Tool 的执行方式',
       },
-      
+
       // 高级设置
       maxTokens: {
         type: 'number',
         title: '最大响应 Token 数',
         default: 2000,
         placement: 'chat-bottom',
-        description: 'AI 响应的最大长度'
-      }
-    }
+        description: 'AI 响应的最大长度',
+      },
+    },
   },
-  
+
   transform: (settings) => ({
     model: {
       id: settings.model,
       temperature: settings.temperature,
-      maxTokens: settings.maxTokens
+      maxTokens: settings.maxTokens,
     },
-    tools: settings.enableTools ? {
-      mode: settings.toolMode,
-      timeout: 30000
-    } : undefined,
+    tools: settings.enableTools
+      ? {
+          mode: settings.toolMode,
+          timeout: 30000,
+        }
+      : undefined,
     options: {
       stream: true,
-      debug: false
-    }
+      debug: false,
+    },
   }),
-  
-  placement: 'dropdown-item'
+
+  placement: 'dropdown-item',
 };
 
 export default runtimeSettings;
@@ -269,7 +273,7 @@ const server = new AgentServer({
     port: 3000,
     runtimeSettings,
     // 其他服务器选项...
-  }
+  },
 });
 ```
 
@@ -349,8 +353,8 @@ debugLevel: {
 const server = new AgentServer({
   server: {
     debug: true,
-    runtimeSettings
-  }
+    runtimeSettings,
+  },
 });
 ```
 

@@ -33,17 +33,17 @@ describe('AgentTARS AIO Integration', () => {
   describe('AIO Sandbox Mode', () => {
     it('should initialize AgentTARS with AIO environment', async () => {
       agent = new AgentTARS(options);
-      
+
       expect(agent).toBeDefined();
       expect(agent.getWorkingDirectory()).toBe('/tmp/test-workspace');
-      
+
       // Should use AIO environment (no local browser manager)
       expect(agent.getBrowserManager()).toBeUndefined();
     });
 
     it('should return AIO sandbox browser control info', () => {
       agent = new AgentTARS(options);
-      
+
       const controlInfo = agent.getBrowserControlInfo();
       expect(controlInfo.mode).toBe('aio-sandbox');
       expect(controlInfo.tools).toEqual([]);
@@ -52,12 +52,12 @@ describe('AgentTARS AIO Integration', () => {
     it('should handle missing aioSandbox option gracefully', () => {
       const localOptions = { ...options };
       delete localOptions.aioSandbox;
-      
+
       agent = new AgentTARS(localOptions);
-      
+
       // Should use local environment
       expect(agent.getBrowserManager()).toBeDefined();
-      
+
       const controlInfo = agent.getBrowserControlInfo();
       expect(controlInfo.mode).not.toBe('aio-sandbox');
     });
@@ -66,7 +66,7 @@ describe('AgentTARS AIO Integration', () => {
   describe('Environment Selection', () => {
     it('should select AIO environment when aioSandbox is provided', () => {
       agent = new AgentTARS(options);
-      
+
       // Verify AIO environment is used by checking browser manager is undefined
       expect(agent.getBrowserManager()).toBeUndefined();
     });
@@ -74,9 +74,9 @@ describe('AgentTARS AIO Integration', () => {
     it('should select Local environment when aioSandbox is not provided', () => {
       const localOptions = { ...options };
       delete localOptions.aioSandbox;
-      
+
       agent = new AgentTARS(localOptions);
-      
+
       // Verify Local environment is used by checking browser manager exists
       expect(agent.getBrowserManager()).toBeDefined();
     });
@@ -90,9 +90,9 @@ describe('AgentTARS AIO Integration', () => {
         instructions: 'Custom instructions',
         maxTokens: 2000,
       };
-      
+
       agent = new AgentTARS(extendedOptions);
-      
+
       expect(agent.name).toBe('Custom AIO Agent');
       expect(agent.getWorkingDirectory()).toBe('/tmp/test-workspace');
     });

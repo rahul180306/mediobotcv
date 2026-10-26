@@ -543,7 +543,7 @@ ${JSON.stringify(schema)}
    */
   private extractCleanJsonContent(content: string): string {
     const trimmed = content.trim();
-    
+
     // Extract first complete JSON object using regex
     const jsonMatch = trimmed.match(/^\s*\{[\s\S]*?\}(?=\s*(?:\}|\n|$))/);
     if (jsonMatch) {
@@ -555,7 +555,7 @@ ${JSON.stringify(schema)}
         // Fall through to original content
       }
     }
-    
+
     return trimmed;
   }
 

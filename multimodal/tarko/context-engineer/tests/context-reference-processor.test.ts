@@ -75,7 +75,7 @@ describe('ContextReferenceProcessor', () => {
         "<file path="test1.txt">
         Hello from test1.txt
         </file>"
-      `
+      `,
       );
     });
 
@@ -108,7 +108,7 @@ describe('ContextReferenceProcessor', () => {
         <file path="test-dir/test2.js">
         const test = "Hello from test2.js";
         </file>"
-      `
+      `,
       );
     });
 
@@ -150,7 +150,7 @@ const test = "Hello from test2.js";
         "<file path="non-existent.txt">
         Error: File not found
         </file>"
-      `
+      `,
       );
       expect(consoleSpy).toHaveBeenCalledWith('File reference not found: non-existent.txt');
 
@@ -168,7 +168,7 @@ const test = "Hello from test2.js";
         "<file path="../../../etc/passwd">
         Error: File reference outside workspace
         </file>"
-      `
+      `,
       );
       expect(consoleSpy).toHaveBeenCalledWith(
         'File reference outside workspace: ../../../etc/passwd',
@@ -212,7 +212,7 @@ const test = "Hello from test2.js";
         "<file path="restricted.txt">
         Error: Failed to read file
         </file>"
-      `
+      `,
       );
       expect(consoleSpy).toHaveBeenCalledWith(
         'Failed to read file restricted.txt:',
@@ -238,7 +238,7 @@ const test = "Hello from test2.js";
         "<directory path="test-dir">
         Error: Failed to pack directory
         </directory>"
-      `
+      `,
       );
       expect(consoleSpy).toHaveBeenCalledWith('Failed to pack workspace paths:', expect.any(Error));
 
@@ -288,7 +288,7 @@ const test = "Hello from test2.js";
         "<file path="test[special].txt">
         special content
         </file>"
-      `
+      `,
       );
     });
   });

@@ -23,6 +23,7 @@ The `autoActive` property in `workspace.navItems` supports dynamic evaluation ba
 ## Usage Examples
 
 ### Basic Boolean (Backward Compatible)
+
 ```json
 {
   "workspace": {
@@ -40,6 +41,7 @@ The `autoActive` property in `workspace.navItems` supports dynamic evaluation ba
 ```
 
 ### Dynamic Expression
+
 ```json
 {
   "workspace": {
@@ -59,6 +61,7 @@ The `autoActive` property in `workspace.navItems` supports dynamic evaluation ba
 ## Real-world Example
 
 From `examples/webui-config.json`:
+
 ```json
 {
   "workspace": {

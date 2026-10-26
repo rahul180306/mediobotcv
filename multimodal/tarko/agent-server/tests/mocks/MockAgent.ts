@@ -95,8 +95,6 @@ export class MockAgent implements IAgent {
   getOptions(): AgentAppConfig {
     return this.options;
   }
-
-
 }
 
 /**
@@ -128,10 +126,8 @@ class MockEventStream extends EventEmitter implements AgentEventStream.Processor
   }
 
   getEventsByType(types: AgentEventStream.EventType[]): AgentEventStream.Event[] {
-    return this.events.filter(event => types.includes(event.type));
+    return this.events.filter((event) => types.includes(event.type));
   }
-
-
 
   dispose(): void {
     this.events = [];
@@ -146,6 +142,4 @@ class MockEventStream extends EventEmitter implements AgentEventStream.Processor
       ...data,
     } as AgentEventStream.Event;
   }
-
-
 }

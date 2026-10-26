@@ -12,7 +12,7 @@ import {
   Figure,
   Grid,
   GridItem,
-  SocialCallout
+  SocialCallout,
 } from '../../../src/components';
 import { PiStarFourDuotone } from 'react-icons/pi';
 import { CgTerminal } from 'react-icons/cg';
@@ -210,7 +210,8 @@ Additionally, we are planning to extend Agent support for the [Responses API](ht
 
 ### Observable and Evaluable
 
-<b>"Observability and evaluability are issues that all Agent Frameworks face and need."</b> Here, we mainly explain some differences in Agent TARS's construction and our evolutionary direction.
+<b>"Observability and evaluability are issues that all Agent Frameworks face and need."</b> Here, we
+mainly explain some differences in Agent TARS's construction and our evolutionary direction.
 
 #### Snapshot
 
@@ -372,10 +373,10 @@ This design makes the architecture of Agent TARS Server and Agent TARS Web UI si
 
 Here, we need to explain some differences between Agent Event Stream in Agent TARS and Agent-UI Protocol:
 
-| Scenario | Agent Event Stream | Agent-UI Protocol |
-| --- | --- | --- |
-| Build UI | YES | YES |
-| Build Context | YES | NO |
+| Scenario      | Agent Event Stream | Agent-UI Protocol |
+| ------------- | ------------------ | ----------------- |
+| Build UI      | YES                | YES               |
+| Build Context | YES                | NO                |
 
 Yes, Agent Event Stream is also used internally in Agent TARS to build Context, referring to the [Context Engineering](#context-engineering) mentioned earlier. Doesn't it all connect? Regarding the details of Agent Event Stream, we will write a separate Blog post to introduce it to everyone in the future.
 
@@ -493,10 +494,10 @@ Finally, starting from Beta, we completely rewrote the Model Provider layer impl
 Currently, the compatibility list for typical models is as follows:
 
 | Model Provider | Model             | Text | Vision | Tool Call & MCP | Visual Grounding |
-| ------------- | ----------------- | ---- | ------ | --------------- | ---------------- |
-| `volcengine`  | Seed1.5-VL        | ✔️   | ✔️     | ✔️              | ✔️               |
-| `anthropic`   | claude-3.7-sonnet | ✔️   | ✔️     | ✔️              | 🚧               |
-| `openai`      | gpt-4o            | ✔️   | ✔️     | ✔️              | 🚧               |
+| -------------- | ----------------- | ---- | ------ | --------------- | ---------------- |
+| `volcengine`   | Seed1.5-VL        | ✔️   | ✔️     | ✔️              | ✔️               |
+| `anthropic`    | claude-3.7-sonnet | ✔️   | ✔️     | ✔️              | 🚧               |
+| `openai`       | gpt-4o            | ✔️   | ✔️     | ✔️              | 🚧               |
 
 ### Native Streaming
 
@@ -562,7 +563,6 @@ Agent TARS Web UI supports saving Replays locally by default, and also supports 
 The new version of Agent TARS not only initially supports multimodal input in the Web UI, but more notably, Agent TARS Web UI has internally implemented some General multimodal content renderers that can select appropriate UI for rendering without coupling with specific Tools and MCP Servers:
 
 ![](/generate_column_chart.png)
-
 
 ---
 
@@ -751,12 +751,11 @@ The release of Agent TARS Beta is just a beginning. In fact, we have only releas
 
 In the future, we expect Agent TARS to truly become an Agent development tool that everyone can use anytime, anywhere. Welcome to use Agent TARS and communicate with us. Thank you to all community members who have supported us ❤️
 
-
 ## Citation
 
 ```
 @misc{chen2025agenttars,
-      title={Introducing Agent TARS}, 
+      title={Introducing Agent TARS},
       author={Haoli Chen* and Chaolin Jin, Xingyuan Yang, Hao Chen, Yujia Qin, Shihao Liang, Wanjun Zhong and Cheng Yuan*},
       year={2025},
       howpublished={https://agent-tars.com/beta},

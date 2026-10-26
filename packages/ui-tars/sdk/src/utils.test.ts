@@ -370,3 +370,76 @@ user-instruction`,
     });
   });
 });
+
+// ══════════════════════════════════════════════════════════════════════════
+// Milestone 1C Hardening: actionOutcomeFeedback prompt alignment regression
+// Verifies that IMAGE_PLACEHOLDER values are NEVER corrupted by feedback injection.
+// A regression here would cause convertToOpenAIMessages to misclassify image turns
+// as text messages, breaking screenshot-to-prompt alignment.
+// ══════════════════════════════════════════════════════════════════════════
+
+describe('toVlmModelFormat — actionOutcomeFeedback IMAGE_PLACEHOLDER alignment', () => {
+  it('[HARDEN-1C] feedback is NOT injected into image placeholder turns', () => {
+    const conversations: any[] = [
+      { from: 'human', value: 'What do you see?' },
+      {
+        from: 'gpt',
+        value: 'I see a button.',
+        actionOutcomeFeedback: 'SUCCESS: click focused element.',
+      },
+      {
+        from: 'human',
+        value: IMAGE_PLACEHOLDER,
+        screenshotBase64: 'base64-screenshot-data',
+        // Feedback on an image turn must NOT be appended to the value
+        actionOutcomeFeedback: 'SUCCESS: click focused element.',
+      },
+    ];
+
+    const result = toVlmModelFormat({
+      historyMessages: [],
+      conversations,
+      systemPrompt: 'You are UI-TARS.',
+    });
+
+    // Image turn value must remain exactly IMAGE_PLACEHOLDER
+    const imageTurns = result.conversations.filter((c) => c.value === IMAGE_PLACEHOLDER);
+    expect(imageTurns).toHaveLength(1);
+
+    // images array must be populated correctly
+    expect(result.images).toHaveLength(1);
+    expect(result.images[0]).toBe('base64-screenshot-data');
+
+    // The gpt turn (non-image) should receive the feedback suffix
+    const gptTurn = result.conversations.find((c) => c.from === 'gpt');
+    expect(gptTurn?.value).toContain('[Action Outcome Verification:');
+    expect(gptTurn?.value).toContain('SUCCESS: click focused element.');
+  });
+
+  it('[HARDEN-1C] all IMAGE_PLACEHOLDER turns preserved when multiple screenshots have feedback', () => {
+    const conversations: any[] = [
+      { from: 'human', value: 'Search for laptops' },
+      ...Array.from({ length: 4 }, (_, i) => ({
+        from: 'human',
+        value: IMAGE_PLACEHOLDER,
+        screenshotBase64: `base64-${i}`,
+        actionOutcomeFeedback: i > 0 ? `outcome-${i}` : undefined,
+      })),
+    ];
+
+    const result = toVlmModelFormat({
+      historyMessages: [],
+      conversations,
+      systemPrompt: 'You are UI-TARS.',
+    });
+
+    // All image turns (index >= 1) must remain exactly IMAGE_PLACEHOLDER
+    const imageTurns = result.conversations.filter((c) => c.value === IMAGE_PLACEHOLDER);
+    expect(imageTurns).toHaveLength(4);
+
+    // Screenshots must remain in order
+    expect(result.images).toHaveLength(4);
+    expect(result.images[0]).toBe('base64-0');
+    expect(result.images[3]).toBe('base64-3');
+  });
+});

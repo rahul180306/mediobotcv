@@ -59,11 +59,19 @@ export async function nextVersion(options: CommonOptions = {}): Promise<void> {
 
     // Display usage examples
     console.log('Usage examples:');
-    console.log(`  pdk release --release-version ${nextVersions.patch} --release-tag latest`);
-    console.log(`  pdk release --release-version ${nextVersions['prerelease-beta']} --release-tag beta`);
-    console.log(`  pdk release --release-version ${nextVersions.minor} --release-tag latest`);
+    console.log(
+      `  pdk release --release-version ${nextVersions.patch} --release-tag latest`,
+    );
+    console.log(
+      `  pdk release --release-version ${nextVersions['prerelease-beta']} --release-tag beta`,
+    );
+    console.log(
+      `  pdk release --release-version ${nextVersions.minor} --release-tag latest`,
+    );
   } catch (err) {
-    logger.error(`Failed to get next version options: ${(err as Error).message}`);
+    logger.error(
+      `Failed to get next version options: ${(err as Error).message}`,
+    );
     throw err;
   }
 }

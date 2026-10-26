@@ -7,7 +7,14 @@
  * CLI entry point for PDK
  */
 import { cac } from 'cac';
-import { dev, release, patch, changelog, githubRelease, nextVersion } from './commands';
+import {
+  dev,
+  release,
+  patch,
+  changelog,
+  githubRelease,
+  nextVersion,
+} from './commands';
 import { logger } from './utils/logger';
 import { loadPDKConfig, mergeOptions } from './utils/config';
 
@@ -122,10 +129,7 @@ export function bootstrapCli() {
       '--release-tag <tag>',
       'Directly specify release tag (skips interactive selection)',
     )
-    .option(
-      '--skip-confirm',
-      'Skip confirmation prompts during release',
-    )
+    .option('--skip-confirm', 'Skip confirmation prompts during release')
     .alias('release')
     .action((opts) => {
       // Process filter options
@@ -233,7 +237,10 @@ export function bootstrapCli() {
 
   // Next Version command
   cli
-    .command('next-version', 'Show next version options based on current version')
+    .command(
+      'next-version',
+      'Show next version options based on current version',
+    )
     .option('--cwd <cwd>', 'Current working directory')
     .action((opts) => {
       return wrapCommand(nextVersion, opts);

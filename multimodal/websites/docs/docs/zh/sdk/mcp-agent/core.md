@@ -70,18 +70,30 @@ main();
 ```ts
 // 只启用指定服务器
 const agent = new MCPAgent({
-  mcpServers: { filesystem: {/*...*/}, github: {/*...*/} },
+  mcpServers: {
+    filesystem: {
+      /*...*/
+    },
+    github: {
+      /*...*/
+    },
+  },
   mcpServer: { include: ['filesystem'] },
 });
 
 // 排除指定服务器
 const agent = new MCPAgent({
-  mcpServers: { filesystem: {/*...*/}, github: {/*...*/} },
+  mcpServers: {
+    filesystem: {
+      /*...*/
+    },
+    github: {
+      /*...*/
+    },
+  },
   mcpServer: { exclude: ['github'] },
 });
 ```
-
-
 
 ## API 参考
 
@@ -99,14 +111,12 @@ const agent = new MCPAgent(options: MCPAgentOptions);
 interface MCPAgentOptions extends AgentOptions {
   /** MCP 服务器配置 */
   mcpServers?: MCPServerRegistry;
-  
+
   /** MCP 服务器过滤选项 */
   mcpServer?: {
     include?: string[];
     exclude?: string[];
   };
-  
-
 }
 ```
 
@@ -116,13 +126,13 @@ interface MCPAgentOptions extends AgentOptions {
 interface MCPServerConfig {
   /** 启动命令 */
   command?: string;
-  
+
   /** 命令参数 */
   args?: string[];
-  
+
   /** 环境变量 */
   env?: Record<string, string>;
-  
+
   /** SSE 连接 URL（可选，与 command 二选一） */
   url?: string;
 }
@@ -208,8 +218,6 @@ const agent = new MCPAgent({
   },
 });
 ```
-
-
 
 ## 相关链接
 

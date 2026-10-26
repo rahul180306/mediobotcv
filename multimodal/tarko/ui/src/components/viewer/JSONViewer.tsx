@@ -11,7 +11,7 @@ import { FiChevronRight, FiCopy, FiCheck, FiMaximize2, FiMinimize2 } from 'react
 // Shared copy hook
 const useCopy = () => {
   const [copied, setCopied] = useState(false);
-  
+
   const handleCopy = useCallback(async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -21,7 +21,7 @@ const useCopy = () => {
       console.error('Failed to copy:', error);
     }
   }, []);
-  
+
   return { copied, handleCopy };
 };
 
@@ -199,43 +199,46 @@ export interface JSONViewerRef {
   copyAll: () => string;
 }
 
-export const JSONViewer = React.forwardRef<JSONViewerRef, JSONViewerProps>((
-  { data, className = '', emptyMessage = 'No data available' },
-  ref
-) => {
-  React.useImperativeHandle(ref, () => ({
-    copyAll: () => JSON.stringify(data, null, 2)
-  }), [data]);
+export const JSONViewer = React.forwardRef<JSONViewerRef, JSONViewerProps>(
+  ({ data, className = '', emptyMessage = 'No data available' }, ref) => {
+    React.useImperativeHandle(
+      ref,
+      () => ({
+        copyAll: () => JSON.stringify(data, null, 2),
+      }),
+      [data],
+    );
 
-  if (!data || (typeof data === 'object' && Object.keys(data).length === 0)) {
-    return (
-      <div className={`flex items-center justify-center py-6 ${className}`}>
-        <div className="text-center">
-          <div className="w-6 h-6 mx-auto mb-2 rounded bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
-            <div className="w-3 h-3 border border-slate-400 dark:border-slate-500 rounded-sm"></div>
+    if (!data || (typeof data === 'object' && Object.keys(data).length === 0)) {
+      return (
+        <div className={`flex items-center justify-center py-6 ${className}`}>
+          <div className="text-center">
+            <div className="w-6 h-6 mx-auto mb-2 rounded bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
+              <div className="w-3 h-3 border border-slate-400 dark:border-slate-500 rounded-sm"></div>
+            </div>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{emptyMessage}</p>
           </div>
-          <p className="text-sm text-slate-500 dark:text-slate-400">{emptyMessage}</p>
         </div>
+      );
+    }
+
+    const isRootObject = typeof data === 'object' && !Array.isArray(data);
+    const isRootArray = Array.isArray(data);
+
+    return (
+      <div className={`space-y-2 ${className}`}>
+        {isRootObject ? (
+          Object.entries(data).map(([itemKey, value]) => (
+            <JsonItem key={itemKey} label={itemKey} value={value} isRoot />
+          ))
+        ) : isRootArray ? (
+          data.map((item: any, index: number) => (
+            <JsonItem key={`root-${index}`} label={`[${index}]`} value={item} isRoot />
+          ))
+        ) : (
+          <JsonItem label="value" value={data} isRoot />
+        )}
       </div>
     );
-  }
-
-  const isRootObject = typeof data === 'object' && !Array.isArray(data);
-  const isRootArray = Array.isArray(data);
-
-  return (
-    <div className={`space-y-2 ${className}`}>
-      {isRootObject ? (
-        Object.entries(data).map(([itemKey, value]) => (
-          <JsonItem key={itemKey} label={itemKey} value={value} isRoot />
-        ))
-      ) : isRootArray ? (
-        data.map((item: any, index: number) => (
-          <JsonItem key={`root-${index}`} label={`[${index}]`} value={item} isRoot />
-        ))
-      ) : (
-        <JsonItem label="value" value={data} isRoot />
-      )}
-    </div>
-  );
-});
+  },
+);

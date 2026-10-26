@@ -12,9 +12,9 @@ strs.forEach((str, i) => {
   console.log('Before - thinkBuffer:', JSON.stringify(state.thinkBuffer));
   console.log('Before - insideThink:', state.insideThink);
   console.log('Before - reasoningBuffer:', JSON.stringify(state.reasoningBuffer));
-  
+
   const result = processStreamingChunk(chunker(str), state);
-  
+
   console.log('After - thinkBuffer:', JSON.stringify(state.thinkBuffer));
   console.log('After - insideThink:', state.insideThink);
   console.log('After - reasoningBuffer:', JSON.stringify(state.reasoningBuffer));

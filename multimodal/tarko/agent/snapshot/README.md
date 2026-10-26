@@ -21,7 +21,6 @@ Generate snapshot for specified cases:
 npx tsx snapshot/runner.ts generate tool-calls-basic
 ```
 
-
 Generate snapshot for all casess:
 
 ```bash

@@ -5,7 +5,7 @@
 
 /**
  * Type definitions for PDK (PNPM Dev Kit)
- * 
+ *
  * CLI, Node.js API, and Config API are completely isomorphic:
  * - CLI: pdk release --changelog --use-ai --dry-run
  * - Node.js: release({ changelog: true, useAi: true, dryRun: true })
@@ -299,10 +299,10 @@ export interface GitHubReleaseSpecificOptions {
 /**
  * Common options available across all commands
  */
-export interface CommonOptions extends 
-  CoreOptions, 
-  AIOptions, 
-  ChangelogFilterOptions {}
+export interface CommonOptions
+  extends CoreOptions,
+    AIOptions,
+    ChangelogFilterOptions {}
 
 /**
  * Development mode command options for selective package development
@@ -322,12 +322,16 @@ export interface PatchOptions extends CommonOptions, PatchSpecificOptions {}
 /**
  * Changelog generation command options
  */
-export interface ChangelogOptions extends CommonOptions, ChangelogSpecificOptions {}
+export interface ChangelogOptions
+  extends CommonOptions,
+    ChangelogSpecificOptions {}
 
 /**
  * GitHub release command options
  */
-export interface GitHubReleaseOptions extends CommonOptions, GitHubReleaseSpecificOptions {}
+export interface GitHubReleaseOptions
+  extends CommonOptions,
+    GitHubReleaseSpecificOptions {}
 
 // =============================================================================
 // CHANGELOG AND GIT TYPES
@@ -375,22 +379,22 @@ export interface ChangelogSection {
 
 /**
  * PDK Configuration interface
- * 
+ *
  * CLI, Node.js API, and Config API are completely isomorphic.
  * All three use identical option names and structures.
- * 
+ *
  * Config file preferences: project conventions, team settings, AI configuration
  * CLI preferences: environment-specific options, one-time operations, sensitive data
  */
-export interface PDKConfig extends 
-  CoreOptions, 
-  AIOptions, 
-  ChangelogFilterOptions,
-  DevSpecificOptions,
-  ReleaseSpecificOptions,
-  PatchSpecificOptions,
-  ChangelogSpecificOptions,
-  GitHubReleaseSpecificOptions {}
+export interface PDKConfig
+  extends CoreOptions,
+    AIOptions,
+    ChangelogFilterOptions,
+    DevSpecificOptions,
+    ReleaseSpecificOptions,
+    PatchSpecificOptions,
+    ChangelogSpecificOptions,
+    GitHubReleaseSpecificOptions {}
 
 /**
  * Loaded configuration with resolved defaults
@@ -398,7 +402,7 @@ export interface PDKConfig extends
 export interface LoadedConfig extends PDKConfig {
   /**
    * The final configuration with all defaults applied
-   * 
+   *
    * This is what should be used for all actual operations. It contains
    * the complete configuration with all optional fields filled in with
    * their default values.

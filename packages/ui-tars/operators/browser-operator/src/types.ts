@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /*
  * Copyright (c) 2025 Bytedance, Inc. and its affiliates.
  * SPDX-License-Identifier: Apache-2.0
@@ -5,8 +6,8 @@
 import { Logger } from '@agent-infra/logger';
 import type { BrowserInterface, Page, BrowserType } from '@agent-infra/browser';
 import type { ScreenshotOutput, ExecuteParams } from '@ui-tars/sdk/core';
-
-export { StatusEnum } from '@ui-tars/sdk';
+import { StatusEnum } from '@ui-tars/sdk';
+export { StatusEnum };
 export type { Page, ScreenshotOutput, ExecuteParams };
 export type ParsedPrediction = ExecuteParams['parsedPrediction'];
 
@@ -37,19 +38,19 @@ export interface BrowserOperatorOptions {
 
   /**
    * Whether to highlight clickable elements before taking screenshots
-   * @default true
+   * @default false
    */
   highlightClickableElements?: boolean;
 
   /**
    * Whether to show action info in the browser window
-   * @default true
+   * @default false
    */
   showActionInfo?: boolean;
 
   /**
    * Whether to show water flow effect during screenshots
-   * @default true
+   * @default false
    */
   showWaterFlow?: boolean;
 
@@ -68,4 +69,57 @@ export interface BrowserOperatorOptions {
    * Callback triggered when a final answer is received
    */
   onFinalAnswer?: (finalAnswer: string) => Promise<void>;
+
+  /**
+   * Optional initial intermediate state contracts/milestones
+   */
+  intermediateMilestones?: IntermediateStateContract[];
+
+  /**
+   * Optional initial active page
+   */
+  page?: Page;
+
+  /**
+   * Optional final-goal contract for Milestone 3 verification
+   */
+  finalGoalContract?: FinalGoalContract;
+}
+
+import type {
+  ActionVerificationResult,
+  IntermediateStateVerificationResult,
+  IntermediateStateContract,
+  FinalGoalVerificationResult,
+  FinalGoalContract,
+  FinalGoalCriteria,
+  FinalGoalEvidence,
+} from './verification';
+import {
+  IntermediateProgressStatus,
+  GoalCategory,
+  FinalGoalStatus,
+} from './verification';
+
+export { IntermediateProgressStatus, GoalCategory, FinalGoalStatus };
+export type {
+  IntermediateStateContract,
+  IntermediateStateVerificationResult,
+  FinalGoalContract,
+  FinalGoalVerificationResult,
+  FinalGoalCriteria,
+  FinalGoalEvidence,
+};
+
+/**
+ * Output of BrowserOperator execute
+ */
+export interface BrowserExecuteOutput {
+  status: StatusEnum;
+  startX: number | null;
+  startY: number | null;
+  action_inputs?: Record<string, any>;
+  verification?: ActionVerificationResult;
+  intermediateState?: IntermediateStateVerificationResult;
+  finalGoalVerification?: FinalGoalVerificationResult;
 }

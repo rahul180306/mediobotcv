@@ -173,6 +173,43 @@ describe('execute', () => {
     expect(keyboard.pressKey).toHaveBeenCalledWith(Key.Enter);
   });
 
+  it('should throw an error when typing with missing or invalid content rather than returning false success', async () => {
+    const nutJSOperator = new NutJSOperator();
+    const executeParamsEmpty: ExecuteParams = {
+      prediction: "Thought: Type something\nAction: type()",
+      parsedPrediction: {
+        reflection: '',
+        thought: 'Type something',
+        action_type: 'type',
+        action_inputs: {},
+      },
+      screenWidth: 1920,
+      screenHeight: 1080,
+      scaleFactor: 1,
+    };
+
+    await expect(nutJSOperator.execute(executeParamsEmpty)).rejects.toThrow(
+      'No content to type: missing or invalid content in action_inputs',
+    );
+
+    const executeParamsBlank: ExecuteParams = {
+      prediction: "Thought: Type empty string\nAction: type('')",
+      parsedPrediction: {
+        reflection: '',
+        thought: 'Type empty string',
+        action_type: 'type',
+        action_inputs: { content: '' },
+      },
+      screenWidth: 1920,
+      screenHeight: 1080,
+      scaleFactor: 1,
+    };
+
+    await expect(nutJSOperator.execute(executeParamsBlank)).rejects.toThrow(
+      'No content to type: missing or invalid content in action_inputs',
+    );
+  });
+
   it('drag slider horizontally', async () => {
     const nutJSOperator = new NutJSOperator();
     const executeParams: ExecuteParams = {

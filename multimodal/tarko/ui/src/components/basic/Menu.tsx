@@ -30,7 +30,7 @@ const getMenuStyles = (isDarkMode: boolean) => ({
     backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.98)' : 'rgba(255, 255, 255, 0.98)',
     border: isDarkMode ? '1px solid rgba(99, 102, 241, 0.4)' : '1px solid rgba(99, 102, 241, 0.2)',
     borderRadius: '16px',
-    boxShadow: isDarkMode 
+    boxShadow: isDarkMode
       ? '0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(99, 102, 241, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
       : '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(99, 102, 241, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
     backdropFilter: 'blur(20px)',
@@ -58,7 +58,7 @@ const getMenuStyles = (isDarkMode: boolean) => ({
     backgroundColor: isDarkMode ? 'rgba(99, 102, 241, 0.15)' : 'rgba(99, 102, 241, 0.08)',
     color: isDarkMode ? 'rgba(165, 180, 252, 0.95)' : 'rgba(99, 102, 241, 0.9)',
     transform: 'translateX(2px)',
-    boxShadow: isDarkMode 
+    boxShadow: isDarkMode
       ? 'inset 0 1px 0 rgba(255, 255, 255, 0.05)'
       : 'inset 0 1px 0 rgba(255, 255, 255, 0.8)',
   },
@@ -85,7 +85,7 @@ export const Menu: React.FC<MenuProps> = ({ open, onClose, children, className }
     <div data-menu className={className} style={styles.container}>
       {children}
     </div>,
-    document.body
+    document.body,
   );
 };
 
@@ -113,12 +113,12 @@ export const MenuItem: React.FC<MenuItemProps> = ({
       disabled={disabled}
     >
       {icon && (
-        <span 
-          style={{ 
-            opacity: isHovered ? 0.9 : 0.7, 
+        <span
+          style={{
+            opacity: isHovered ? 0.9 : 0.7,
             flexShrink: 0,
             transition: 'opacity 0.2s ease',
-            color: isHovered ? (isDarkMode ? '#a5b4fc' : '#6366f1') : 'inherit'
+            color: isHovered ? (isDarkMode ? '#a5b4fc' : '#6366f1') : 'inherit',
           }}
         >
           {icon}

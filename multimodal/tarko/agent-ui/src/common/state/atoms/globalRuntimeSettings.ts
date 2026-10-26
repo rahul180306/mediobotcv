@@ -13,20 +13,17 @@ export const globalRuntimeSettingsAtom = atom<GlobalRuntimeSettingsState>({
 export const updateGlobalRuntimeSettingsAction = atom(
   null,
   (get, set, updates: Record<string, any>) => {
-    set(globalRuntimeSettingsAtom, prev => ({
+    set(globalRuntimeSettingsAtom, (prev) => ({
       ...prev,
       selectedValues: { ...prev.selectedValues, ...updates },
       isActive: true,
     }));
-  }
+  },
 );
 
-export const resetGlobalRuntimeSettingsAction = atom(
-  null,
-  (get, set) => {
-    set(globalRuntimeSettingsAtom, {
-      selectedValues: {},
-      isActive: false,
-    });
-  }
-);
+export const resetGlobalRuntimeSettingsAction = atom(null, (get, set) => {
+  set(globalRuntimeSettingsAtom, {
+    selectedValues: {},
+    isActive: false,
+  });
+});

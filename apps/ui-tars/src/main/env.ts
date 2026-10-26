@@ -3,10 +3,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import os from 'node:os';
+import path from 'node:path';
 
 import dotenv from 'dotenv';
 
 dotenv.config();
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+dotenv.config({ path: path.resolve(process.cwd(), '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 export const mode = process.env.NODE_ENV;
 export const isProd = mode === 'production';

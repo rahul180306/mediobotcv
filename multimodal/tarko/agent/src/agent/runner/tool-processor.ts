@@ -337,7 +337,7 @@ export class ToolProcessor {
         });
       } catch (error) {
         const elapsedMs = Date.now() - startTime;
-        
+
         // Don't log aborted requests as errors
         if (abortSignal?.aborted) {
           this.logger.info(`[Tool] Tool execution aborted: ${toolName}`);

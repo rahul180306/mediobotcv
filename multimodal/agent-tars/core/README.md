@@ -145,24 +145,24 @@ interface AgentTARSOptions {
     model: string;
     apiKey: string;
   };
-  
+
   // Browser settings
   browser?: {
     headless?: boolean;
     control?: 'dom' | 'visual-grounding' | 'hybrid';
     cdpEndpoint?: string;
   };
-  
+
   // Search configuration
   search?: {
     provider: 'browser_search' | 'tavily';
     count?: number;
     apiKey?: string;
   };
-  
+
   // Workspace settings
   workspace?: string;
-  
+
   // MCP implementation
   mcpImpl?: 'in-memory' | 'stdio';
 }
@@ -213,7 +213,7 @@ const workspace = agent.getWorkingDirectory();
 console.log(`Working in: ${workspace}`);
 
 // All file operations are automatically scoped to workspace
-const result = await agent.run('Create a summary.md file with today\'s findings');
+const result = await agent.run("Create a summary.md file with today's findings");
 ```
 
 ## Error Handling
@@ -276,7 +276,6 @@ agent.eventStream.subscribe((event) => {
 - 🔧 **MCP Integration**: Built-in Model Context Protocol support
 - 📸 **Visual Understanding**: Screenshot-based browser interaction
 - 🛡️ **Safety First**: Path validation and workspace isolation
-
 
 ## What's Changed
 

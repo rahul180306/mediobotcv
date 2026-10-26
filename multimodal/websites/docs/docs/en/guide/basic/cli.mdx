@@ -12,7 +12,6 @@ import { Figure } from '@components/Figure';
 
 <Figure src="/agent-tars-cli.png" maxWidth="75%" title="Agent TARS CLI" />
 
-
 ## All commands
 
 To view all available CLI commands, run the following command in the project directory:
@@ -39,31 +38,31 @@ Commands:
 
 Agent TARS CLI provides several common flags that can be used with most commands:
 
-| Flag                          | Description                                                                                |
-| ----------------------------- | ------------------------------------------------------------------------------------------ |
-| `-c, --config <path>`         | Path to configuration file(s) or URL(s), supports multiple values                          |
-| `--port <port>`               | Port to run the server on (default: 8888)                                                  |
-| `--host <host>`               | Network interface to bind (default: `127.0.0.1`), see [Remote access](#remote-access)      |
-| `--auth-token <token>`        | Access token for the API, also read from `TARKO_AUTH_TOKEN`                                |
-| `--open`                      | Open the web UI in the default browser on server start                                     |
-| `--logLevel <level>`          | Specify the log level (debug, info, warn, error)                                           |
-| `--debug`                     | Enable debug mode (show tool calls and system events)                                      |
-| `--quiet`                     | Reduce startup logging to minimum                                                          |
-| `--model.provider <provider>` | LLM provider name                                                                          |
-| `--model.id <model>`          | Model identifier                                                                           |
-| `--model.apiKey <apiKey>`     | Model API key                                                                              |
-| `--model.baseURL <baseURL>`   | Model base URL                                                                             |
-| `--stream`                    | Enable streaming mode for LLM responses                                                    |
-| `--thinking`                  | Enable reasoning mode for compatible models                                                |
-| `--toolCallEngine <engine>`   | Tool call engine type (`native`, `prompt_engineering`, `structured_outputs`)                     |
-| `--workspace <path>` | Path to workspace directory                                                        |
-| `--browser.control <mode>`    | Browser control mode (mixed, browser-use-only, gui-agent-only)                             |
-| `--planner.enabled`           | Enable planning functionality for complex tasks                                            |
-| `-h, --help`                  | Display help for command                                                                   |
+| Flag | Description |
+| --- | --- |
+| `-c, --config <path>` | Path to configuration file(s) or URL(s), supports multiple values |
+| `--port <port>` | Port to run the server on (default: 8888) |
+| `--host <host>` | Network interface to bind (default: `127.0.0.1`), see [Remote access](#remote-access) |
+| `--auth-token <token>` | Access token for the API, also read from `TARKO_AUTH_TOKEN` |
+| `--open` | Open the web UI in the default browser on server start |
+| `--logLevel <level>` | Specify the log level (debug, info, warn, error) |
+| `--debug` | Enable debug mode (show tool calls and system events) |
+| `--quiet` | Reduce startup logging to minimum |
+| `--model.provider <provider>` | LLM provider name |
+| `--model.id <model>` | Model identifier |
+| `--model.apiKey <apiKey>` | Model API key |
+| `--model.baseURL <baseURL>` | Model base URL |
+| `--stream` | Enable streaming mode for LLM responses |
+| `--thinking` | Enable reasoning mode for compatible models |
+| `--toolCallEngine <engine>` | Tool call engine type (`native`, `prompt_engineering`, `structured_outputs`) |
+| `--workspace <path>` | Path to workspace directory |
+| `--browser.control <mode>` | Browser control mode (mixed, browser-use-only, gui-agent-only) |
+| `--planner.enabled` | Enable planning functionality for complex tasks |
+| `-h, --help` | Display help for command |
 
 ## agent-tars \[start\]
 
-The default command (or explicitly using  `agent-tars start`) runs Agent TARS with an interactive UI.
+The default command (or explicitly using `agent-tars start`) runs Agent TARS with an interactive UI.
 
 ```bash
 Usage: agent-tars [start] [options]
@@ -82,7 +81,7 @@ This command will start a web server and display a welcome message with the URL 
 
 ## agent-tars serve
 
-The  `agent-tars serve` command launches a headless Agent TARS Server.
+The `agent-tars serve` command launches a headless Agent TARS Server.
 
 ```bash
 Usage: agent-tars serve [options]
@@ -148,7 +147,7 @@ npx agent-tars request --provider anthropic --model claude-3-sonnet --body '{"me
 
 ## agent-tars run
 
-The  `agent-tars run` command executes Agent TARS in silent mode and outputs results to stdout.
+The `agent-tars run` command executes Agent TARS in silent mode and outputs results to stdout.
 
 ```bash
 Usage: agent-tars run [options]
@@ -175,7 +174,7 @@ npx agent-tars run --input "Explain quantum computing" --model.provider openai -
 
 ## agent-tars workspace
 
-The  `agent-tars workspace` command helps you manage Agent TARS workspaces.
+The `agent-tars workspace` command helps you manage Agent TARS workspaces.
 
 ```bash
 Usage: agent-tars workspace [options]
@@ -194,6 +193,7 @@ npx agent-tars workspace --init
 ```
 
 During initialization, you'll be prompted to select:
+
 - Configuration format (TypeScript, JSON, or YAML)
 - Default model provider
 - Whether to initialize a git repository

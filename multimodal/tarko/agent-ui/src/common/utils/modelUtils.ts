@@ -13,7 +13,9 @@ import { AgentModel } from '@tarko/agent-interface';
  * @param model - The model object (AgentModel or modelConfig)
  * @returns The display name or model ID
  */
-export function getModelDisplayName(model?: AgentModel | SessionItemMetadata['modelConfig']): string {
+export function getModelDisplayName(
+  model?: AgentModel | SessionItemMetadata['modelConfig'],
+): string {
   if (!model?.id) {
     return '';
   }

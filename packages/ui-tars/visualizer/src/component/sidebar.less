@@ -53,7 +53,7 @@
 
   .side-item {
     cursor: pointer;
-    transition: .1s;
+    transition: 0.1s;
     // margin-bottom: 9px;
     padding: 2px 0 2px 28px;
 
@@ -61,13 +61,13 @@
       background: @hover-bg;
     }
 
-    &.selected
-    {
+    &.selected {
       background: @selected-bg;
     }
 
     .side-item-content {
-      padding: 0 @side-horizontal-padding 0 calc(@side-horizontal-padding + 10px);
+      padding: 0 @side-horizontal-padding 0
+        calc(@side-horizontal-padding + 10px);
     }
   }
 
@@ -77,11 +77,11 @@
     display: flex;
     justify-content: space-between;
 
-    .status-icon{
+    .status-icon {
       position: absolute;
       left: 0;
       display: inline-block;
-      color: #AAA;
+      color: #aaa;
       font-size: 12px;
       line-height: 10px;
       top: 50%;
@@ -93,7 +93,7 @@
     }
   }
 
-  .bottom-controls{
+  .bottom-controls {
     padding: @side-horizontal-padding 10px;
     text-align: left;
     text-align: center;

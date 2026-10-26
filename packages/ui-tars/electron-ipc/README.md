@@ -33,9 +33,11 @@ export const router = t.router({
   }),
 
   // Procedure with Zod schema validation
-  world: t.procedure.input(z.object({ a: z.string() })).handle(async ({ input }) => {
-    return input.a;
-  })
+  world: t.procedure
+    .input(z.object({ a: z.string() }))
+    .handle(async ({ input }) => {
+      return input.a;
+    }),
 });
 
 // Export router type for client usage
@@ -77,22 +79,27 @@ await client.hello({ a: '123' }); // => 'hello123'
 ### Main Process
 
 #### `initIpc.create()`
+
 Creates a new IPC router builder instance.
 
 #### `registerIpcMain(router)`
+
 Registers IPC handlers for the main process.
 
 #### `createServer(router)`
+
 Creates a server instance for direct invocation in the main process.
 
 ### Renderer Process
 
 #### `createClient<Router>(options)`
+
 Creates a type-safe client for calling IPC procedures from the renderer process.
 
 ## Type Safety
 
 The library provides full type safety between your main and renderer processes:
+
 - Input types are validated at compile time
 - Return types are properly inferred
 - Zod schema validation provides runtime type safety

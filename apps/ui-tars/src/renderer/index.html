@@ -21,27 +21,27 @@
     <title>UI-TARS Desktop</title>
     <style>
       .draggable-area {
-          user-select: none;
-          -webkit-app-region: drag;
-          cursor: grab;
+        user-select: none;
+        -webkit-app-region: drag;
+        cursor: grab;
       }
 
       .non-draggable-area {
-          user-select: auto;
-          -webkit-app-region: none;
+        user-select: auto;
+        -webkit-app-region: none;
       }
 
       ::-webkit-scrollbar {
-          width: 6px;
+        width: 6px;
       }
 
       ::-webkit-scrollbar-track {
-          background-color: var(--scrollbar-background-color);
+        background-color: var(--scrollbar-background-color);
       }
 
       ::-webkit-scrollbar-thumb {
-          background-color: var(--scrollbar-foreground-color);
-          border-radius: 4px;
+        background-color: var(--scrollbar-foreground-color);
+        border-radius: 4px;
       }
 
       body {
@@ -49,8 +49,12 @@
       }
 
       @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
 
       .loading-spinner {
@@ -70,8 +74,7 @@
         align-items: center;
         height: 100vh;
       }
-
-  </style>
+    </style>
   </head>
   <body>
     <div id="root">

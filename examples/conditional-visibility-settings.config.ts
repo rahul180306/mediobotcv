@@ -13,7 +13,7 @@ export default {
             default: false,
             placement: 'chat-bottom',
           },
-          
+
           // This option is only visible when enableAdvanced is true
           debugMode: {
             type: 'boolean',
@@ -25,7 +25,7 @@ export default {
               when: true,
             },
           },
-          
+
           // Browser control mode
           browserMode: {
             type: 'string',
@@ -35,7 +35,7 @@ export default {
             default: 'hybrid',
             placement: 'chat-bottom',
           },
-          
+
           // This option is only visible when browserMode is 'hybrid'
           hybridStrategy: {
             type: 'string',
@@ -49,7 +49,7 @@ export default {
               when: 'hybrid',
             },
           },
-          
+
           // This option is only visible when browserMode is 'visual-grounding'
           visualAccuracy: {
             type: 'string',
@@ -63,7 +63,7 @@ export default {
               when: 'visual-grounding',
             },
           },
-          
+
           // Always visible thinking option
           enableThinking: {
             type: 'boolean',

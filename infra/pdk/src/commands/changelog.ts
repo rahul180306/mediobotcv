@@ -85,10 +85,14 @@ export async function changelog(options: ChangelogOptions = {}): Promise<void> {
 
   // Construct tag name - try to find actual git tag first
   let tagName = `${tagPrefix}${version}`;
-  
+
   // Try to find the actual git tag that matches this version
   try {
-    const { stdout } = await execa('git', ['tag', '--list', `${tagPrefix}${version}`], { cwd });
+    const { stdout } = await execa(
+      'git',
+      ['tag', '--list', `${tagPrefix}${version}`],
+      { cwd },
+    );
     const matchingTags = stdout.trim().split('\n').filter(Boolean);
     if (matchingTags.length > 0) {
       // Use the actual tag that exists

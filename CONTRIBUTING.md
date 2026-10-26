@@ -5,11 +5,11 @@ First off, thanks for taking the time to contribute! ❤️
 All types of contributions are encouraged and valued. Please make sure to read the relevant section before making your contribution. It will make it a lot easier for us maintainers and smooth out the experience for all involved. The community looks forward to your contributions. 🎉
 
 > And if you like the project, but just don't have time to contribute, that's fine. There are other easy ways to support the project and show your appreciation, which we would also be very happy about:
+>
 > - Star the project
 > - Tweet about it
 > - Refer this project in your project's readme
 > - Mention the project at local meetups and tell your friends/colleagues
-
 
 ## I Have a Question / Bug Report
 
@@ -88,7 +88,6 @@ This is a [Monorepo](https://pnpm.io/workspaces) project including the following
 
 > **Note**: The `src` directory is located in the top-level directory instead of the `apps/{main,preload,renderer}` directories because Electron Forge previously did not support Pnpm's hoisting mechanism([electron/forge#2633](https://github.com/electron/forge/issues/2633)), requiring the `src` directory to be placed in the top-level directory.
 
-
 #### Clone the repository
 
 ```bash
@@ -127,6 +126,7 @@ $ pnpm run dev:w
 Run `pnpm run build` in current system, it will output into `out/*` directory.
 
 To build the products of other systems, run:
+
 - Mac x64: `pnpm run publish:mac-x64`
 - Mac ARM: `pnpm run publish:mac-arm64`
 - Windows x64: `pnpm run publish:win32`
@@ -166,10 +166,9 @@ If you want to publish the `beta` version packages to the npm registry, you can 
 2. Git commit and push to the branch
 3. `pnpm run publish-beta:packages` to publish the packages in current branch
 
-
 ### Documentation
 
-The documents are placed in the `docs/*.md` directory, formatted in markdown.  There is currently no documentation site, but the `docs/*.md` directory will be converted into a documentation site in the future.
+The documents are placed in the `docs/*.md` directory, formatted in markdown. There is currently no documentation site, but the `docs/*.md` directory will be converted into a documentation site in the future.
 
 ## Styleguides
 
@@ -202,6 +201,6 @@ pnpm run test:e2e
 
 ## Submitting Changes
 
-* Push your changes to a feature branch in your fork of the repository.
-* Submit a pull request to this repository
-* Accept the CLA in your PR.
+- Push your changes to a feature branch in your fork of the repository.
+- Submit a pull request to this repository
+- Accept the CLA in your PR.

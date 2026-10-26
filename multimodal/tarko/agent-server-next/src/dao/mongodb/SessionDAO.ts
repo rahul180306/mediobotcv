@@ -10,13 +10,12 @@ import { SessionDocument } from './MongoDBSchemas';
 import { getLogger } from '../../utils/logger';
 import { ILogger } from '../../types';
 
-
 /**
  * MongoDB implementation of ISessionDAO
  */
 export class SessionDAO implements ISessionDAO {
   private connection: Connection;
-  private logger: ILogger
+  private logger: ILogger;
 
   constructor(connection: Connection) {
     this.connection = connection;

@@ -9,12 +9,11 @@ import { ISessionDAO } from './ISessionDAO';
 import { IEventDAO } from './IEventDAO';
 import { ISandboxAllocationDAO } from './ISandboxAllocationDAO';
 
-
 /**
  * DAO Factory interface
  * Provides abstraction for creating and managing DAO instances
  * Supports different storage backends (MongoDB, SQLite, etc.)
- * 
+ *
  * Now includes StorageProvider functionality for unified data access
  */
 export interface IDAOFactory {

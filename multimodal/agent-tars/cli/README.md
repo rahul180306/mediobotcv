@@ -10,3 +10,4 @@ npm install -g @agent-tars/cli
 
 # Or use directly via npx
 npx @agent-tars/cli
+```

@@ -97,8 +97,6 @@ export function useSession() {
 
       initConnectionMonitoring,
       checkServerStatus,
-
-
     }),
     [
       sessions,

@@ -29,21 +29,23 @@ vi.mock('../../src/utils/error-handler', () => ({
 }));
 
 // Test helpers
-const createRequest = (query: any, sessionId = 'test-session') => ({
-  body: { sessionId, query },
-  session: mockSession,
-  app: { locals: { server: mockServer } },
-}) as Partial<Request>;
+const createRequest = (query: any, sessionId = 'test-session') =>
+  ({
+    body: { sessionId, query },
+    session: mockSession,
+    app: { locals: { server: mockServer } },
+  }) as Partial<Request>;
 
-const createResponse = () => ({
-  status: vi.fn().mockReturnThis(),
-  json: vi.fn().mockReturnThis(),
-  setHeader: vi.fn().mockReturnThis(),
-  write: vi.fn().mockReturnThis(),
-  end: vi.fn().mockReturnThis(),
-  closed: false,
-  headersSent: false,
-}) as Partial<Response>;
+const createResponse = () =>
+  ({
+    status: vi.fn().mockReturnThis(),
+    json: vi.fn().mockReturnThis(),
+    setHeader: vi.fn().mockReturnThis(),
+    write: vi.fn().mockReturnThis(),
+    end: vi.fn().mockReturnThis(),
+    closed: false,
+    headersSent: false,
+  }) as Partial<Response>;
 
 const mockProcessing = (expandedContext: string | null, compressedQuery: any = null) => {
   mockContextProcessor.processContextualReferences.mockResolvedValue(expandedContext);
@@ -151,7 +153,7 @@ describe('Queries Controller', () => {
       const res = createResponse();
 
       mockContextProcessor.processContextualReferences.mockRejectedValue(
-        new Error('Unexpected error')
+        new Error('Unexpected error'),
       );
 
       await executeQuery(req as Request, res as Response);
@@ -242,7 +244,7 @@ describe('Queries Controller', () => {
       const req = createRequest(undefined);
       const res = createResponse();
       req.body = { sessionId: 'test-session' };
-      
+
       mockSession.abortQuery.mockResolvedValue(true);
 
       await abortQuery(req as Request, res as Response);
@@ -256,7 +258,7 @@ describe('Queries Controller', () => {
       const req = createRequest(undefined);
       const res = createResponse();
       req.body = { sessionId: 'test-session' };
-      
+
       mockSession.abortQuery.mockRejectedValue(new Error('Abort failed'));
 
       await abortQuery(req as Request, res as Response);

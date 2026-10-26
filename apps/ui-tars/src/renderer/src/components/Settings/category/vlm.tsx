@@ -380,10 +380,47 @@ export function VLMSettings({
                   <Input
                     className="bg-white"
                     placeholder="Enter VLM Model Name"
+                    list="vlm-model-presets"
                     {...field}
                     disabled={isRemoteAutoUpdatedPreset}
                   />
                 </FormControl>
+                <datalist id="vlm-model-presets">
+                  <option value="nvidia/nemotron-3.5-super-vl-120b-a12b" />
+                  <option value="google/diffusiongemma-26b-a4b-it" />
+                  <option value="stepfun-ai/step-5-preview" />
+                </datalist>
+                {(newProvider === VLMProviderV2.nvidia ||
+                  newBaseUrl?.includes('nvidia.com')) && (
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    {[
+                      {
+                        name: 'Nemotron 3.5 Super VL',
+                        id: 'nvidia/nemotron-3.5-super-vl-120b-a12b',
+                      },
+                      {
+                        name: 'DiffusionGemma 26B',
+                        id: 'google/diffusiongemma-26b-a4b-it',
+                      },
+                      {
+                        name: 'StepFun Step-5 Preview',
+                        id: 'stepfun-ai/step-5-preview',
+                      },
+                    ].map((m) => (
+                      <Button
+                        key={m.id}
+                        type="button"
+                        variant={field.value === m.id ? 'default' : 'outline'}
+                        size="sm"
+                        className="text-xs h-7 px-2.5"
+                        onClick={() => field.onChange(m.id)}
+                        disabled={isRemoteAutoUpdatedPreset}
+                      >
+                        {m.name}
+                      </Button>
+                    ))}
+                  </div>
+                )}
               </FormItem>
             )}
           />

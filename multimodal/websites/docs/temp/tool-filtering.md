@@ -19,13 +19,12 @@ tarko --tool.include "browser,filesystem" --tool.exclude "run_command,run_script
 
 ## CLI Options
 
-| Option | Description | Example |
-|--------|-------------|----------|
+| Option                      | Description                     | Example                  |
+| --------------------------- | ------------------------------- | ------------------------ |
 | `--tool.include <patterns>` | Include tools matching patterns | `--tool.include browser` |
-| `--tool.exclude <patterns>` | Exclude tools matching patterns | `--tool.exclude delete` |
+| `--tool.exclude <patterns>` | Exclude tools matching patterns | `--tool.exclude delete`  |
 
-**Pattern Matching**: Uses substring matching for high performance.
-**Execution Order**: Include filters applied first, then exclude filters.
+**Pattern Matching**: Uses substring matching for high performance. **Execution Order**: Include filters applied first, then exclude filters.
 
 ## Programmatic Usage
 
@@ -37,8 +36,8 @@ import { Agent } from '@tarko/agent';
 const agent = new Agent({
   tool: {
     include: ['browser', 'filesystem'],
-    exclude: ['browser-get-markdown', 'filesystem-delete']
-  }
+    exclude: ['browser-get-markdown', 'filesystem-delete'],
+  },
 });
 ```
 
@@ -55,28 +54,31 @@ const agent = new Agent({
 
 ## Available Tool Categories
 
-| Category | Count | Tools |
-|----------|-------|-------|
-| **general** | 1 | `web_search` |
-| **browser** | 18 | `browser_click`, `browser_navigate`, `browser_screenshot`, etc. |
-| **filesystem** | 11 | `read_file`, `write_file`, `edit_file`, `create_directory`, etc. |
-| **commands** | 2 | `run_command`, `run_script` |
+| Category       | Count | Tools                                                            |
+| -------------- | ----- | ---------------------------------------------------------------- |
+| **general**    | 1     | `web_search`                                                     |
+| **browser**    | 18    | `browser_click`, `browser_navigate`, `browser_screenshot`, etc.  |
+| **filesystem** | 11    | `read_file`, `write_file`, `edit_file`, `create_directory`, etc. |
+| **commands**   | 2     | `run_command`, `run_script`                                      |
 
 ## Use Cases
 
 ### Web Automation Only
+
 ```bash
 # Browser tools + web search (19 tools)
 tarko --tool.include "browser,web_search"
 ```
 
 ### Safe File Operations
+
 ```bash
 # Filesystem without command execution (11 tools)
 tarko --tool.include filesystem --tool.exclude "run_command,run_script"
 ```
 
 ### Read-Only Agent
+
 ```bash
 # No file writing or command execution
 tarko --tool.exclude "write_file,edit_file,create_directory,move_file,run_command,run_script"
@@ -92,24 +94,28 @@ tarko --tool.exclude "write_file,edit_file,create_directory,move_file,run_comman
 ## Examples
 
 ### Browser-Only Agent
+
 ```bash
 tarko --tool.include browser
 # Result: 18 browser tools (browser_click, browser_navigate, etc.)
 ```
 
 ### File Operations Without Editing
+
 ```bash
 tarko --tool.include filesystem --tool.exclude edit_file
 # Result: 10 filesystem tools (read_file, write_file, list_directory, etc.)
 ```
 
 ### Specific Tool Exclusion
+
 ```bash
 tarko --tool.include "browser,filesystem" --tool.exclude "browser_get_markdown,run_command"
 # Result: 28 tools (17 browser + 11 filesystem, excluding markdown and commands)
 ```
 
 ### Minimal Agent (Read-Only)
+
 ```bash
 tarko --tool.include "read_file,read_multiple_files,list_directory,browser_screenshot,web_search"
 # Result: 5 essential read-only tools
@@ -118,7 +124,9 @@ tarko --tool.include "read_file,read_multiple_files,list_directory,browser_scree
 ## Troubleshooting
 
 ### No Tools Available
+
 If no tools match your filters:
+
 ```bash
 # Check what tools are available (32 total)
 tarko --debug # Shows all registered tools
@@ -128,11 +136,13 @@ tarko --tool.exclude "run_command" # Exclude specific tools instead
 ```
 
 ### Pattern Not Working
+
 - Patterns are case-sensitive (`browser` not `Browser`)
 - Use exact tool names (`browser_click` not `click`)
 - Categories work: `browser`, `filesystem`, `commands`, `general`
 
 ### Debug Filtering
+
 ```bash
 # See which tools are filtered
 tarko --debug --tool.include browser
@@ -142,9 +152,11 @@ tarko --debug --tool.include browser
 ## Complete Tool Reference
 
 ### 📦 general (1)
+
 - `web_search` - Search the web
 
 ### 📦 browser (18)
+
 - `browser_click` - Click on elements
 - `browser_close_tab` - Close browser tab
 - `browser_evaluate` - Execute JavaScript
@@ -165,6 +177,7 @@ tarko --debug --tool.include browser
 - `browser_tab_list` - List all open tabs
 
 ### 📦 filesystem (11)
+
 - `create_directory` - Create directories
 - `directory_tree` - Get directory structure
 - `edit_file` - Edit existing files
@@ -178,5 +191,6 @@ tarko --debug --tool.include browser
 - `write_file` - Write file contents
 
 ### 📦 commands (2)
+
 - `run_command` - Execute shell commands
 - `run_script` - Run scripts with interpreters

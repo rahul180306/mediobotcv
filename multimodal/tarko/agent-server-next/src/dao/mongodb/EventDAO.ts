@@ -81,7 +81,9 @@ export class EventDAO implements IEventDAO {
       const events = await EventModel.find({
         sessionId,
         timestamp: { $gte: startTime, $lte: endTime },
-      }).sort({ timestamp: 1, _id: 1 }).lean();
+      })
+        .sort({ timestamp: 1, _id: 1 })
+        .lean();
 
       return events.map((event: EventDocument) => {
         try {

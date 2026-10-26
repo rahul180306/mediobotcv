@@ -34,11 +34,11 @@ flowchart TD
     I -->|No| D
     I -->|Yes| G
     G --> J[Event Stream]
-    
+
     J --> K[UI Updates]
     J --> L[Logging]
     J --> M[Monitoring]
-    
+
     style A fill:#e1f5fe
     style G fill:#c8e6c9
     style F fill:#fff3e0
@@ -103,7 +103,8 @@ const agent = new Agent({
     apiKey: process.env.OPENAI_API_KEY!, // From environment variable
   },
   tools: [locationTool, weatherTool],
-  instructions: 'You are a professional weather assistant capable of getting accurate location and weather information.',
+  instructions:
+    'You are a professional weather assistant capable of getting accurate location and weather information.',
   temperature: 0.7,
   maxIterations: 50,
 });
@@ -154,11 +155,13 @@ const agent = new Agent({
 Based on the actual `AgentOptions` interface from the source code, all options are optional:
 
 ##### Basic Configuration
+
 - `id`: Unique identifier for the agent instance (default: `"@tarko/agent"`)
 - `name`: Agent name for tracking and logging (default: `"Anonymous"`)
 - `instructions`: Agent system prompt, completely replaces default prompt (default: built-in intelligent assistant prompt)
 
 ##### Model Configuration
+
 - `model`: Model configuration object containing `provider`, `id`, `apiKey`, etc.
 - `temperature`: LLM temperature controlling output randomness (default: `0.7`)
 - `top_p`: Nucleus sampling parameter controlling vocabulary selection diversity (default: model default)
@@ -166,6 +169,7 @@ Based on the actual `AgentOptions` interface from the source code, all options a
 - `thinking`: Reasoning content control options
 
 ##### Tool Configuration
+
 - `tools`: Array of tools available to the agent
 - `tool`: Tool filtering options supporting `include`/`exclude` patterns
 - `toolCallEngine`: Tool call engine type (default: `'native'`)
@@ -174,15 +178,18 @@ Based on the actual `AgentOptions` interface from the source code, all options a
   - `'structured_outputs'`: JSON Schema structured outputs
 
 ##### Execution Control
+
 - `maxIterations`: Maximum number of iterations (default: `1000`)
 - `context`: Context awareness options like `maxImagesCount`
 
 ##### Debug and Monitoring
+
 - `logLevel`: Log level (`LogLevel.DEBUG`, `LogLevel.INFO`, etc.)
 - `metric`: Performance metrics collection configuration
 - `enableStreamingToolCallEvents`: Enable streaming tool call events (default: `false`)
 
 ##### Advanced Options
+
 - `workspace`: Working directory for filesystem operations
 - `sandboxUrl`: Sandbox environment URL
 - `eventStreamOptions`: Event stream processor configuration
@@ -327,17 +334,13 @@ Besides the complete Agent workflow, you can also directly call the currently co
 ```ts
 // Non-streaming call
 const response = await agent.callLLM({
-  messages: [
-    { role: 'user', content: 'Hello' }
-  ],
+  messages: [{ role: 'user', content: 'Hello' }],
   temperature: 0.5,
 });
 
 // Streaming call
 const stream = await agent.callLLM({
-  messages: [
-    { role: 'user', content: 'Write a poem' }
-  ],
+  messages: [{ role: 'user', content: 'Write a poem' }],
   stream: true,
 });
 
@@ -400,13 +403,13 @@ class CustomAgent extends Agent {
     // Can modify arguments
     return { ...args, timestamp: Date.now() };
   }
-  
+
   async onAfterToolCall(sessionId, toolCall, result) {
     console.log(`Tool call completed: ${toolCall.name}`);
     // Can modify result
     return result;
   }
-  
+
   async onLLMRequest(sessionId, payload) {
     console.log(`Sending LLM request: ${payload.messages.length} messages`);
   }
@@ -472,15 +475,15 @@ const optimizedAgent = new Agent({
   context: {
     maxImagesCount: 3, // Avoid oversized context
   },
-  
+
   // Reasonable iteration count
   maxIterations: 20, // Avoid infinite loops
-  
+
   // Enable performance monitoring
   metric: {
     enable: true,
   },
-  
+
   // Appropriate temperature setting
   temperature: 0.3, // Lower temperature recommended for production
 });

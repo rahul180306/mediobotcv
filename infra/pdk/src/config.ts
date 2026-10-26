@@ -12,11 +12,11 @@ import type { PDKConfig } from './types';
 /**
  * Defines PDK configuration with TypeScript support
  * CLI, Node.js API, and Config API are completely isomorphic
- * 
+ *
  * @example
  * ```typescript
  * import { defineConfig } from 'pnpm-dev-kit';
- * 
+ *
  * export default defineConfig({
  *   tagPrefix: 'v',
  *   useAi: true,

@@ -140,7 +140,6 @@ export async function createSession(req: Request, res: Response) {
       server.storageUnsubscribes[sessionId] = storageUnsubscribe;
     }
 
-
     // Wait a short time to ensure all initialization events are persisted
     // This handles the async nature of event storage during agent initialization
     await session.waitForEventSavesToComplete();

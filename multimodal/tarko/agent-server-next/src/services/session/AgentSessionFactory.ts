@@ -65,22 +65,20 @@ export class AgentSessionFactory {
     session: AgentSession;
     sessionInfo?: SessionInfo;
     storageUnsubscribe?: () => void;
-    events: any[]
+    events: any[];
   }> {
     const sessionId = nanoid();
     const user = getCurrentUser(c);
     const server = c.get('server');
-    
+
     // Get runtimeSettings and agentOptions from request body
     const body = await c.req.json().catch(() => ({}));
 
-    const {
-      runtimeSettings: requestedRuntimeSettings,
-      agentOptions: requestedAgentOptions,
-    } = body as {
-      runtimeSettings?: Record<string, any>;
-      agentOptions?: Record<string, any>;
-    };
+    const { runtimeSettings: requestedRuntimeSettings, agentOptions: requestedAgentOptions } =
+      body as {
+        runtimeSettings?: Record<string, any>;
+        agentOptions?: Record<string, any>;
+      };
 
     // Both fields are merged into the Agent constructor, so accept only the
     // allowlisted agent options and only runtime settings the server declared.
@@ -134,8 +132,8 @@ export class AgentSessionFactory {
           configuredAt: now,
         },
         ...(defaultModel && {
-            modelConfig: defaultModel,
-          }),
+          modelConfig: defaultModel,
+        }),
         sandboxUrl,
         // Include runtime settings if provided (persistent session settings)
         ...(hasRuntimeSettings && {
@@ -159,7 +157,6 @@ export class AgentSessionFactory {
 
     // Initialize the session
     const { storageUnsubscribe } = await session.initialize();
-    
 
     // Wait a short time to ensure all initialization events are persisted
     // This handles the async nature of event storage during agent initialization
@@ -254,7 +251,13 @@ export class AgentSessionFactory {
   }): AgentSession {
     const { sessionInfo, agioProvider, agentOptions } = options;
 
-    const session = new AgentSession(this.server, sessionInfo.id, agioProvider, sessionInfo, agentOptions);
+    const session = new AgentSession(
+      this.server,
+      sessionInfo.id,
+      agioProvider,
+      sessionInfo,
+      agentOptions,
+    );
 
     return session;
   }

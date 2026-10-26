@@ -31,26 +31,29 @@ class MonitoringAgent extends Agent {
   override async onLLMRequest(id: string, payload: LLMRequestHookPayload) {
     console.log(`[${id}] Sending request to ${payload.model}`);
     console.log('Messages count:', payload.messages.length);
-    
+
     // Log token usage estimates
     const tokenEstimate = this.estimateTokens(payload.messages);
     console.log('Estimated tokens:', tokenEstimate);
   }
-  
+
   // Called after each LLM response
   override async onLLMResponse(id: string, payload: LLMResponseHookPayload) {
     const response = payload.response;
     console.log(`[${id}] Received response:`);
     console.log('Usage:', response.usage);
     console.log('Finish reason:', response.choices[0]?.finish_reason);
-    
+
     // Log tool calls if present
     const toolCalls = response.choices[0]?.message?.tool_calls;
     if (toolCalls?.length) {
-      console.log('Tool calls:', toolCalls.map(tc => tc.function.name));
+      console.log(
+        'Tool calls:',
+        toolCalls.map((tc) => tc.function.name),
+      );
     }
   }
-  
+
   // Called during streaming responses
   override onLLMStreamingResponse(id: string, payload: LLMStreamingResponseHookPayload) {
     // Monitor streaming chunks in real-time
@@ -67,82 +70,79 @@ Monitor and control tool call execution:
 ```typescript
 class ToolMonitoringAgent extends Agent {
   private toolUsageStats = new Map<string, number>();
-  
+
   // Called before each tool execution
   override async onBeforeToolCall(
     id: string,
     toolCall: { toolCallId: string; name: string },
-    args: any
+    args: any,
   ) {
     console.log(`[${id}] Executing tool: ${toolCall.name}`);
     console.log('Arguments:', JSON.stringify(args, null, 2));
-    
+
     // Track tool usage
     const currentCount = this.toolUsageStats.get(toolCall.name) || 0;
     this.toolUsageStats.set(toolCall.name, currentCount + 1);
-    
+
     // Validate arguments or apply rate limiting
     if (toolCall.name === 'expensive_api' && currentCount >= 5) {
       throw new Error('Rate limit exceeded for expensive_api');
     }
-    
+
     // Return potentially modified args
     return args;
   }
-  
+
   // Called after each tool execution
   override async onAfterToolCall(
     id: string,
     toolCall: { toolCallId: string; name: string },
-    result: any
+    result: any,
   ) {
     console.log(`[${id}] Tool ${toolCall.name} completed`);
     console.log('Result type:', typeof result);
-    
+
     // Log errors or successful results
     if (result?.error) {
       console.error('Tool execution failed:', result.error);
     } else {
       console.log('Tool execution successful');
     }
-    
+
     // Return potentially modified result
     return result;
   }
-  
+
   // Called when tool execution fails
   override async onToolCallError(
     id: string,
     toolCall: { toolCallId: string; name: string },
-    error: any
+    error: any,
   ) {
     console.error(`[${id}] Tool ${toolCall.name} failed:`, error);
-    
+
     // Implement retry logic or error transformation
     if (error.message?.includes('timeout')) {
       return 'Tool execution timed out. Please try again later.';
     }
-    
+
     return `Error: ${error.message || error}`;
   }
-  
+
   // Override tool call processing entirely
-  override async onProcessToolCalls(
-    id: string,
-    toolCalls: ChatCompletionMessageToolCall[]
-  ) {
+  override async onProcessToolCalls(id: string, toolCalls: ChatCompletionMessageToolCall[]) {
     // Return undefined to execute tools normally
     // Return ToolCallResult[] to skip normal execution
-    
+
     // Example: Mock tool execution for testing
     if (process.env.NODE_ENV === 'test') {
-      return toolCalls.map(tc => ({
+      return toolCalls.map((tc) => ({
         toolCallId: tc.id,
         result: `Mocked result for ${tc.function.name}`,
-        success: true
+        success: true,
       }));
     }
-    
+
     return undefined; // Execute tools normally
   }
 }
@@ -155,17 +155,17 @@ Control agent loop iterations and termination:
 ```typescript
 class LoopControlAgent extends Agent {
   private iterationStartTimes = new Map<string, number>();
-  
+
   // Called at the start of each loop iteration
   override async onEachAgentLoopStart(sessionId: string) {
     this.iterationStartTimes.set(sessionId, Date.now());
     console.log(`[${sessionId}] Starting iteration ${this.getCurrentLoopIteration()}`);
-    
+
     // Inject additional context or perform setup
     const currentTime = new Date().toISOString();
     console.log(`Current time: ${currentTime}`);
   }
-  
+
   // Called at the end of each loop iteration
   override async onEachAgentLoopEnd(context: EachAgentLoopEndContext) {
     const startTime = this.iterationStartTimes.get(context.sessionId);
@@ -173,20 +173,20 @@ class LoopControlAgent extends Agent {
       const duration = Date.now() - startTime;
       console.log(`[${context.sessionId}] Iteration completed in ${duration}ms`);
     }
-    
+
     // Log iteration results
     console.log('Events in this iteration:', context.events?.length || 0);
     console.log('Tool calls made:', context.toolCallResults?.length || 0);
   }
-  
+
   // Called when the entire agent loop ends
   override async onAgentLoopEnd(id: string) {
     console.log(`[${id}] Agent loop completed`);
     console.log('Total iterations:', this.getCurrentLoopIteration());
-    
+
     // Cleanup iteration tracking
     this.iterationStartTimes.delete(id);
-    
+
     // Call parent implementation
     await super.onAgentLoopEnd(id);
   }
@@ -203,7 +203,7 @@ Use `onBeforeLoopTermination` to enforce specific completion requirements:
 class ValidatingAgent extends Agent {
   private requiredToolsCalled = new Set<string>();
   private requiredTools = ['gather_data', 'analyze_results', 'final_report'];
-  
+
   constructor(options: AgentOptions) {
     super({
       ...options,
@@ -213,50 +213,51 @@ You must call these tools in order: gather_data, analyze_results, final_report.
 Do not provide a final answer until all required tools have been called.`,
     });
   }
-  
+
   override async onAfterToolCall(
     id: string,
     toolCall: { toolCallId: string; name: string },
-    result: any
+    result: any,
   ) {
     // Track required tool calls
     if (this.requiredTools.includes(toolCall.name)) {
       this.requiredToolsCalled.add(toolCall.name);
       console.log(`Required tool called: ${toolCall.name}`);
-      console.log('Remaining:', this.requiredTools.filter(t => !this.requiredToolsCalled.has(t)));
+      console.log(
+        'Remaining:',
+        this.requiredTools.filter((t) => !this.requiredToolsCalled.has(t)),
+      );
     }
-    
+
     return await super.onAfterToolCall(id, toolCall, result);
   }
-  
+
   // Prevent termination until all required tools are called
   override async onBeforeLoopTermination(
     id: string,
-    finalEvent: AgentEventStream.AssistantMessageEvent
+    finalEvent: AgentEventStream.AssistantMessageEvent,
   ): Promise<LoopTerminationCheckResult> {
-    const missingTools = this.requiredTools.filter(tool => 
-      !this.requiredToolsCalled.has(tool)
-    );
-    
+    const missingTools = this.requiredTools.filter((tool) => !this.requiredToolsCalled.has(tool));
+
     if (missingTools.length > 0) {
       console.log(`[${id}] Preventing termination. Missing tools:`, missingTools);
-      
+
       // Inject a reminder message
       const reminderEvent = this.getEventStream().createEvent('user_message', {
-        content: `Please call the following required tools before providing your final answer: ${missingTools.join(', ')}`
+        content: `Please call the following required tools before providing your final answer: ${missingTools.join(', ')}`,
       });
       this.getEventStream().sendEvent(reminderEvent);
-      
+
       return {
         finished: false,
-        message: `Must call required tools: ${missingTools.join(', ')}`
+        message: `Must call required tools: ${missingTools.join(', ')}`,
       };
     }
-    
+
     console.log(`[${id}] All required tools called. Allowing termination.`);
     return { finished: true };
   }
-  
+
   override async onAgentLoopEnd(id: string) {
     // Reset for next run
     this.requiredToolsCalled.clear();
@@ -272,13 +273,11 @@ Use `onPrepareRequest` to dynamically modify system prompts and available tools:
 ```typescript
 class AdaptiveAgent extends Agent {
   private userExpertiseLevel: 'beginner' | 'intermediate' | 'expert' = 'intermediate';
-  
-  override async onPrepareRequest(
-    context: PrepareRequestContext
-  ): Promise<PrepareRequestResult> {
+
+  override async onPrepareRequest(context: PrepareRequestContext): Promise<PrepareRequestResult> {
     // Modify system prompt based on context
     let systemPrompt = context.systemPrompt;
-    
+
     // Add expertise-level specific instructions
     switch (this.userExpertiseLevel) {
       case 'beginner':
@@ -288,29 +287,29 @@ class AdaptiveAgent extends Agent {
         systemPrompt += '\n\nProvide technical details and assume advanced knowledge.';
         break;
     }
-    
+
     // Filter tools based on iteration count
     let availableTools = context.tools;
     const iteration = this.getCurrentLoopIteration();
-    
+
     if (iteration === 1) {
       // First iteration: only allow information gathering tools
-      availableTools = context.tools.filter(tool => 
-        tool.id.includes('search') || tool.id.includes('read')
+      availableTools = context.tools.filter(
+        (tool) => tool.id.includes('search') || tool.id.includes('read'),
       );
     } else if (iteration >= 5) {
       // Later iterations: add analysis and reporting tools
       availableTools = context.tools; // All tools available
     }
-    
+
     console.log(`Iteration ${iteration}: ${availableTools.length} tools available`);
-    
+
     return {
       systemPrompt,
-      tools: availableTools
+      tools: availableTools,
     };
   }
-  
+
   // Method to update user expertise level
   setUserExpertiseLevel(level: 'beginner' | 'intermediate' | 'expert') {
     this.userExpertiseLevel = level;
@@ -325,33 +324,33 @@ class AdaptiveAgent extends Agent {
 class ResilientAgent extends Agent {
   private errorCounts = new Map<string, number>();
   private maxRetries = 3;
-  
+
   override async onToolCallError(
     id: string,
     toolCall: { toolCallId: string; name: string },
-    error: any
+    error: any,
   ) {
     const errorKey = `${id}-${toolCall.name}`;
     const currentCount = this.errorCounts.get(errorKey) || 0;
-    
+
     console.error(`Tool ${toolCall.name} failed (attempt ${currentCount + 1}):`, error);
-    
+
     // Implement retry logic
     if (currentCount < this.maxRetries && this.isRetriableError(error)) {
       this.errorCounts.set(errorKey, currentCount + 1);
-      
+
       // Add delay before retry
-      await new Promise(resolve => setTimeout(resolve, 1000 * (currentCount + 1)));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000 * (currentCount + 1)));
+
       console.log(`Retrying ${toolCall.name} (attempt ${currentCount + 2})`);
       return 'Retrying due to temporary error...';
     }
-    
+
     // Max retries exceeded or non-retriable error
     this.errorCounts.delete(errorKey);
     return `Tool ${toolCall.name} failed after ${currentCount + 1} attempts: ${error.message || error}`;
   }
-  
+
   private isRetriableError(error: any): boolean {
     const errorMessage = error.message || error.toString();
     return (
@@ -361,7 +360,7 @@ class ResilientAgent extends Agent {
       errorMessage.includes('502')
     );
   }
-  
+
   override async onAgentLoopEnd(id: string) {
     // Clear error counts for this session
     for (const key of this.errorCounts.keys()) {
@@ -369,7 +368,7 @@ class ResilientAgent extends Agent {
         this.errorCounts.delete(key);
       }
     }
-    
+
     await super.onAgentLoopEnd(id);
   }
 }

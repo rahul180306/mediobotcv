@@ -10,6 +10,7 @@ Agent Snapshot is a powerful feature that allows you to capture the complete sta
 ## What is Agent Snapshot?
 
 An Agent Snapshot captures:
+
 - Complete conversation history
 - Current context state
 - Tool call history and results
@@ -32,9 +33,9 @@ const agent = new Agent({
     interval: 'on_tool_call', // or 'on_message', 'manual'
     storage: {
       type: 'file',
-      path: './snapshots'
-    }
-  }
+      path: './snapshots',
+    },
+  },
 });
 ```
 
@@ -46,7 +47,7 @@ Create snapshots programmatically:
 // Create a snapshot
 const snapshot = await agent.createSnapshot({
   name: 'debug-session-1',
-  description: 'Before problematic tool call'
+  description: 'Before problematic tool call',
 });
 
 console.log('Snapshot created:', snapshot.id);
@@ -62,24 +63,24 @@ interface AgentSnapshot {
   timestamp: string;
   name?: string;
   description?: string;
-  
+
   // Agent state
   context: {
     messages: Message[];
     length: number;
     metadata: Record<string, any>;
   };
-  
+
   // Configuration
   config: AgentConfig;
-  
+
   // Environment
   environment: {
     variables: Record<string, string>;
     workingDirectory: string;
     platform: string;
   };
-  
+
   // Tool state
   tools: {
     available: ToolDefinition[];
@@ -130,10 +131,10 @@ test('should handle file operations correctly', async () => {
   // Load pre-recorded snapshot
   const snapshot = await loadSnapshot('./test-snapshots/file-ops.json');
   const agent = Agent.fromSnapshot(snapshot);
-  
+
   // Replay the scenario
   const response = await agent.chat('Create a new file called test.txt');
-  
+
   // Assert expected behavior
   expect(response).toContain('File created successfully');
 });
@@ -144,12 +145,12 @@ test('should handle file operations correctly', async () => {
 ```typescript
 // Capture baseline behavior
 const baselineSnapshot = await agent.createSnapshot({
-  name: 'baseline-v1.0'
+  name: 'baseline-v1.0',
 });
 
 // Later, test against baseline
 const currentSnapshot = await agent.createSnapshot({
-  name: 'current-test'
+  name: 'current-test',
 });
 
 // Compare snapshots
@@ -165,7 +166,7 @@ if (diff.hasChanges) {
 
 ```typescript
 const snapshots = await agent.listSnapshots();
-snapshots.forEach(snapshot => {
+snapshots.forEach((snapshot) => {
   console.log(`${snapshot.name} (${snapshot.timestamp})`);
 });
 ```
@@ -179,7 +180,7 @@ await agent.deleteSnapshot('debug-session-1');
 // Clean up old snapshots
 await agent.cleanupSnapshots({
   olderThan: '7d',
-  keepLatest: 10
+  keepLatest: 10,
 });
 ```
 
@@ -198,7 +199,7 @@ await agent.cleanupSnapshots({
 // Use descriptive names
 const snapshot = await agent.createSnapshot({
   name: 'before-file-upload-v2.1',
-  description: 'State before implementing new file upload logic'
+  description: 'State before implementing new file upload logic',
 });
 ```
 
@@ -211,11 +212,11 @@ const agent = new Agent({
     storage: {
       type: 'redis', // For production
       url: 'redis://localhost:6379',
-      ttl: 86400 // 24 hours
+      ttl: 86400, // 24 hours
     },
     compression: true, // Reduce storage size
-    maxSnapshots: 100  // Limit storage usage
-  }
+    maxSnapshots: 100, // Limit storage usage
+  },
 });
 ```
 
@@ -228,9 +229,9 @@ agent.on('error', async (error) => {
   // Automatically create snapshot on error
   const snapshot = await agent.createSnapshot({
     name: `error-${Date.now()}`,
-    description: `Error: ${error.message}`
+    description: `Error: ${error.message}`,
   });
-  
+
   console.log('Error snapshot saved:', snapshot.id);
 });
 ```
@@ -274,8 +275,8 @@ export default defineConfig({
   // ...
   snapshot: {
     enable: true,
-    storageDirectory: resolve(__dirname, 'snapshots')
-  }
+    storageDirectory: resolve(__dirname, 'snapshots'),
+  },
 });
 ```
 

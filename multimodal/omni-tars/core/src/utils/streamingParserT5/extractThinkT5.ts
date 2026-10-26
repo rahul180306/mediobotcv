@@ -14,12 +14,12 @@ import { T5StreamProcessingState } from './index';
 function generatePartialPatterns(tag: string): string[] {
   const patterns: string[] = [];
   const openTag = `<${tag}`;
-  
+
   // Generate all possible partial patterns
   for (let i = 1; i <= openTag.length; i++) {
     patterns.push(openTag.substring(0, i));
   }
-  
+
   return patterns;
 }
 
@@ -31,11 +31,11 @@ function generatePartialPatterns(tag: string): string[] {
 function generatePartialClosingPatterns(tag: string): string[] {
   const patterns: string[] = [];
   const closeTag = `</${tag}`;
-  
+
   // Generate basic closing patterns
   const basicPatterns = ['<', '</', '</t', '</th', '</thi', '</thin', '</think'];
   patterns.push(...basicPatterns);
-  
+
   // Generate all possible partial patterns for the specific tag
   for (let i = 1; i <= closeTag.length; i++) {
     const partial = closeTag.substring(0, i);
@@ -43,7 +43,7 @@ function generatePartialClosingPatterns(tag: string): string[] {
       patterns.push(partial);
     }
   }
-  
+
   return patterns;
 }
 

@@ -85,13 +85,13 @@
 }
 
 /* 亮色模式适配 */
-:root[data-theme="light"] .quick-action-card {
+:root[data-theme='light'] .quick-action-card {
   --card-bg: rgba(0, 0, 0, 0.02);
   --card-text: #333;
   border-color: rgba(0, 0, 0, 0.1);
 }
 
-:root[data-theme="light"] .quick-action-card:hover {
+:root[data-theme='light'] .quick-action-card:hover {
   box-shadow: 0 12px 20px rgba(0, 0, 0, 0.08);
 }
 
@@ -100,13 +100,13 @@
   .quick-action-card {
     padding: 1.25rem;
   }
-  
+
   .card-icon {
     width: 40px;
     height: 40px;
     font-size: 1.25rem;
   }
-  
+
   .card-title {
     font-size: 1.1rem;
   }
